@@ -13,6 +13,7 @@ import {
   Download,
   Printer,
   Loader2,
+  X,
 } from "lucide-react";
 import type { Project } from "@/lib/types";
 import {
@@ -252,12 +253,54 @@ export default function ProjectTable({
             {projects.length} Projects
           </h2>
           {selectedRows.size > 0 && (
-            <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">
+            <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-medium">
               {selectedRows.size} selected
             </span>
           )}
         </div>
         <div className="flex items-center gap-2">
+          {selectedRows.size > 0 && (
+            <>
+              <button
+                onClick={() => setSelectedRows(new Set())}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors"
+              >
+                <X size={14} />
+                Clear
+              </button>
+              <button
+                onClick={async () => {
+                  const count = selectedRows.size;
+                  if (confirm(`Archive ${count} project${count > 1 ? "s" : ""}? You can restore them later from the archive.`)) {
+                    for (const id of selectedRows) {
+                      await onArchive(id);
+                    }
+                    setSelectedRows(new Set());
+                  }
+                }}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
+              >
+                <Archive size={14} />
+                Archive
+              </button>
+              <button
+                onClick={async () => {
+                  const count = selectedRows.size;
+                  if (confirm(`⚠️ Delete ${count} project${count > 1 ? "s" : ""}? This action cannot be undone!`)) {
+                    for (const id of selectedRows) {
+                      await onDelete(id);
+                    }
+                    setSelectedRows(new Set());
+                  }
+                }}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-red-500 hover:bg-red-600 rounded-lg transition-colors shadow-sm"
+              >
+                <Trash2 size={14} />
+                Delete {selectedRows.size}
+              </button>
+              <div className="w-px h-6 bg-slate-200 mx-1"></div>
+            </>
+          )}
           <button
             onClick={exportCSV}
             className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors"
