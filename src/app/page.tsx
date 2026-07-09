@@ -48,9 +48,18 @@ export default function Dashboard() {
     setAuditLogs(data);
   }, []);
 
+  const [dbReady, setDbReady] = useState(false);
+
   useEffect(() => {
-    fetchProjects();
-  }, [fetchProjects]);
+    // Auto-create tables on first visit (safe to call multiple times)
+    fetch("/api/setup")
+      .then(() => setDbReady(true))
+      .catch(() => setDbReady(true)); // proceed anyway
+  }, []);
+
+  useEffect(() => {
+    if (dbReady) fetchProjects();
+  }, [dbReady, fetchProjects]);
 
   useEffect(() => {
     if (showAudit) fetchAuditLogs();
