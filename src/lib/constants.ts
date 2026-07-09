@@ -1,7 +1,8 @@
 export const PROJECT_LOCATIONS = [
   "Abu Dhabi",
-  "Al Ain",
-  "Al Dhafra",
+  "Madinat Al Riyad",
+  "Al Falah",
+  "Khalidiyah",
   "Yas Island",
   "Saadiyat Island",
   "Jubail Island",
@@ -12,6 +13,10 @@ export const PROJECT_LOCATIONS = [
   "Al Shamkha",
   "Masdar City",
   "Al Reem Island",
+  "Al Shawamekh",
+  "Zayed City",
+  "Al Ain",
+  "Beda Zayed-Al Dhafra",
 ] as const;
 
 export const NOC_OPTIONS = [
