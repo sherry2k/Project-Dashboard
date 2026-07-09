@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Eye, EyeOff, UserPlus, Loader2, Check } from "lucide-react";
@@ -14,21 +14,6 @@ export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [checkingAuth, setCheckingAuth] = useState(true);
-
-  useEffect(() => {
-    // Check if already logged in
-    fetch("/api/auth/me")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.user) {
-          router.push("/dashboard");
-        } else {
-          setCheckingAuth(false);
-        }
-      })
-      .catch(() => setCheckingAuth(false));
-  }, [router]);
 
   const passwordRequirements = [
     { met: password.length >= 6, text: "At least 6 characters" },
@@ -75,14 +60,6 @@ export default function SignUpPage() {
       setLoading(false);
     }
   };
-
-  if (checkingAuth) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-[#5E9E3A] to-[#4a8230] flex items-center justify-center">
-        <Loader2 size={40} className="animate-spin text-white" />
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#5E9E3A] to-[#4a8230] flex items-center justify-center p-4">

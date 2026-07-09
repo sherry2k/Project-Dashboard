@@ -9,12 +9,18 @@ import AddProjectModal from "@/components/AddProjectModal";
 import FilterSidebar from "@/components/FilterSidebar";
 import AuditPanel from "@/components/AuditPanel";
 import type { Project, ProjectStats, AuditLog } from "@/lib/types";
-import type { UserSession } from "@/lib/auth";
 import { Loader2 } from "lucide-react";
+
+interface UserInfo {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+}
 
 export default function Dashboard() {
   const router = useRouter();
-  const [user, setUser] = useState<UserSession | null>(null);
+  const [user, setUser] = useState<UserInfo | null>(null);
   const [authChecked, setAuthChecked] = useState(false);
   
   const [projects, setProjects] = useState<Project[]>([]);
@@ -32,20 +38,18 @@ export default function Dashboard() {
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
 
-  // Check authentication
+  // Get user info (middleware already ensures auth)
   useEffect(() => {
     fetch("/api/auth/me")
       .then((res) => res.json())
       .then((data) => {
         if (data.user) {
           setUser(data.user);
-          setAuthChecked(true);
-        } else {
-          router.push("/login");
         }
+        setAuthChecked(true);
       })
-      .catch(() => router.push("/login"));
-  }, [router]);
+      .catch(() => setAuthChecked(true));
+  }, []);
 
   const fetchProjects = useCallback(async () => {
     setLoading(true);
