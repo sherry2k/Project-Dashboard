@@ -32,7 +32,7 @@ export default function Header({
   onAddProject,
 }: HeaderProps) {
   return (
-    <header className="bg-navy text-white sticky top-0 z-50 shadow-lg no-print">
+    <header className="bg-[#518242] text-white sticky top-0 z-50 shadow-lg no-print">
       <div className="max-w-[1920px] mx-auto px-4 md:px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo & Company */}
