@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+@theme {
+  --color-navy: #0B3A63;
+  --color-navy-light: #0d4a7f;
+  --color-steel: #4B7EA8;
+  --color-steel-light: #6a9bc4;
+  --color-accent: #F59E0B;
+  --color-accent-light: #FBBF24;
+}
+
+:root {
+  --header-height: 64px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Table styles */
+.table-container {
+  overflow: auto;
+  position: relative;
+}
+
+.editable-cell {
+  cursor: text;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.15s;
+}
+
+.editable-cell:hover {
+  background-color: #f1f5f9;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out;
+}
+
+.animate-slideIn {
+  animation: slideIn 0.25s ease-out;
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.2s ease-out;
+}
+
+/* Modal overlay */
+.modal-overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+/* Status badge animation */
+.status-badge {
+  transition: all 0.2s;
+}
+
+.status-badge:hover {
+  transform: scale(1.05);
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  .table-container {
+    overflow: visible;
+  }
+}
