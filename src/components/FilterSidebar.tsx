@@ -38,7 +38,7 @@ function FilterSection({
             onClick={() => onChange(field, value === opt ? "" : opt)}
             className={`w-full text-left px-3 py-1.5 text-sm rounded-lg transition-colors ${
               value === opt
-                ? "bg-navy text-white font-medium"
+                ? "bg-[#5E9E3A] text-white font-medium"
                 : "text-slate-600 hover:bg-slate-100"
             }`}
           >
@@ -70,7 +70,7 @@ export default function FilterSidebar({ filters, onFilterChange, onClose }: Filt
         <div className="flex items-center gap-2">
           <h3 className="text-sm font-semibold text-slate-800">Filters</h3>
           {activeCount > 0 && (
-            <span className="text-xs bg-navy text-white px-1.5 py-0.5 rounded-full">{activeCount}</span>
+            <span className="text-xs bg-[#5E9E3A] text-white px-1.5 py-0.5 rounded-full">{activeCount}</span>
           )}
         </div>
         <div className="flex items-center gap-1">

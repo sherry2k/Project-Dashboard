@@ -114,7 +114,8 @@ export default function Dashboard() {
   };
 
   const handleStatFilter = (statusValue: string) => {
-    if (filters.status === statusValue) {
+    // Empty string means "show all" — clear the status filter
+    if (!statusValue || filters.status === statusValue) {
       setFilters((prev) => {
         const next = { ...prev };
         delete next.status;

@@ -35,7 +35,7 @@ function SelectField({
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-navy focus:border-navy bg-white"
+        className="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#5E9E3A] focus:border-[#5E9E3A] bg-white"
       >
         {options.map((opt) => (
           <option key={opt} value={opt}>{opt}</option>
@@ -70,7 +70,7 @@ function TextField({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         required={required}
-        className="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-navy focus:border-navy"
+        className="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#5E9E3A] focus:border-[#5E9E3A]"
       />
     </div>
   );
@@ -129,12 +129,12 @@ export default function AddProjectModal({ project, onSave, onClose }: AddProject
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="bg-gradient-to-r from-navy to-steel p-6 rounded-t-2xl flex items-center justify-between">
+        <div className="bg-gradient-to-r from-[#5E9E3A] to-[#4a8230] p-6 rounded-t-2xl flex items-center justify-between">
           <div>
             <h2 className="text-xl font-bold text-white">
               {project ? "Edit Project" : "Add New Project"}
             </h2>
-            <p className="text-blue-200 text-sm mt-1">
+            <p className="text-green-100 text-sm mt-1">
               {project ? "Update project details" : "Fill in the project details below"}
             </p>
           </div>
@@ -218,7 +218,7 @@ export default function AddProjectModal({ project, onSave, onClose }: AddProject
               onChange={(e) => updateField("remarks", e.target.value)}
               rows={3}
               placeholder="Add any notes or remarks..."
-              className="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-navy focus:border-navy resize-none"
+              className="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#5E9E3A] focus:border-[#5E9E3A] resize-none"
             />
           </div>
 
@@ -227,7 +227,7 @@ export default function AddProjectModal({ project, onSave, onClose }: AddProject
             {["Drawings", "Approval Documents", "3D Images"].map((type) => (
               <div key={type}>
                 <label className="block text-sm font-medium text-slate-700 mb-1.5">Upload {type}</label>
-                <div className="border-2 border-dashed border-slate-300 rounded-lg p-4 text-center hover:border-navy transition-colors cursor-pointer">
+                <div className="border-2 border-dashed border-slate-300 rounded-lg p-4 text-center hover:border-[#5E9E3A] transition-colors cursor-pointer">
                   <Upload size={20} className="mx-auto text-slate-400 mb-1" />
                   <p className="text-xs text-slate-500">Click to upload</p>
                 </div>
@@ -246,7 +246,7 @@ export default function AddProjectModal({ project, onSave, onClose }: AddProject
             </button>
             <button
               type="submit"
-              className="px-5 py-2.5 text-sm font-medium text-white bg-navy rounded-lg hover:bg-navy-light transition-colors flex items-center gap-2 shadow-md"
+              className="px-5 py-2.5 text-sm font-medium text-white bg-[#5E9E3A] rounded-lg hover:bg-[#5E9E3A]-light transition-colors flex items-center gap-2 shadow-md"
             >
               <Save size={16} />
               {project ? "Update Project" : "Add Project"}

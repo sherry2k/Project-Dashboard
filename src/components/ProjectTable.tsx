@@ -543,7 +543,7 @@ export default function ProjectTable({
       {viewProject && (
         <div className="fixed inset-0 z-50 modal-overlay flex items-center justify-center p-4" onClick={() => setViewProject(null)}>
           <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto animate-scaleIn" onClick={(e) => e.stopPropagation()}>
-            <div className="bg-gradient-to-r from-navy to-steel p-6 rounded-t-2xl">
+            <div className="bg-gradient-to-r from-[#5E9E3A] to-[#4a8230] p-6 rounded-t-2xl">
               <h2 className="text-xl font-bold text-white">Project Details</h2>
               <p className="text-blue-200 text-sm mt-1">{viewProject.projectNo}</p>
             </div>

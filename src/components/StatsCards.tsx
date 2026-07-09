@@ -19,8 +19,8 @@ interface StatsCardsProps {
 }
 
 const cards = [
-  { key: "total", label: "Total Projects", icon: FolderKanban, color: "from-navy to-steel", filterVal: "" },
-  { key: "active", label: "Active Projects", icon: Activity, color: "from-blue-500 to-blue-600", filterVal: "" },
+  { key: "total", label: "Total Projects", icon: FolderKanban, color: "from-[#5E9E3A] to-[#4a8230]", filterVal: "__clear__" },
+  { key: "active", label: "Active Projects", icon: Activity, color: "from-blue-500 to-blue-600", filterVal: "__clear__" },
   { key: "permitIssued", label: "Permit Issued", icon: CheckCircle2, color: "from-emerald-500 to-emerald-600", filterVal: "Permit Issued" },
   { key: "waitingOwner", label: "Waiting Owner", icon: Clock, color: "from-amber-500 to-amber-600", filterVal: "Waiting Owner" },
   { key: "waitingSoilReport", label: "Waiting Soil Report", icon: FileWarning, color: "from-orange-500 to-orange-600", filterVal: "Waiting Soil Report" },
@@ -35,14 +35,15 @@ export default function StatsCards({ stats, onFilter, activeFilter }: StatsCards
       {cards.map((card) => {
         const Icon = card.icon;
         const value = stats[card.key as keyof ProjectStats];
-        const isActive = card.filterVal && activeFilter === card.filterVal;
+        const isClearCard = card.filterVal === "__clear__";
+        const isActive = isClearCard ? !activeFilter : activeFilter === card.filterVal;
 
         return (
           <button
             key={card.key}
-            onClick={() => card.filterVal && onFilter(card.filterVal)}
+            onClick={() => onFilter(isClearCard ? "" : card.filterVal)}
             className={`relative bg-white rounded-xl p-4 shadow-sm border transition-all hover:shadow-md hover:-translate-y-0.5 text-left group ${
-              isActive ? "ring-2 ring-accent border-accent" : "border-slate-200"
+              isActive ? "ring-2 ring-[#5E9E3A] border-[#5E9E3A]" : "border-slate-200"
             }`}
           >
             <div className={`w-9 h-9 rounded-lg bg-gradient-to-br ${card.color} flex items-center justify-center mb-2 shadow-sm`}>
@@ -51,7 +52,7 @@ export default function StatsCards({ stats, onFilter, activeFilter }: StatsCards
             <p className="text-2xl font-bold text-slate-800">{value}</p>
             <p className="text-xs text-slate-500 mt-0.5 leading-tight">{card.label}</p>
             {isActive && (
-              <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-accent"></div>
+              <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-[#5E9E3A]"></div>
             )}
           </button>
         );

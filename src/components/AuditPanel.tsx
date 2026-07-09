@@ -29,7 +29,7 @@ export default function AuditPanel({ logs, onClose }: AuditPanelProps) {
     <div className="w-80 shrink-0 bg-white rounded-xl border border-slate-200 shadow-sm h-fit sticky top-20 animate-slideIn no-print max-h-[calc(100vh-120px)] overflow-y-auto">
       <div className="p-4 border-b border-slate-200 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Clock size={16} className="text-navy" />
+          <Clock size={16} className="text-[#5E9E3A]" />
           <h3 className="text-sm font-semibold text-slate-800">Activity Log</h3>
         </div>
         <button onClick={onClose} className="p-1 hover:bg-slate-100 rounded-lg transition-colors">
@@ -45,14 +45,14 @@ export default function AuditPanel({ logs, onClose }: AuditPanelProps) {
             {logs.map((log) => (
               <div key={log.id} className="border-l-2 border-blue-200 pl-3 pb-3">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xs font-medium text-navy">Project #{log.projectId}</span>
+                  <span className="text-xs font-medium text-[#5E9E3A]">Project #{log.projectId}</span>
                   <span className="text-xs text-slate-400">
                     {format(new Date(log.createdAt), "dd MMM HH:mm")}
                   </span>
                 </div>
                 <p className="text-xs text-slate-600">
                   <span className="font-medium">{log.editedBy}</span> changed{" "}
-                  <span className="font-medium text-navy">{fieldLabels[log.field] || log.field}</span>
+                  <span className="font-medium text-[#5E9E3A]">{fieldLabels[log.field] || log.field}</span>
                 </p>
                 <div className="mt-1 flex items-center gap-2 text-xs">
                   <span className="line-through text-slate-400 truncate max-w-[100px]" title={log.oldValue}>
