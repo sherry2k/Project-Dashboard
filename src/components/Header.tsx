@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   Search,
   Bell,
@@ -9,7 +10,16 @@ import {
   Plus,
   History,
   User,
+  LogOut,
+  ChevronDown,
 } from "lucide-react";
+
+interface UserSession {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+}
 
 interface HeaderProps {
   search: string;
@@ -19,6 +29,8 @@ interface HeaderProps {
   onShowFilters: () => void;
   onShowAudit: () => void;
   onAddProject: () => void;
+  user?: UserSession | null;
+  onLogout?: () => void;
 }
 
 export default function Header({
@@ -29,7 +41,10 @@ export default function Header({
   onShowFilters,
   onShowAudit,
   onAddProject,
+  user,
+  onLogout,
 }: HeaderProps) {
+  const [showUserMenu, setShowUserMenu] = useState(false);
   return (
     <header className="bg-[#5E9E3A] text-white sticky top-0 z-50 shadow-lg no-print">
       <div className="max-w-[1920px] mx-auto px-4 md:px-6">
@@ -43,7 +58,7 @@ export default function Header({
             />
             <div className="hidden sm:block">
               <h1 className="text-base font-bold leading-tight tracking-wide">Universal Building</h1>
-              <p className="text-xs text-blue-200 leading-tight">Engineering Consultants</p>
+              <p className="text-xs text-green-100 leading-tight">Engineering Consultants</p>
             </div>
           </div>
 
@@ -100,8 +115,48 @@ export default function Header({
               <span className="absolute top-1 right-1 w-2 h-2 bg-white rounded-full"></span>
             </button>
 
-            <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center ml-1 cursor-pointer hover:ring-2 hover:ring-white transition-all">
-              <User size={16} />
+            {/* User Menu */}
+            <div className="relative ml-1">
+              <button
+                onClick={() => setShowUserMenu(!showUserMenu)}
+                className="flex items-center gap-2 bg-white/10 hover:bg-white/20 rounded-lg px-2 py-1.5 transition-all"
+              >
+                <div className="w-7 h-7 bg-white/30 rounded-full flex items-center justify-center">
+                  <User size={14} />
+                </div>
+                {user && (
+                  <span className="text-sm font-medium hidden md:block max-w-[100px] truncate">
+                    {user.name.split(" ")[0]}
+                  </span>
+                )}
+                <ChevronDown size={14} className={`transition-transform ${showUserMenu ? "rotate-180" : ""}`} />
+              </button>
+
+              {showUserMenu && (
+                <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-xl shadow-xl border border-slate-200 py-2 z-50 animate-scaleIn">
+                  {user && (
+                    <div className="px-4 py-3 border-b border-slate-100">
+                      <p className="text-sm font-semibold text-slate-800">{user.name}</p>
+                      <p className="text-xs text-slate-500 truncate">{user.email}</p>
+                      <span className="inline-block mt-1 text-xs bg-[#5E9E3A]/10 text-[#5E9E3A] px-2 py-0.5 rounded-full capitalize">
+                        {user.role}
+                      </span>
+                    </div>
+                  )}
+                  {onLogout && (
+                    <button
+                      onClick={() => {
+                        setShowUserMenu(false);
+                        onLogout();
+                      }}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                    >
+                      <LogOut size={16} />
+                      Sign Out
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
