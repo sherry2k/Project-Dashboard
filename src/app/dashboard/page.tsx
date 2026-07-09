@@ -14,7 +14,7 @@ import { Loader2 } from "lucide-react";
 interface UserInfo {
   id: number;
   name: string;
-  email: string;
+  username: string;
   role: string;
 }
 

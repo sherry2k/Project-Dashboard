@@ -3,12 +3,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Eye, EyeOff, UserPlus, Loader2, Check } from "lucide-react";
+import { Eye, EyeOff, UserPlus, Loader2, Check, AtSign } from "lucide-react";
 
 export default function SignUpPage() {
   const router = useRouter();
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -16,13 +16,19 @@ export default function SignUpPage() {
   const [loading, setLoading] = useState(false);
 
   const passwordRequirements = [
-    { met: password.length >= 6, text: "At least 6 characters" },
+    { met: username.length >= 3, text: "Username at least 3 characters" },
+    { met: password.length >= 6, text: "Password at least 6 characters" },
     { met: password === confirmPassword && password.length > 0, text: "Passwords match" },
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+
+    if (username.length < 3) {
+      setError("Username must be at least 3 characters");
+      return;
+    }
 
     if (password !== confirmPassword) {
       setError("Passwords do not match");
@@ -37,13 +43,13 @@ export default function SignUpPage() {
     setLoading(true);
 
     try {
-      // First ensure DB tables exist
+      // Ensure DB tables exist
       await fetch("/api/setup");
 
       const res = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ name, username, password }),
       });
 
       const data = await res.json();
@@ -96,7 +102,7 @@ export default function SignUpPage() {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="John Doe"
+                placeholder="e.g. Ahmed Al Mansoori"
                 required
                 className="w-full border border-slate-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#5E9E3A] focus:border-[#5E9E3A] transition-all"
               />
@@ -104,16 +110,21 @@ export default function SignUpPage() {
 
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                Email Address
+                Username
               </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@company.com"
-                required
-                className="w-full border border-slate-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#5E9E3A] focus:border-[#5E9E3A] transition-all"
-              />
+              <div className="relative">
+                <AtSign size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value.replace(/\s/g, ""))}
+                  placeholder="e.g. ahmed.eng"
+                  required
+                  autoComplete="username"
+                  className="w-full border border-slate-300 rounded-lg pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#5E9E3A] focus:border-[#5E9E3A] transition-all"
+                />
+              </div>
+              <p className="text-xs text-slate-400 mt-1">Lowercase, no spaces. This is what you&apos;ll use to login.</p>
             </div>
 
             <div>
@@ -127,6 +138,7 @@ export default function SignUpPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   required
+                  autoComplete="new-password"
                   className="w-full border border-slate-300 rounded-lg px-4 py-3 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-[#5E9E3A] focus:border-[#5E9E3A] transition-all"
                 />
                 <button
@@ -149,11 +161,12 @@ export default function SignUpPage() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="••••••••"
                 required
+                autoComplete="new-password"
                 className="w-full border border-slate-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#5E9E3A] focus:border-[#5E9E3A] transition-all"
               />
             </div>
 
-            {/* Password Requirements */}
+            {/* Requirements */}
             <div className="space-y-2">
               {passwordRequirements.map((req, i) => (
                 <div key={i} className="flex items-center gap-2 text-sm">

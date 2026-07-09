@@ -3,11 +3,24 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
+    // Drop old users table that had email column and recreate with username
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF EXISTS (
+          SELECT 1 FROM information_schema.columns 
+          WHERE table_name = 'users' AND column_name = 'email'
+        ) THEN
+          DROP TABLE users CASCADE;
+        END IF;
+      END $$;
+    `);
+
     await pool.query(`
       CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
-        email VARCHAR(255) NOT NULL UNIQUE,
+        username VARCHAR(100) NOT NULL UNIQUE,
         password VARCHAR(255) NOT NULL,
         role VARCHAR(50) NOT NULL DEFAULT 'user',
         created_at TIMESTAMP NOT NULL DEFAULT NOW()

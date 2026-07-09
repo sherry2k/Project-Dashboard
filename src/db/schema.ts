@@ -3,7 +3,7 @@ import { pgTable, serial, text, timestamp, varchar, integer, boolean } from "dri
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
-  email: varchar("email", { length: 255 }).notNull().unique(),
+  username: varchar("username", { length: 100 }).notNull().unique(),
   password: varchar("password", { length: 255 }).notNull(),
   role: varchar("role", { length: 50 }).notNull().default("user"),
   createdAt: timestamp("created_at").notNull().defaultNow(),

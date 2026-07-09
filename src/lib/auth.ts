@@ -7,7 +7,7 @@ const key = new TextEncoder().encode(secretKey);
 export interface UserSession {
   id: number;
   name: string;
-  email: string;
+  username: string;
   role: string;
 }
 

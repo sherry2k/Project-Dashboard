@@ -8,25 +8,24 @@ import { createToken, setSessionCookie } from "@/lib/auth";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { email, password } = body;
+    const { username, password } = body;
 
-    // Validation
-    if (!email || !password) {
+    if (!username || !password) {
       return NextResponse.json(
-        { error: "Email and password are required" },
+        { error: "Username and password are required" },
         { status: 400 }
       );
     }
 
-    // Find user
+    // Find user by username
     const result = await db
       .select()
       .from(users)
-      .where(eq(users.email, email.toLowerCase()));
+      .where(eq(users.username, username.toLowerCase()));
 
     if (result.length === 0) {
       return NextResponse.json(
-        { error: "Invalid email or password" },
+        { error: "Invalid username or password" },
         { status: 401 }
       );
     }
@@ -38,7 +37,7 @@ export async function POST(request: NextRequest) {
 
     if (!isValidPassword) {
       return NextResponse.json(
-        { error: "Invalid email or password" },
+        { error: "Invalid username or password" },
         { status: 401 }
       );
     }
@@ -47,11 +46,10 @@ export async function POST(request: NextRequest) {
     const token = await createToken({
       id: user.id,
       name: user.name,
-      email: user.email,
+      username: user.username,
       role: user.role,
     });
 
-    // Set cookie
     await setSessionCookie(token);
 
     return NextResponse.json({
@@ -59,7 +57,7 @@ export async function POST(request: NextRequest) {
       user: {
         id: user.id,
         name: user.name,
-        email: user.email,
+        username: user.username,
         role: user.role,
       },
     });

@@ -17,7 +17,7 @@ import {
 interface UserSession {
   id: number;
   name: string;
-  email: string;
+  username: string;
   role: string;
 }
 
@@ -137,7 +137,7 @@ export default function Header({
                   {user && (
                     <div className="px-4 py-3 border-b border-slate-100">
                       <p className="text-sm font-semibold text-slate-800">{user.name}</p>
-                      <p className="text-xs text-slate-500 truncate">{user.email}</p>
+                      <p className="text-xs text-slate-500 truncate">@{user.username}</p>
                       <span className="inline-block mt-1 text-xs bg-[#5E9E3A]/10 text-[#5E9E3A] px-2 py-0.5 rounded-full capitalize">
                         {user.role}
                       </span>

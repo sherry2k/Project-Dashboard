@@ -8,12 +8,18 @@ import { createToken, setSessionCookie } from "@/lib/auth";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, password } = body;
+    const { name, username, password } = body;
 
-    // Validation
-    if (!name || !email || !password) {
+    if (!name || !username || !password) {
       return NextResponse.json(
-        { error: "Name, email, and password are required" },
+        { error: "Name, username, and password are required" },
+        { status: 400 }
+      );
+    }
+
+    if (username.length < 3) {
+      return NextResponse.json(
+        { error: "Username must be at least 3 characters" },
         { status: 400 }
       );
     }
@@ -25,15 +31,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if user already exists
+    // Check if username already exists
     const existingUser = await db
       .select()
       .from(users)
-      .where(eq(users.email, email.toLowerCase()));
+      .where(eq(users.username, username.toLowerCase()));
 
     if (existingUser.length > 0) {
       return NextResponse.json(
-        { error: "An account with this email already exists" },
+        { error: "This username is already taken" },
         { status: 400 }
       );
     }
@@ -46,7 +52,7 @@ export async function POST(request: NextRequest) {
       .insert(users)
       .values({
         name,
-        email: email.toLowerCase(),
+        username: username.toLowerCase(),
         password: hashedPassword,
         role: "user",
       })
@@ -58,11 +64,10 @@ export async function POST(request: NextRequest) {
     const token = await createToken({
       id: user.id,
       name: user.name,
-      email: user.email,
+      username: user.username,
       role: user.role,
     });
 
-    // Set cookie
     await setSessionCookie(token);
 
     return NextResponse.json({
@@ -70,7 +75,7 @@ export async function POST(request: NextRequest) {
       user: {
         id: user.id,
         name: user.name,
-        email: user.email,
+        username: user.username,
         role: user.role,
       },
     });
