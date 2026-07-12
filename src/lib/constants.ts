@@ -10,12 +10,16 @@ export const PROJECT_LOCATIONS = [
   "Khalifa City",
   "Al Reef",
   "Al Raha",
-  "Al Shamkha",
+  "Al Shamkhah",
+  "Al Samhah",
   "Masdar City",
-  "Al Reem Island",
+  "Shakhbout City",
+  "Al Bahyah",
   "Al Shawamekh",
+  "Al Reem Island",
   "Zayed City",
   "Al Ain",
+  "Liwa",
   "Beda Zayed-Al Dhafra",
 ] as const;
 
@@ -23,7 +27,7 @@ export const NOC_OPTIONS = [
   "Done",
   "Not Required",
   "Pending",
-  "Waiting",
+  "Waiting Payment",
   "Rejected",
 ] as const;
 
@@ -45,6 +49,7 @@ export const ARCHITECTURE_OPTIONS = [
 export const STRUCTURE_OPTIONS = [
   "Approved",
   "In Progress",
+  "Ready",
   "Comments",
   "Pending",
 ] as const;
