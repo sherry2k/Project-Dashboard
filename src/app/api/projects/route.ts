@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { projects, auditLogs } from "@/db/schema";
-import { eq, asc, ilike, or, and, sql } from "drizzle-orm";
+import { eq, desc, ilike, or, and, sql } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
     .select()
     .from(projects)
     .where(where)
-    .orderBy(asc(projects.createdAt));
+    .orderBy(desc(projects.createdAt));
 
   // Get stats
   const allProjects = await db.select().from(projects).where(eq(projects.archived, 0));
