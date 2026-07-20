@@ -136,7 +136,7 @@ export default function LoginPage() {
         </div>
 
         <p className="text-center text-green-100 text-sm mt-6">
-          © 2024 Universal Building Engineering Consultants
+          © 2026 Universal Building Engineering Consultants
         </p>
       </div>
     </div>
