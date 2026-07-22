@@ -7,8 +7,15 @@ const key = new TextEncoder().encode(secretKey);
 // Pages that don't require authentication
 const publicPaths = ["/login", "/signup", "/api/auth/login", "/api/auth/signup", "/api/auth/logout", "/api/setup", "/api/health"];
 
+// Pages that unapproved users can access
+const pendingAllowedPaths = ["/pending", "/api/auth/me", "/api/auth/logout"];
+
 function isPublicPath(pathname: string): boolean {
   return publicPaths.some((p) => pathname.startsWith(p)) || pathname.startsWith("/images") || pathname.startsWith("/_next");
+}
+
+function isPendingAllowedPath(pathname: string): boolean {
+  return pendingAllowedPaths.some((p) => pathname.startsWith(p));
 }
 
 export async function middleware(request: NextRequest) {
@@ -24,17 +31,35 @@ export async function middleware(request: NextRequest) {
 
   // No token → redirect to login
   if (!token) {
-    // Root path or dashboard → go to login
     const loginUrl = new URL("/login", request.url);
     return NextResponse.redirect(loginUrl);
   }
 
   // Verify token
   try {
-    await jwtVerify(token, key);
+    const { payload } = await jwtVerify(token, key);
+    const user = payload as { approved?: number; role?: string };
+
+    // Check if user is approved
+    const isApproved = user.approved === 1 || user.role === "admin";
+
+    // If not approved
+    if (!isApproved) {
+      // Allow access to pending page and logout
+      if (isPendingAllowedPath(pathname)) {
+        return NextResponse.next();
+      }
+      // Redirect to pending page
+      return NextResponse.redirect(new URL("/pending", request.url));
+    }
 
     // If user visits "/" → redirect to dashboard
     if (pathname === "/") {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
+
+    // If approved user visits pending page → redirect to dashboard
+    if (pathname === "/pending") {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
 
