@@ -48,6 +48,7 @@ export async function POST(request: NextRequest) {
       name: user.name,
       username: user.username,
       role: user.role,
+      approved: user.approved,
     });
 
     await setSessionCookie(token);
@@ -59,6 +60,7 @@ export async function POST(request: NextRequest) {
         name: user.name,
         username: user.username,
         role: user.role,
+        approved: user.approved,
       },
     });
   } catch (error) {
