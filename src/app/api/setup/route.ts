@@ -23,8 +23,20 @@ export async function GET() {
         username VARCHAR(100) NOT NULL UNIQUE,
         password VARCHAR(255) NOT NULL,
         role VARCHAR(50) NOT NULL DEFAULT 'user',
+        approved INTEGER NOT NULL DEFAULT 0,
         created_at TIMESTAMP NOT NULL DEFAULT NOW()
       );
+      
+      -- Add approved column if it doesn't exist (for existing tables)
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns 
+          WHERE table_name = 'users' AND column_name = 'approved'
+        ) THEN
+          ALTER TABLE users ADD COLUMN approved INTEGER NOT NULL DEFAULT 0;
+        END IF;
+      END $$;
 
       CREATE TABLE IF NOT EXISTS projects (
         id SERIAL PRIMARY KEY,
