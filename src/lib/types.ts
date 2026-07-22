@@ -23,6 +23,7 @@ export interface ProjectStats {
   permitIssued: number;
   waitingOwner: number;
   waitingSoilReport: number;
+  waitingPayment: number;
   projectCancelled: number;
   completed: number;
   inProgress: number;
