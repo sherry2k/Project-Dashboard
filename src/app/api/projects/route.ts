@@ -63,6 +63,7 @@ export async function GET(request: NextRequest) {
     permitIssued: allProjects.filter((p) => p.status === "Permit Issued").length,
     waitingOwner: allProjects.filter((p) => p.status === "Waiting Owner").length,
     waitingSoilReport: allProjects.filter((p) => p.status === "Waiting Soil Report").length,
+    waitingPayment: allProjects.filter((p) => p.noc === "Waiting Payment").length,
     projectCancelled: allProjects.filter((p) => p.status === "Project Cancelled").length,
     completed: allProjects.filter((p) => p.status === "Completed").length,
     inProgress: allProjects.filter((p) => p.status === "In Progress").length,
