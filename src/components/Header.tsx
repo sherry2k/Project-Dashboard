@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import {
   Search,
   Bell,
@@ -12,6 +13,7 @@ import {
   User,
   LogOut,
   ChevronDown,
+  Shield,
 } from "lucide-react";
 
 interface UserSession {
@@ -142,6 +144,16 @@ export default function Header({
                         {user.role}
                       </span>
                     </div>
+                  )}
+                  {user?.role === "admin" && (
+                    <Link
+                      href="/admin"
+                      onClick={() => setShowUserMenu(false)}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-purple-600 hover:bg-purple-50 transition-colors"
+                    >
+                      <Shield size={16} />
+                      User Management
+                    </Link>
                   )}
                   {onLogout && (
                     <button
