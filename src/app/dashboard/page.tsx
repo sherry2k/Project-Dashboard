@@ -26,7 +26,7 @@ export default function Dashboard() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [stats, setStats] = useState<ProjectStats>({
     total: 0, active: 0, permitIssued: 0, waitingOwner: 0,
-    waitingSoilReport: 0, projectCancelled: 0, completed: 0, inProgress: 0,
+    waitingSoilReport: 0, waitingPayment: 0, projectCancelled: 0, completed: 0, inProgress: 0,
   });
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -66,7 +66,7 @@ export default function Dashboard() {
     setProjects(data.projects || []);
     setStats(data.stats || {
       total: 0, active: 0, permitIssued: 0, waitingOwner: 0,
-      waitingSoilReport: 0, projectCancelled: 0, completed: 0, inProgress: 0,
+      waitingSoilReport: 0, waitingPayment: 0, projectCancelled: 0, completed: 0, inProgress: 0,
     });
     setLoading(false);
   }, [search, filters]);
@@ -143,15 +143,45 @@ export default function Dashboard() {
     setShowAddModal(false);
   };
 
-  const handleStatFilter = (statusValue: string) => {
-    if (!statusValue || filters.status === statusValue) {
+  const handleStatFilter = (statusValue: string, isNocFilter?: boolean) => {
+    if (!statusValue) {
+      // Clear all filters
       setFilters((prev) => {
         const next = { ...prev };
         delete next.status;
+        delete next.noc;
         return next;
       });
+    } else if (isNocFilter) {
+      // NOC filter (Waiting Payment)
+      if (filters.noc === statusValue) {
+        setFilters((prev) => {
+          const next = { ...prev };
+          delete next.noc;
+          return next;
+        });
+      } else {
+        setFilters((prev) => {
+          const next = { ...prev };
+          delete next.status;
+          return { ...next, noc: statusValue };
+        });
+      }
     } else {
-      setFilters((prev) => ({ ...prev, status: statusValue }));
+      // Status filter
+      if (filters.status === statusValue) {
+        setFilters((prev) => {
+          const next = { ...prev };
+          delete next.status;
+          return next;
+        });
+      } else {
+        setFilters((prev) => {
+          const next = { ...prev };
+          delete next.noc;
+          return { ...next, status: statusValue };
+        });
+      }
     }
   };
 
@@ -188,7 +218,7 @@ export default function Dashboard() {
         />
 
         <main className="px-4 md:px-6 pt-4 pb-8 max-w-[1920px] mx-auto">
-          <StatsCards stats={stats} onFilter={handleStatFilter} activeFilter={filters.status || ""} />
+          <StatsCards stats={stats} onFilter={handleStatFilter} activeFilter={filters.status || ""} activeNocFilter={filters.noc || ""} />
 
           <div className="flex gap-4 mt-6">
             {showFilters && (
