@@ -4,6 +4,7 @@ export const PROJECT_LOCATIONS = [
   "Al Falah",
   "Khalidiyah",
   "Yas Island",
+  "Mushrif",
   "Saadiyat Island",
   "Jubail Island",
   "Mohammed Bin Zayed City",
@@ -22,7 +23,6 @@ export const PROJECT_LOCATIONS = [
   "Liwa",
   "Beda Zayed-Al Dhafra",
 ] as const;
-
 export const NOC_OPTIONS = [
   "Done",
   "Not Required",
@@ -49,7 +49,6 @@ export const ARCHITECTURE_OPTIONS = [
 export const STRUCTURE_OPTIONS = [
   "Approved",
   "In Progress",
-  "Ready",
   "Comments",
   "Pending",
 ] as const;
@@ -61,6 +60,7 @@ export const STATUS_OPTIONS = [
   "Soil Report Ready",
   "Waiting Tender",
   "In Progress",
+  "Pending",
   "Project Cancelled",
   "Completed",
   "On Hold",
@@ -83,6 +83,7 @@ export const NOC_COLORS: Record<string, { bg: string; text: string }> = {
   "Not Required": { bg: "bg-gray-100", text: "text-gray-600" },
   "Pending": { bg: "bg-amber-100", text: "text-amber-800" },
   "Waiting": { bg: "bg-orange-100", text: "text-orange-800" },
+  "Waiting Payment": { bg: "bg-red-500", text: "text-white" },
   "Rejected": { bg: "bg-red-100", text: "text-red-800" },
 };
 
@@ -107,3 +108,4 @@ export const PERSPECTIVE_COLORS: Record<string, { bg: string; text: string }> = 
   "In Progress": { bg: "bg-blue-100", text: "text-blue-800" },
   "Pending": { bg: "bg-amber-100", text: "text-amber-800" },
 };
+ 
