@@ -9,6 +9,7 @@ export interface UserSession {
   name: string;
   username: string;
   role: string;
+  approved: number;
 }
 
 export async function createToken(user: UserSession): Promise<string> {
