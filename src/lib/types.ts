@@ -15,6 +15,7 @@ export interface Project {
   createdAt: string;
   updatedAt: string;
   lastEditedBy: string;
+  fieldEditors?: Record<string, string>;
 }
 
 export interface ProjectStats {
@@ -23,6 +24,7 @@ export interface ProjectStats {
   permitIssued: number;
   waitingOwner: number;
   waitingSoilReport: number;
+  waitingTender: number;
   waitingPayment: number;
   projectCancelled: number;
   completed: number;
