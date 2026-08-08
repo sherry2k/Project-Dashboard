@@ -96,6 +96,19 @@ function InlineDropdown({
   );
 }
 
+/** Small username tag showing who last edited this specific cell */
+function EditorTag({ name }: { name?: string }) {
+  if (!name) return null;
+  return (
+    <span
+      className="block text-[10px] leading-none text-slate-400 mt-0.5 pl-2 truncate max-w-[140px]"
+      title={`Last edited by ${name}`}
+    >
+      @{name}
+    </span>
+  );
+}
+
 function InlineTextEdit({
   value,
   onSave,
@@ -404,11 +417,11 @@ export default function ProjectTable({
                             onClose={() => setEditingCell(null)}
                           />
                         ) : (
-                          <div
-                            className="editable-cell text-sm text-slate-800"
-                            onDoubleClick={() => setEditingCell({ rowId: project.id, field })}
-                          >
-                            {project[field] || <span className="text-slate-300">—</span>}
+                          <div onDoubleClick={() => setEditingCell({ rowId: project.id, field })}>
+                            <div className="editable-cell text-sm text-slate-800">
+                              {project[field] || <span className="text-slate-300">—</span>}
+                            </div>
+                            <EditorTag name={project.fieldEditors?.[field]} />
                           </div>
                         )}
                       </td>
@@ -426,14 +439,17 @@ export default function ProjectTable({
                           />
                         ) : (
                           <div
-                            className="editable-cell cursor-pointer"
+                            className="cursor-pointer"
                             onDoubleClick={() => setEditingCell({ rowId: project.id, field })}
                           >
-                            {badgeFields[field] ? (
-                              <StatusBadge value={project[field]} colors={badgeFields[field]} />
-                            ) : (
-                              <span className="text-sm text-slate-700">{project[field]}</span>
-                            )}
+                            <div className="editable-cell">
+                              {badgeFields[field] ? (
+                                <StatusBadge value={project[field]} colors={badgeFields[field]} />
+                              ) : (
+                                <span className="text-sm text-slate-700">{project[field]}</span>
+                              )}
+                            </div>
+                            <EditorTag name={project.fieldEditors?.[field]} />
                           </div>
                         )}
                       </td>
@@ -448,11 +464,11 @@ export default function ProjectTable({
                           onClose={() => setEditingCell(null)}
                         />
                       ) : (
-                        <div
-                          className="editable-cell text-sm text-slate-700"
-                          onDoubleClick={() => setEditingCell({ rowId: project.id, field: "contractor" })}
-                        >
-                          {project.contractor || <span className="text-slate-300">—</span>}
+                        <div onDoubleClick={() => setEditingCell({ rowId: project.id, field: "contractor" })}>
+                          <div className="editable-cell text-sm text-slate-700">
+                            {project.contractor || <span className="text-slate-300">—</span>}
+                          </div>
+                          <EditorTag name={project.fieldEditors?.contractor} />
                         </div>
                       )}
                     </td>
@@ -466,12 +482,14 @@ export default function ProjectTable({
                           onClose={() => setEditingCell(null)}
                         />
                       ) : (
-                        <div
-                          className="editable-cell text-sm text-slate-600 max-w-[200px] truncate"
-                          onDoubleClick={() => setEditingCell({ rowId: project.id, field: "remarks" })}
-                          title={project.remarks}
-                        >
-                          {project.remarks || <span className="text-slate-300">—</span>}
+                        <div onDoubleClick={() => setEditingCell({ rowId: project.id, field: "remarks" })}>
+                          <div
+                            className="editable-cell text-sm text-slate-600 max-w-[200px] truncate"
+                            title={project.remarks}
+                          >
+                            {project.remarks || <span className="text-slate-300">—</span>}
+                          </div>
+                          <EditorTag name={project.fieldEditors?.remarks} />
                         </div>
                       )}
                     </td>
