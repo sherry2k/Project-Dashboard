@@ -1,4 +1,4 @@
-import { db } from "@/db";
+import { db, pool } from "@/db";
 import { projects, auditLogs } from "@/db/schema";
 import { eq, desc, ilike, or, and, sql } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
@@ -49,11 +49,36 @@ export async function GET(request: NextRequest) {
 
   const where = conditions.length > 0 ? and(...conditions) : undefined;
 
-  const result = await db
+  const rows = await db
     .select()
     .from(projects)
     .where(where)
     .orderBy(desc(projects.createdAt));
+
+  // Latest editor per (project, field) so each cell can show who touched it
+  const editorMap: Record<number, Record<string, string>> = {};
+  try {
+    const editorRows = await pool.query<{
+      project_id: number;
+      field: string;
+      edited_by: string;
+    }>(
+      `SELECT DISTINCT ON (project_id, field) project_id, field, edited_by
+       FROM audit_logs
+       ORDER BY project_id, field, created_at DESC`
+    );
+    for (const r of editorRows.rows) {
+      if (!editorMap[r.project_id]) editorMap[r.project_id] = {};
+      editorMap[r.project_id][r.field] = r.edited_by;
+    }
+  } catch {
+    // audit table may not exist yet — ignore
+  }
+
+  const result = rows.map((p) => ({
+    ...p,
+    fieldEditors: editorMap[p.id] || {},
+  }));
 
   // Get stats
   const allProjects = await db.select().from(projects).where(eq(projects.archived, 0));
@@ -63,6 +88,7 @@ export async function GET(request: NextRequest) {
     permitIssued: allProjects.filter((p) => p.status === "Permit Issued").length,
     waitingOwner: allProjects.filter((p) => p.status === "Waiting Owner").length,
     waitingSoilReport: allProjects.filter((p) => p.status === "Waiting Soil Report").length,
+    waitingTender: allProjects.filter((p) => p.status === "Waiting Tender").length,
     waitingPayment: allProjects.filter((p) => p.noc === "Waiting Payment").length,
     projectCancelled: allProjects.filter((p) => p.status === "Project Cancelled").length,
     completed: allProjects.filter((p) => p.status === "Completed").length,
@@ -88,6 +114,7 @@ export async function POST(request: NextRequest) {
       status: body.status || "In Progress",
       contractor: body.contractor || "",
       remarks: body.remarks || "",
+      lastEditedBy: body.editedBy || "Admin",
     })
     .returning();
 
