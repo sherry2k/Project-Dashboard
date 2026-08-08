@@ -26,7 +26,7 @@ export default function Dashboard() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [stats, setStats] = useState<ProjectStats>({
     total: 0, active: 0, permitIssued: 0, waitingOwner: 0,
-    waitingSoilReport: 0, waitingPayment: 0, projectCancelled: 0, completed: 0, inProgress: 0,
+    waitingSoilReport: 0, waitingTender: 0, waitingPayment: 0, projectCancelled: 0, completed: 0, inProgress: 0,
   });
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -66,7 +66,7 @@ export default function Dashboard() {
     setProjects(data.projects || []);
     setStats(data.stats || {
       total: 0, active: 0, permitIssued: 0, waitingOwner: 0,
-      waitingSoilReport: 0, waitingPayment: 0, projectCancelled: 0, completed: 0, inProgress: 0,
+      waitingSoilReport: 0, waitingTender: 0, waitingPayment: 0, projectCancelled: 0, completed: 0, inProgress: 0,
     });
     setLoading(false);
   }, [search, filters]);
@@ -99,7 +99,7 @@ export default function Dashboard() {
     await fetch("/api/projects", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
+      body: JSON.stringify({ ...data, editedBy: user?.username || "unknown" }),
     });
     setShowAddModal(false);
     fetchProjects();
@@ -109,7 +109,7 @@ export default function Dashboard() {
     await fetch(`/api/projects/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...data, editedBy: user?.name || "Unknown" }),
+      body: JSON.stringify({ ...data, editedBy: user?.username || "unknown" }),
     });
     fetchProjects();
   };
