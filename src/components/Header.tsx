@@ -48,7 +48,7 @@ export default function Header({
 }: HeaderProps) {
   const [showUserMenu, setShowUserMenu] = useState(false);
   return (
-    <header className="bg-[#5E9E3A] text-white sticky top-0 z-50 shadow-lg no-print">
+    <header className="bg-[#5E9E3A] text-white sticky top-0 z-50 shadow-xl no-print backdrop-blur-md border-b border-white/10">
       <div className="max-w-[1920px] mx-auto px-4 md:px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo & Company */}
