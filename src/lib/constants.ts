@@ -27,6 +27,7 @@ export const NOC_OPTIONS = [
   "Done",
   "Not Required",
   "Pending",
+  "Waiting",
   "Waiting Payment",
   "Rejected",
 ] as const;
@@ -54,19 +55,23 @@ export const STRUCTURE_OPTIONS = [
 ] as const;
 
 export const STATUS_OPTIONS = [
+  "Pending",
   "Permit Issued",
   "Waiting Owner",
   "Waiting Soil Report",
   "Soil Report Ready",
   "Waiting Tender",
   "In Progress",
-  "Pending",
   "Project Cancelled",
   "Completed",
   "On Hold",
 ] as const;
 
+// Prominent highlighted style used for every "Pending" value
+const PENDING_STYLE = { bg: "bg-amber-400", text: "text-amber-950 font-semibold" };
+
 export const STATUS_COLORS: Record<string, { bg: string; text: string; dot: string }> = {
+  "Pending": { ...PENDING_STYLE, dot: "bg-amber-700" },
   "Permit Issued": { bg: "bg-emerald-100", text: "text-emerald-800", dot: "bg-emerald-500" },
   "Waiting Owner": { bg: "bg-amber-100", text: "text-amber-800", dot: "bg-amber-500" },
   "Waiting Soil Report": { bg: "bg-orange-100", text: "text-orange-800", dot: "bg-orange-500" },
@@ -81,7 +86,7 @@ export const STATUS_COLORS: Record<string, { bg: string; text: string; dot: stri
 export const NOC_COLORS: Record<string, { bg: string; text: string }> = {
   "Done": { bg: "bg-emerald-100", text: "text-emerald-800" },
   "Not Required": { bg: "bg-gray-100", text: "text-gray-600" },
-  "Pending": { bg: "bg-amber-100", text: "text-amber-800" },
+  "Pending": PENDING_STYLE,
   "Waiting": { bg: "bg-orange-100", text: "text-orange-800" },
   "Waiting Payment": { bg: "bg-red-500", text: "text-white" },
   "Rejected": { bg: "bg-red-100", text: "text-red-800" },
@@ -91,7 +96,7 @@ export const ARCH_COLORS: Record<string, { bg: string; text: string }> = {
   "Approved": { bg: "bg-emerald-100", text: "text-emerald-800" },
   "Ready": { bg: "bg-blue-100", text: "text-blue-800" },
   "Comments": { bg: "bg-amber-100", text: "text-amber-800" },
-  "Pending": { bg: "bg-orange-100", text: "text-orange-800" },
+  "Pending": PENDING_STYLE,
   "In Progress": { bg: "bg-purple-100", text: "text-purple-800" },
 };
 
@@ -99,13 +104,17 @@ export const STRUCT_COLORS: Record<string, { bg: string; text: string }> = {
   "Approved": { bg: "bg-emerald-100", text: "text-emerald-800" },
   "In Progress": { bg: "bg-blue-100", text: "text-blue-800" },
   "Comments": { bg: "bg-amber-100", text: "text-amber-800" },
-  "Pending": { bg: "bg-orange-100", text: "text-orange-800" },
+  "Pending": PENDING_STYLE,
 };
 
 export const PERSPECTIVE_COLORS: Record<string, { bg: string; text: string }> = {
   "Ready": { bg: "bg-emerald-100", text: "text-emerald-800" },
   "Not Required": { bg: "bg-gray-100", text: "text-gray-600" },
   "In Progress": { bg: "bg-blue-100", text: "text-blue-800" },
-  "Pending": { bg: "bg-amber-100", text: "text-amber-800" },
+  "Pending": PENDING_STYLE,
 };
+
+
+
+
  
