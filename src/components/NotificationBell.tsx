@@ -18,6 +18,7 @@ const FIELD_LABELS: Record<string, string> = {
   contractor: "Contractor",
   remarks: "Remarks",
   archived: "Archived",
+  created: "created a project",
 };
 
 interface NotificationBellProps {
