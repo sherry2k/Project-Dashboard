@@ -18,8 +18,7 @@ const FIELD_LABELS: Record<string, string> = {
   contractor: "Contractor",
   remarks: "Remarks",
   archived: "Archived",
-  created: "created a project",
-};
+  };
 
 interface NotificationBellProps {
   notifications: NotificationItem[];
@@ -142,36 +141,48 @@ export default function NotificationBell({
                       >
                         {(n.editedBy || "?").slice(0, 2)}
                       </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-xs text-slate-700 leading-relaxed">
-                          <span className="font-semibold text-slate-900">@{n.editedBy}</span>{" "}
-                          updated{" "}
-                          <span className="font-medium text-[#5E9E3A]">
-                            {FIELD_LABELS[n.field] || n.field}
-                          </span>{" "}
-                          on{" "}
-                          <span className="font-medium text-slate-800">
-                            {n.projectNo}
-                          </span>
-                          {n.ownerName ? (
-                            <span className="text-slate-500"> ({n.ownerName})</span>
-                          ) : null}
-                        </p>
-                        <div className="mt-1 flex items-center gap-1.5 text-[11px] min-w-0">
-                          <span
-                            className="line-through text-slate-400 truncate max-w-[110px]"
-                            title={n.oldValue}
-                          >
-                            {n.oldValue || "(empty)"}
-                          </span>
-                          <span className="text-slate-300 shrink-0">→</span>
-                          <span
-                            className="text-emerald-600 font-medium truncate max-w-[110px]"
-                            title={n.newValue}
-                          >
-                            {n.newValue || "(empty)"}
-                          </span>
-                        </div>
+                     {n.field === "created" ? (
++                          <p className="text-xs text-slate-700 leading-relaxed">
++                            <span className="font-semibold text-slate-900">@{n.editedBy}</span>{" "}
++                            added a new project{" "}
++                            <span className="font-medium text-slate-800">{n.projectNo}</span>
++                            {n.ownerName ? (
++                              <span className="text-slate-500"> ({n.ownerName})</span>
++                            ) : null}
++                          </p>
++                        ) : (
++                          <>
++                            <p className="text-xs text-slate-700 leading-relaxed">
++                              <span className="font-semibold text-slate-900">@{n.editedBy}</span>{" "}
++                              updated{" "}
++                              <span className="font-medium text-[#5E9E3A]">
++                                {FIELD_LABELS[n.field] || n.field}
++                              </span>{" "}
++                              on{" "}
++                              <span className="font-medium text-slate-800">
++                                {n.projectNo}
++                              </span>
++                              {n.ownerName ? (
++                                <span className="text-slate-500"> ({n.ownerName})</span>
++                              ) : null}
++                            </p>
++                            <div className="mt-1 flex items-center gap-1.5 text-[11px] min-w-0">
++                              <span
++                                className="line-through text-slate-400 truncate max-w-[110px]"
++                                title={n.oldValue}
++                              >
++                                {n.oldValue || "(empty)"}
++                              </span>
++                              <span className="text-slate-300 shrink-0">→</span>
++                              <span
++                                className="text-emerald-600 font-medium truncate max-w-[110px]"
++                                title={n.newValue}
++                              >
++                                {n.newValue || "(empty)"}
++                              </span>
++                            </div>
++                          </>
++                        )}
                         <p className="mt-1 text-[10px] text-slate-400">{relativeTime(n.createdAt)}</p>
                       </div>
                       {isUnread && (
