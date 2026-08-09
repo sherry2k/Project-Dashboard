@@ -4,9 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import {
   Search,
-  Bell,
-  Moon,
-  Sun,
   Filter,
   Plus,
   History,
@@ -15,6 +12,8 @@ import {
   ChevronDown,
   Shield,
 } from "lucide-react";
+import NotificationBell from "./NotificationBell";
+import type { NotificationItem } from "@/lib/types";
 
 interface UserSession {
   id: number;
@@ -26,8 +25,6 @@ interface UserSession {
 interface HeaderProps {
   search: string;
   onSearchChange: (value: string) => void;
-  darkMode: boolean;
-  onToggleDarkMode: () => void;
   onShowFilters: () => void;
   onShowAudit: () => void;
   onAddProject: () => void;
@@ -45,6 +42,11 @@ export default function Header({
   onAddProject,
   user,
   onLogout,
+  notifications = [],
+  unreadCount = 0,
+  onMarkNotificationsRead,
+
+  
 }: HeaderProps) {
   const [showUserMenu, setShowUserMenu] = useState(false);
   return (
@@ -104,18 +106,10 @@ export default function Header({
               <History size={18} />
             </button>
 
-            <button
-              onClick={onToggleDarkMode}
-              className="p-2 rounded-lg hover:bg-white/10 transition-colors"
-              title="Toggle Theme"
-            >
-              {darkMode ? <Sun size={18} /> : <Moon size={18} />}
-            </button>
-
-            <button className="p-2 rounded-lg hover:bg-white/10 transition-colors relative" title="Notifications">
-              <Bell size={18} />
-              <span className="absolute top-1 right-1 w-2 h-2 bg-white rounded-full"></span>
-            </button>
+           <NotificationBell notifications={notifications}
+             unreadCount={unreadCount}
+           onMarkAllRead={() => onMarkNotificationsRead?.()}
+              />
 
             {/* User Menu */}
             <div className="relative ml-1">
