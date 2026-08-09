@@ -1,7 +1,10 @@
 import { db, pool } from "@/db";
-import { projects, auditLogs } from "@/db/schema";
-import { eq, desc, ilike, or, and, sql } from "drizzle-orm";
+import { projects } from "@/db/schema";
+import { eq, desc, ilike, or, and, notInArray } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
+
+/** Statuses that are NOT considered "active" work */
+const INACTIVE_STATUSES = ["Project Cancelled", "Completed", "On Hold"];
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -12,11 +15,17 @@ export async function GET(request: NextRequest) {
   const architecture = searchParams.get("architecture") || "";
   const structure = searchParams.get("structure") || "";
   const showArchived = searchParams.get("archived") === "true";
+  const activeOnly = searchParams.get("activeOnly") === "true";
 
   const conditions = [];
 
   if (!showArchived) {
     conditions.push(eq(projects.archived, 0));
+  }
+
+  // "Active Projects" stat card → everything that is still being worked on
+  if (activeOnly) {
+    conditions.push(notInArray(projects.status, INACTIVE_STATUSES));
   }
 
   if (search) {
