@@ -22,6 +22,7 @@ const fieldLabels: Record<string, string> = {
   contractor: "Contractor",
   remarks: "Remarks",
   archived: "Archived",
+  created: "Project Created",
 };
 
 export default function AuditPanel({ logs, onClose }: AuditPanelProps) {
