@@ -35,8 +35,6 @@ interface HeaderProps {
 export default function Header({
   search,
   onSearchChange,
-  darkMode,
-  onToggleDarkMode,
   onShowFilters,
   onShowAudit,
   onAddProject,
