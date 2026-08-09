@@ -1,5 +1,5 @@
 import { db, pool } from "@/db";
-import { projects } from "@/db/schema";
+import { projects, auditLogs } from "@/db/schema";
 import { eq, desc, ilike, or, and, notInArray } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
