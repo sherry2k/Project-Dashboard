@@ -207,8 +207,6 @@ export default function Dashboard() {
         <Header
           search={search}
           onSearchChange={setSearch}
-          darkMode={darkMode}
-          onToggleDarkMode={() => setDarkMode(!darkMode)}
           onShowFilters={() => setShowFilters(!showFilters)}
           onShowAudit={() => setShowAudit(!showAudit)}
           onAddProject={() => { setEditingProject(null); setShowAddModal(true); }}
