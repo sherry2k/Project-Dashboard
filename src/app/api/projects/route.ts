@@ -93,7 +93,7 @@ export async function GET(request: NextRequest) {
   const allProjects = await db.select().from(projects).where(eq(projects.archived, 0));
   const stats = {
     total: allProjects.length,
-    active: allProjects.filter((p) => !["Project Cancelled", "Completed", "On Hold"].includes(p.status)).length,
+    active: allProjects.filter((p) => !INACTIVE_STATUSES.includes(p.status)).length,
     permitIssued: allProjects.filter((p) => p.status === "Permit Issued").length,
     waitingOwner: allProjects.filter((p) => p.status === "Waiting Owner").length,
     waitingSoilReport: allProjects.filter((p) => p.status === "Waiting Soil Report").length,
