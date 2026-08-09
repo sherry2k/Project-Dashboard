@@ -88,6 +88,21 @@ body {
   animation: scaleIn 0.2s ease-out;
 }
 
+/* Notification bell attention shake */
+@keyframes bellShake {
+  0%, 60%, 100% { transform: rotate(0deg); }
+  65% { transform: rotate(14deg); }
+  70% { transform: rotate(-12deg); }
+  75% { transform: rotate(10deg); }
+  80% { transform: rotate(-8deg); }
+  85% { transform: rotate(5deg); }
+  90% { transform: rotate(-3deg); }
+}
+
+.animate-bellShake {
+  animation: bellShake 2.2s ease-in-out infinite;
+  transform-origin: top center;
+}
 /* Modal overlay */
 .modal-overlay {
   background-color: rgba(0, 0, 0, 0.5);
