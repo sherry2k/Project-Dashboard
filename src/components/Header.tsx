@@ -2,50 +2,51 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import {
-  Search,
-  Bell,
-  Moon,
-  Sun,
-  Filter,
-  Plus,
-  History,
-  User,
-  LogOut,
-  ChevronDown,
-  Shield,
-} from "lucide-react";
-
-interface UserSession {
-  id: number;
-  name: string;
-  username: string;
-  role: string;
-}
-
-interface HeaderProps {
-  search: string;
-  onSearchChange: (value: string) => void;
-  darkMode: boolean;
-  onToggleDarkMode: () => void;
-  onShowFilters: () => void;
-  onShowAudit: () => void;
-  onAddProject: () => void;
-  user?: UserSession | null;
-  onLogout?: () => void;
-}
+ import {
+   Search,
+-  Bell,
+-  Moon,
+-  Sun,
+   Filter,
+   Plus,
+   History,
+   ChevronDown,
+   Shield,
+ } from "lucide-react";
++import NotificationBell from "./NotificationBell";
++import type { NotificationItem } from "@/lib/types";
+ 
+ interface UserSession {
+   id: number;
+  interface HeaderProps {
+   search: string;
+   onSearchChange: (value: string) => void;
+-  darkMode: boolean;
+-  onToggleDarkMode: () => void;
+   onShowFilters: () => void;
+   onShowAudit: () => void;
+   onAddProject: () => void;
+   user?: UserSession | null;
+   onLogout?: () => void;
++  notifications?: NotificationItem[];
++  unreadCount?: number;
++  onMarkNotificationsRead?: () => void;
+ }
 
 export default function Header({
-  search,
-  onSearchChange,
-  darkMode,
-  onToggleDarkMode,
-  onShowFilters,
-  onShowAudit,
-  onAddProject,
-  user,
-  onLogout,
-}: HeaderProps) {
+   search,
+   onSearchChange,
+-  darkMode,
+-  onToggleDarkMode,
+   onShowFilters,
+   onShowAudit,
+   onAddProject,
+   user,
+   onLogout,
++  notifications = [],
++  unreadCount = 0,
++  onMarkNotificationsRead,
+ }: HeaderProps) {
   const [showUserMenu, setShowUserMenu] = useState(false);
   return (
     <header className="bg-[#5E9E3A] text-white sticky top-0 z-50 shadow-xl no-print backdrop-blur-md border-b border-white/10">
@@ -105,17 +106,22 @@ export default function Header({
             </button>
 
             <button
-              onClick={onToggleDarkMode}
-              className="p-2 rounded-lg hover:bg-white/10 transition-colors"
-              title="Toggle Theme"
-            >
-              {darkMode ? <Sun size={18} /> : <Moon size={18} />}
-            </button>
-
-            <button className="p-2 rounded-lg hover:bg-white/10 transition-colors relative" title="Notifications">
-              <Bell size={18} />
-              <span className="absolute top-1 right-1 w-2 h-2 bg-white rounded-full"></span>
-            </button>
+-              onClick={onToggleDarkMode}
+-              className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+-              title="Toggle Theme"
+-            >
+-              {darkMode ? <Sun size={18} /> : <Moon size={18} />}
+-            </button>
+-
+-            <button className="p-2 rounded-lg hover:bg-white/10 transition-colors relative" title="Notifications">
+-              <Bell size={18} />
+-              <span className="absolute top-1 right-1 w-2 h-2 bg-white rounded-full"></span>
+-            </button>
++            <NotificationBell
++              notifications={notifications}
++              unreadCount={unreadCount}
++              onMarkAllRead={() => onMarkNotificationsRead?.()}
++            />
 
             {/* User Menu */}
             <div className="relative ml-1">
