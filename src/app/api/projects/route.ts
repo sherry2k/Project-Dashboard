@@ -124,9 +124,22 @@ export async function POST(request: NextRequest) {
       status: body.status || "In Progress",
       contractor: body.contractor || "",
       remarks: body.remarks || "",
-      lastEditedBy: body.editedBy || "Admin",
+      lastEditedBy: editedBy,
     })
     .returning();
+
+  // Record creation so it shows up in notifications / activity log
+  try {
+    await db.insert(auditLogs).values({
+      projectId: result[0].id,
+      field: "created",
+      oldValue: "",
+      newValue: result[0].projectNo || result[0].ownerName || "New project",
+      editedBy,
+    });
+  } catch {
+    // audit table may not exist yet — ignore
+  }
 
   return NextResponse.json(result[0], { status: 201 });
 }
