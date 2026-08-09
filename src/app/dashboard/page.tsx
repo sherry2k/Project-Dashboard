@@ -33,7 +33,6 @@ export default function Dashboard() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [showAudit, setShowAudit] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
   const [filters, setFilters] = useState<Record<string, string>>({});
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
