@@ -18,8 +18,6 @@ import type { NotificationItem } from "@/lib/types";
   interface HeaderProps {
    search: string;
    onSearchChange: (value: string) => void;
-   darkMode: boolean;
-   onToggleDarkMode: () => void;
    onShowFilters: () => void;
    onShowAudit: () => void;
    onAddProject: () => void;
