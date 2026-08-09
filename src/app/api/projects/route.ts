@@ -109,6 +109,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
+  const editedBy = body.editedBy || "Admin";
   const result = await db
     .insert(projects)
     .values({
