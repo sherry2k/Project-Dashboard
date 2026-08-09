@@ -14,16 +14,16 @@ import NotificationBell from "./NotificationBell";
 import type { NotificationItem } from "@/lib/types";
  
  interface UserSession {
-   id: number;
-  interface HeaderProps {
-   search: string;
-   onSearchChange: (value: string) => void;
-   onShowFilters: () => void;
-   onShowAudit: () => void;
-   onAddProject: () => void;
-   user?: UserSession | null;
-   onLogout?: () => void;
-  notifications?: NotificationItem[];
+ id: number;
+ @@ -26,25 +25,27 @@  interface HeaderProps {
+ search: string;
+ onSearchChange: (value: string) => void;
+ onShowFilters: () => void;
+ onShowAudit: () => void;
+ onAddProject: () => void;
+ user?: UserSession | null;
+ onLogout?: () => void;
+ notifications?: NotificationItem[];
  unreadCount?: number;
  onMarkNotificationsRead?: () => void;
  }
