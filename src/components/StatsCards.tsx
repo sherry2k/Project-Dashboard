@@ -23,6 +23,10 @@ interface StatsCardsProps {
   activeValue: string;
   needsInfoCount: number;
 }
+export default function StatsCards({ stats, onFilter, activeType, activeValue, needsInfoCount }: StatsCardsProps) {
+  const totalCards = cards.length + (needsInfoCount > 0 ? 1 : 0);
+
+  return (
 
 const cards = [
   { key: "total", label: "Total Projects", icon: FolderKanban, color: "from-[#5E9E3A] to-[#4a8230]", type: "none", value: "" },
@@ -43,7 +47,10 @@ const cards = [
 export default function StatsCards({ stats, onFilter, activeType, activeValue, needsInfoCount }: StatsCardsProps) {
   return (
     <div className="sticky top-16 z-40 bg-[#F1F5F9] pt-3 pb-3 -mx-4 px-4 md:-mx-6 md:px-6 border-b border-slate-200 shadow-sm no-print">
-      <div className="flex gap-2.5 overflow-x-auto lg:grid lg:grid-cols-11 lg:overflow-visible pb-1 lg:pb-0">
+      <div
+  className="flex gap-2.5 overflow-x-auto lg:grid lg:overflow-visible pb-1 lg:pb-0"
+  style={{ gridTemplateColumns: `repeat(${totalCards}, minmax(0, 1fr))` }}
+>
         {cards.map((card) => {
   const Icon = card.icon;
   const value = stats[card.key as keyof ProjectStats];
