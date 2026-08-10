@@ -103,6 +103,7 @@ body {
   animation: bellShake 2.2s ease-in-out infinite;
   transform-origin: top center;
 }
+
 /* Modal overlay */
 .modal-overlay {
   background-color: rgba(0, 0, 0, 0.5);
