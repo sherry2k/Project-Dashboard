@@ -80,10 +80,34 @@ export default function StatsCards({ stats, onFilter, activeType, activeValue, n
           {value}
         </p>
       </div>
-      <p className="text-[11px] text-slate-500 mt-1.5 leading-tight truncate">{card.label}</p>
+     <p className="text-[11px] text-slate-500 mt-1.5 leading-tight truncate">{card.label}</p>
       {isActive && (
         <div className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#5E9E3A]"></div>
       )}
+    </button>
+  );
+})}
+
+        {needsInfoCount > 0 && (
+          <button
+            onClick={() => onFilter("dataQuality" as StatFilterType, "needsInfo")}
+            title={`${needsInfoCount} projects missing contractor or remarks`}
+            className={`relative shrink-0 w-[132px] lg:w-auto bg-white rounded-xl px-3 py-2.5 shadow-sm border-2 border-dashed transition-all hover:shadow-md text-left ${
+              activeType === "dataQuality"
+                ? "ring-2 ring-sky-500 border-sky-500"
+                : "border-slate-300"
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 shrink-0 rounded-lg bg-gradient-to-br from-sky-400 to-sky-500 flex items-center justify-center shadow-sm">
+                <FileWarning size={16} className="text-white" />
+              </div>
+              <p className="text-xl font-bold leading-none text-sky-700">{needsInfoCount}</p>
+            </div>
+            <p className="text-[11px] text-slate-500 mt-1.5 leading-tight truncate">Needs Info</p>
+            {activeType === "dataQuality" && (
+              <div className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-sky-500"></div>
+            )}
     </button>
   );
 })}
