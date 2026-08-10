@@ -163,15 +163,19 @@ export default function Dashboard() {
     if (showAudit) fetchAuditLogs();
   }, [showAudit, fetchAuditLogs]);
 
-  // Load persisted "last seen" marker, then poll for new changes
+  // Load persisted "last seen" marker, then poll for new changes made by anyone
   useEffect(() => {
     if (!dbReady) return;
     lastSeenRef.current = localStorage.getItem(NOTIF_SEEN_KEY);
-    fetchNotifications();
+
+    // Kick off outside the effect body so state updates never cascade renders
+    const initial = setTimeout(fetchNotifications, 0);
     const timer = setInterval(fetchNotifications, NOTIF_POLL_MS);
     const onFocus = () => fetchNotifications();
     window.addEventListener("focus", onFocus);
+
     return () => {
+      clearTimeout(initial);
       clearInterval(timer);
       window.removeEventListener("focus", onFocus);
     };
