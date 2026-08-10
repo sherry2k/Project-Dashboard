@@ -87,7 +87,6 @@ export default function StatsCards({ stats, onFilter, activeType, activeValue, n
     </button>
   );
 })}
-
         {needsInfoCount > 0 && (
           <button
             onClick={() => onFilter("dataQuality" as StatFilterType, "needsInfo")}
@@ -108,11 +107,9 @@ export default function StatsCards({ stats, onFilter, activeType, activeValue, n
             {activeType === "dataQuality" && (
               <div className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-sky-500"></div>
             )}
-    </button>
-  );
-})}
+          </button>
+        )}
       </div>
     </div>
   );
 }
-
