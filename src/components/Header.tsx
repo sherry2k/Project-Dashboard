@@ -30,6 +30,9 @@ interface HeaderProps {
   onAddProject: () => void;
   user?: UserSession | null;
   onLogout?: () => void;
+  notifications?: NotificationItem[];
+  unreadCount?: number;
+  onMarkNotificationsRead?: () => void;
 }
 
 export default function Header({
@@ -43,8 +46,6 @@ export default function Header({
   notifications = [],
   unreadCount = 0,
   onMarkNotificationsRead,
-
-  
 }: HeaderProps) {
   const [showUserMenu, setShowUserMenu] = useState(false);
   return (
@@ -104,10 +105,11 @@ export default function Header({
               <History size={18} />
             </button>
 
-           <NotificationBell notifications={notifications}
-             unreadCount={unreadCount}
-           onMarkAllRead={() => onMarkNotificationsRead?.()}
-              />
+            <NotificationBell
+              notifications={notifications}
+              unreadCount={unreadCount}
+              onMarkAllRead={() => onMarkNotificationsRead?.()}
+            />
 
             {/* User Menu */}
             <div className="relative ml-1">
