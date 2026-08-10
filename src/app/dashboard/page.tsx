@@ -30,9 +30,7 @@ const EMPTY_STATS: ProjectStats = {
   waitingSoilReport: 0, waitingTender: 0, waitingPayment: 0,
   projectCancelled: 0, completed: 0, inProgress: 0,
 };
-const needsInfoCount = projects.filter(
-  (p) => !p.contractor?.trim() || !p.remarks?.trim()
-).length;
+
 
 // In handleStatFilter, add a branch so clicking it doesn't collide with status/noc filters:
 const handleStatFilter = (type: StatFilterType, value: string) => {
@@ -56,6 +54,9 @@ export default function Dashboard() {
 
   const [projects, setProjects] = useState<Project[]>([]);
   const [stats, setStats] = useState<ProjectStats>(EMPTY_STATS);
+  const needsInfoCount = projects.filter(
+  (p) => !p.contractor?.trim() || !p.remarks?.trim()
+).length;
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
