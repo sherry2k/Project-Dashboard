@@ -1,77 +1,34 @@
 export const PROJECT_LOCATIONS = [
-  "Abu Dhabi",
-  "Madinat Al Riyad",
-  "Al Falah",
-  "Khalidiyah",
-  "Yas Island",
-  "Mushrif",
-  "Saadiyat Island",
-  "Jubail Island",
-  "Mohammed Bin Zayed City",
-  "Khalifa City",
-  "Al Reef",
-  "Al Raha",
-  "Al Shamkhah",
-  "Al Samhah",
-  "Masdar City",
-  "Shakhbout City",
-  "Al Bahyah",
-  "Al Shawamekh",
-  "Al Reem Island",
-  "Zayed City",
-  "Al Ain",
-  "Liwa",
-  "Beda Zayed-Al Dhafra",
+  "Abu Dhabi", "Madinat Al Riyad", "Al Falah", "Khalidiyah", "Yas Island",
+  "Mushrif", "Saadiyat Island", "Jubail Island", "Mohammed Bin Zayed City",
+  "Khalifa City", "Al Reef", "Al Raha", "Al Shamkhah", "Al Samhah",
+  "Masdar City", "Shakhbout City", "Al Bahyah", "Al Shawamekh",
+  "Al Reem Island", "Zayed City", "Al Ain", "Liwa", "Beda Zayed-Al Dhafra",
 ] as const;
+
 export const NOC_OPTIONS = [
-  "Done",
-  "Not Required",
-  "Pending",
-  "Waiting",
-  "Waiting Payment",
-  "Rejected",
+  "Done", "Not Required", "Pending", "Waiting", "Waiting Payment", "Rejected",
 ] as const;
-
-export const PERSPECTIVE_3D_OPTIONS = [
-  "Ready",
-  "Not Required",
-  "In Progress",
-  "Pending",
-] as const;
-
-export const ARCHITECTURE_OPTIONS = [
-  "Approved",
-  "Ready",
-  "Comments",
-  "Pending",
-  "In Progress",
-] as const;
-
-export const STRUCTURE_OPTIONS = [
-  "Approved",
-  "In Progress",
-  "Comments",
-  "Pending",
-] as const;
-
+export const PERSPECTIVE_3D_OPTIONS = ["Ready", "Not Required", "In Progress", "Pending"] as const;
+export const ARCHITECTURE_OPTIONS = ["Approved", "Ready", "Comments", "Pending", "In Progress"] as const;
+export const STRUCTURE_OPTIONS = ["Approved", "In Progress", "Comments", "Pending"] as const;
 export const STATUS_OPTIONS = [
-  "Pending",
-  "Permit Issued",
-  "Waiting Owner",
-  "Waiting Soil Report",
-  "Soil Report Ready",
-  "Waiting Tender",
-  "In Progress",
-  "Project Cancelled",
-  "Completed",
-  "On Hold",
+  "Pending", "Permit Issued", "Waiting Owner", "Waiting Soil Report",
+  "Soil Report Ready", "Waiting Tender", "In Progress", "Project Cancelled",
+  "Completed", "On Hold",
 ] as const;
 
-// Prominent highlighted style used for every "Pending" value
-const PENDING_STYLE = { bg: "bg-amber-400", text: "text-amber-950 font-semibold" };
+// Only used for the top-level project Status column — this is the one
+// "Pending" that should visually shout, since it's the whole-project flag.
+const STATUS_PENDING_STYLE = { bg: "bg-amber-400", text: "text-amber-950 font-semibold" };
+
+// Shared alert style for genuinely urgent/blocking sub-states (used sparingly,
+// cross-column, so it doesn't get diluted)
+const ALERT_STYLE = { bg: "bg-red-500", text: "text-white font-medium" };
+const COMMENTS_STYLE = { bg: "bg-amber-100", text: "text-amber-800" };
 
 export const STATUS_COLORS: Record<string, { bg: string; text: string; dot: string }> = {
-  "Pending": { ...PENDING_STYLE, dot: "bg-amber-700" },
+  "Pending": { ...STATUS_PENDING_STYLE, dot: "bg-amber-700" },
   "Permit Issued": { bg: "bg-emerald-100", text: "text-emerald-800", dot: "bg-emerald-500" },
   "Waiting Owner": { bg: "bg-amber-100", text: "text-amber-800", dot: "bg-amber-500" },
   "Waiting Soil Report": { bg: "bg-orange-100", text: "text-orange-800", dot: "bg-orange-500" },
@@ -83,38 +40,37 @@ export const STATUS_COLORS: Record<string, { bg: string; text: string; dot: stri
   "On Hold": { bg: "bg-slate-100", text: "text-slate-800", dot: "bg-slate-500" },
 };
 
+// NOC — blue family
 export const NOC_COLORS: Record<string, { bg: string; text: string }> = {
-  "Done": { bg: "bg-emerald-100", text: "text-emerald-800" },
-  "Not Required": { bg: "bg-gray-100", text: "text-gray-600" },
-  "Pending": PENDING_STYLE,
-  "Waiting": { bg: "bg-orange-100", text: "text-orange-800" },
-  "Waiting Payment": { bg: "bg-red-500", text: "text-white" },
+  "Done": { bg: "bg-blue-600", text: "text-white font-medium" },
+  "Not Required": { bg: "bg-gray-100", text: "text-gray-500" },
+  "Pending": { bg: "bg-blue-50", text: "text-blue-900 font-semibold border border-blue-300" },
+  "Waiting": { bg: "bg-blue-100", text: "text-blue-800" },
+  "Waiting Payment": ALERT_STYLE,
   "Rejected": { bg: "bg-red-100", text: "text-red-800" },
 };
 
-export const ARCH_COLORS: Record<string, { bg: string; text: string }> = {
-  "Approved": { bg: "bg-emerald-100", text: "text-emerald-800" },
-  "Ready": { bg: "bg-blue-100", text: "text-blue-800" },
-  "Comments": { bg: "bg-amber-100", text: "text-amber-800" },
-  "Pending": PENDING_STYLE,
-  "In Progress": { bg: "bg-purple-100", text: "text-purple-800" },
-};
-
-export const STRUCT_COLORS: Record<string, { bg: string; text: string }> = {
-  "Approved": { bg: "bg-emerald-100", text: "text-emerald-800" },
-  "In Progress": { bg: "bg-blue-100", text: "text-blue-800" },
-  "Comments": { bg: "bg-amber-100", text: "text-amber-800" },
-  "Pending": PENDING_STYLE,
-};
-
+// 3D Perspective — teal family
 export const PERSPECTIVE_COLORS: Record<string, { bg: string; text: string }> = {
-  "Ready": { bg: "bg-emerald-100", text: "text-emerald-800" },
-  "Not Required": { bg: "bg-gray-100", text: "text-gray-600" },
-  "In Progress": { bg: "bg-blue-100", text: "text-blue-800" },
-  "Pending": PENDING_STYLE,
+  "Ready": { bg: "bg-teal-600", text: "text-white font-medium" },
+  "Not Required": { bg: "bg-gray-100", text: "text-gray-500" },
+  "In Progress": { bg: "bg-teal-100", text: "text-teal-800" },
+  "Pending": { bg: "bg-teal-50", text: "text-teal-900 font-semibold border border-teal-300" },
 };
 
+// Architecture — indigo family
+export const ARCH_COLORS: Record<string, { bg: string; text: string }> = {
+  "Approved": { bg: "bg-indigo-600", text: "text-white font-medium" },
+  "Ready": { bg: "bg-indigo-100", text: "text-indigo-800" },
+  "Comments": COMMENTS_STYLE,
+  "Pending": { bg: "bg-indigo-50", text: "text-indigo-900 font-semibold border border-indigo-300" },
+  "In Progress": { bg: "bg-indigo-200", text: "text-indigo-900" },
+};
 
-
-
- 
+// Structure — violet family
+export const STRUCT_COLORS: Record<string, { bg: string; text: string }> = {
+  "Approved": { bg: "bg-violet-600", text: "text-white font-medium" },
+  "In Progress": { bg: "bg-violet-100", text: "text-violet-800" },
+  "Comments": COMMENTS_STYLE,
+  "Pending": { bg: "bg-violet-50", text: "text-violet-900 font-semibold border border-violet-300" },
+};
