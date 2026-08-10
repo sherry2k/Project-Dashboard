@@ -30,6 +30,21 @@ const EMPTY_STATS: ProjectStats = {
   waitingSoilReport: 0, waitingTender: 0, waitingPayment: 0,
   projectCancelled: 0, completed: 0, inProgress: 0,
 };
+const needsInfoCount = projects.filter(
+  (p) => !p.contractor?.trim() || !p.remarks?.trim()
+).length;
+
+// In handleStatFilter, add a branch so clicking it doesn't collide with status/noc filters:
+const handleStatFilter = (type: StatFilterType, value: string) => {
+  setStatFilter({ type, value });
+  setFilters((prev) => {
+    const next = { ...prev };
+    delete next.status;
+    delete next.noc;
+    return next;
+  });
+};
+
 
 const NOTIF_POLL_MS = 15000;
 const NOTIF_SEEN_KEY = "ubec:notifications:lastSeen";
@@ -302,6 +317,7 @@ export default function Dashboard() {
           onFilter={handleStatFilter}
           activeType={statFilter.type}
           activeValue={statFilter.value}
+          needsInfoCount={needsInfoCount}
         />
 
         <div className="flex gap-4 mt-6">
