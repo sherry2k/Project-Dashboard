@@ -7,7 +7,7 @@ export const PROJECT_LOCATIONS = [
 ] as const;
 
 export const NOC_OPTIONS = [
-  "Done", "Not Required", "Pending", "Waiting", "Waiting Payment", "Rejected",
+  "Done", "Not Required", "Pending", "Submitted", "Waiting Payment", "Rejected",
 ] as const;
 export const PERSPECTIVE_3D_OPTIONS = ["Ready", "Not Required", "In Progress", "Pending"] as const;
 export const ARCHITECTURE_OPTIONS = ["Approved", "Ready", "Comments", "Pending", "In Progress"] as const;
