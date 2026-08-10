@@ -11,7 +11,7 @@ export const NOC_OPTIONS = [
 ] as const;
 export const PERSPECTIVE_3D_OPTIONS = ["Ready", "Not Required", "In Progress", "Pending"] as const;
 export const ARCHITECTURE_OPTIONS = ["Approved", "Ready", "Comments", "Submitted", "Pending", "In Progress"] as const;
-export const STRUCTURE_OPTIONS = ["Approved", "Ready", "Comments", "Submitted", "Pending", "In Progress"] as const;
+export const STRUCTURE_OPTIONS = ["Approved", "Ready", "Comments", "Submitted", "Pending", "Not Required", "In Progress"] as const;
 export const STATUS_OPTIONS = [
   "Pending", "Permit Issued", "Waiting Owner", "Waiting Soil Report",
   "Soil Report Ready", "Waiting Tender", "In Progress", "Project Cancelled",
