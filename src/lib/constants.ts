@@ -20,11 +20,11 @@ export const STATUS_OPTIONS = [
 
 // Only used for the top-level project Status column — this is the one
 // "Pending" that should visually shout, since it's the whole-project flag.
-const STATUS_PENDING_STYLE = { bg: "bg-amber-400", text: "text-amber-950 font-semibold" };
+const STATUS_PENDING_STYLE = { bg: "bg-amber-300", text: "text-amber-950 font-semibold" };
 
 // Shared alert style for genuinely urgent/blocking sub-states (used sparingly,
 // cross-column, so it doesn't get diluted)
-const ALERT_STYLE = { bg: "bg-red-500", text: "text-white font-medium" };
+const ALERT_STYLE = { bg: "bg-red-400", text: "text-white font-medium" };
 const COMMENTS_STYLE = { bg: "bg-amber-100", text: "text-amber-800" };
 
 export const STATUS_COLORS: Record<string, { bg: string; text: string; dot: string }> = {
