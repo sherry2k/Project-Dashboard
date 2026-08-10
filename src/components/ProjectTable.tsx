@@ -39,6 +39,7 @@ interface ProjectTableProps {
   onDuplicate: (id: number) => Promise<void>;
   onArchive: (id: number) => Promise<void>;
   onEdit: (project: Project) => void;
+  dataQualityFilter?: boolean; // true when "Needs Info" stat card is active
 }
 
 type SortDir = "asc" | "desc" | null;
@@ -175,7 +176,14 @@ export default function ProjectTable({
       setSortDir("asc");
     }
   };
+  
+// Then:
+const visibleProjects = dataQualityFilter
+  ? sortedProjects.filter((p) => !p.contractor?.trim() || !p.remarks?.trim())
+  : sortedProjects;
 
+// render visibleProjects instead of sortedProjects in the .map()
+  
   const sortedProjects = [...projects].sort((a, b) => {
     if (!sortField || !sortDir) return 0;
     const aVal = String((a as unknown as Record<string, unknown>)[sortField] || "");
