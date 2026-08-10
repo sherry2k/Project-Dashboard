@@ -37,8 +37,21 @@ const handleStatFilter = (type: StatFilterType, value: string) => {
   setStatFilter({ type, value });
   setFilters((prev) => {
     const next = { ...prev };
-    delete next.status;
-    delete next.noc;
+    if (type === "none") {
+      delete next.status;
+      delete next.noc;
+    } else if (type === "status") {
+      delete next.status;
+      delete next.noc;
+    } else if (type === "noc") {
+      delete next.status;
+      delete next.noc;
+    } else if (type === "active") {
+      delete next.status;
+    } else if (type === "dataQuality") {   // ← new branch, everything else unchanged
+      delete next.status;
+      delete next.noc;
+    }
     return next;
   });
 };
