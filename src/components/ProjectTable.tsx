@@ -227,7 +227,7 @@ const visibleProjects = dataQualityFilter
     { key: "structure", label: "Structure", width: "min-w-[130px]", sortable: true },
     { key: "status", label: "Status", width: "min-w-[160px]", sortable: true },
     { key: "contractor", label: "Contractor", width: "min-w-[150px]", sortable: true },
-    { key: "remarks", label: "Remarks", width: "min-w-[200px]", sortable: false },
+    { key: "remarks", label: "Remarks", width: "w-20", sortable: false },
     { key: "updatedAt", label: "Last Updated", width: "min-w-[140px]", sortable: true },
     { key: "actions", label: "Actions", width: "w-20", sortable: false },
   ];
@@ -530,9 +530,16 @@ const visibleProjects = dataQualityFilter
 </td>
 
                     {/* Last Updated */}
-                    <td className="px-3 py-2 text-xs text-slate-500">
-                      {project.updatedAt ? format(new Date(project.updatedAt), "dd MMM yyyy HH:mm") : "—"}
-                    </td>
+                    <td className="px-2 py-2 text-xs text-slate-500">
+  {project.updatedAt ? (
+    <div className="leading-tight">
+      <div>{format(new Date(project.updatedAt), "dd MMM yyyy")}</div>
+      <div className="text-slate-400">{format(new Date(project.updatedAt), "HH:mm")}</div>
+    </div>
+  ) : (
+    "—"
+  )}
+</td>
 
                     {/* Actions */}
                     <td className="px-3 py-2 relative">
