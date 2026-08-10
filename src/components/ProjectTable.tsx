@@ -150,6 +150,7 @@ export default function ProjectTable({
   onDuplicate,
   onArchive,
   onEdit,
+  dataQualityFilter,
 }: ProjectTableProps) {
   const [sortField, setSortField] = useState<string | null>(null);
   const [sortDir, setSortDir] = useState<SortDir>(null);
@@ -177,12 +178,6 @@ export default function ProjectTable({
     }
   };
   
-// Then:
-const visibleProjects = dataQualityFilter
-  ? sortedProjects.filter((p) => !p.contractor?.trim() || !p.remarks?.trim())
-  : sortedProjects;
-
-// render visibleProjects instead of sortedProjects in the .map()
   
   const sortedProjects = [...projects].sort((a, b) => {
     if (!sortField || !sortDir) return 0;
@@ -190,7 +185,11 @@ const visibleProjects = dataQualityFilter
     const bVal = String((b as unknown as Record<string, unknown>)[sortField] || "");
     return sortDir === "asc" ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
   });
-
+  
+const visibleProjects = dataQualityFilter
+  ? sortedProjects.filter((p) => !p.contractor?.trim() || !p.remarks?.trim())
+  : sortedProjects;
+  
   const handleCellEdit = useCallback(
     async (id: number, field: string, value: string) => {
       await onUpdate(id, { [field]: value });
@@ -381,7 +380,7 @@ const visibleProjects = dataQualityFilter
                     </div>
                   </td>
                 </tr>
-              ) : sortedProjects.length === 0 ? (
+              ) : visibleProjects.length === 0 ? (
                 <tr>
                   <td colSpan={columns.length + 1} className="text-center py-20">
                     <div className="flex flex-col items-center gap-3">
@@ -394,7 +393,7 @@ const visibleProjects = dataQualityFilter
                   </td>
                 </tr>
               ) : (
-                sortedProjects.map((project, index) => (
+                visibleProjects.map((project, index) => (
                   <tr
                     key={project.id}
                     className={`border-b border-slate-100 hover:bg-blue-50/50 transition-colors ${
