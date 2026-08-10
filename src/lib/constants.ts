@@ -66,7 +66,7 @@ export const ARCH_COLORS: Record<string, { bg: string; text: string }> = {
   "Comments": COMMENTS_STYLE,
   "Pending": { bg: "bg-indigo-50", text: "text-indigo-900 font-semibold border border-indigo-300" },
   "In Progress": { bg: "bg-indigo-200", text: "text-indigo-900" },
-  "Submitted": { bg: "bg-blue-200", text: "text-blue-900 font-medium" },
+  "Submitted": { bg: "bg-indigo-300", text: "text-indigo-900 font-medium" },
 };
 
 // Structure — violet family
@@ -75,5 +75,5 @@ export const STRUCT_COLORS: Record<string, { bg: string; text: string }> = {
   "In Progress": { bg: "bg-violet-100", text: "text-violet-800" },
   "Comments": COMMENTS_STYLE,
   "Pending": { bg: "bg-violet-50", text: "text-violet-900 font-semibold border border-violet-300" },
-  "Submitted": { bg: "bg-blue-200", text: "text-blue-900 font-medium" },
+  "Submitted": { bg: "bg-violet-300", text: "text-violet-900 font-medium" },
 };
