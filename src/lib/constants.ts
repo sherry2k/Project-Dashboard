@@ -29,7 +29,7 @@ const COMMENTS_STYLE = { bg: "bg-amber-100", text: "text-amber-800" };
 
 export const STATUS_COLORS: Record<string, { bg: string; text: string; dot: string }> = {
   "Pending": { ...STATUS_PENDING_STYLE, dot: "bg-amber-700"  },
-  "Permit Issued": { bg: "bg-emerald-800", text: "text-white", dot: "bg-green-500" },
+  "Permit Issued": { bg: "bg-emerald-600", text: "text-white", dot: "bg-green-500" },
   "Waiting Owner": { bg: "bg-amber-100", text: "text-amber-800", dot: "bg-amber-500" },
   "Waiting Soil Report": { bg: "bg-orange-100", text: "text-orange-800", dot: "bg-orange-500" },
   "Soil Report Ready": { bg: "bg-teal-100", text: "text-teal-800", dot: "bg-teal-500" },
