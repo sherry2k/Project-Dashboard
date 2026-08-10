@@ -360,12 +360,20 @@ const visibleProjects = dataQualityFilter
                     } ${col.sortable ? "cursor-pointer hover:text-slate-800 select-none" : ""}`}
                     onClick={() => col.sortable && handleSort(col.key)}
                   >
-                    <div className="flex items-center gap-1">
-                      {col.label}
-                      {col.sortable && sortField === col.key && (
-                        sortDir === "asc" ? <ChevronUp size={14} /> : <ChevronDown size={14} />
-                      )}
-                    </div>
+                   <div className="flex items-center gap-1">
+  {col.label}
+  {col.sortable && (
+    sortField === col.key ? (
+      sortDir === "asc" ? (
+        <ChevronUp size={14} className="text-slate-700" />
+      ) : (
+        <ChevronDown size={14} className="text-slate-700" />
+      )
+    ) : (
+      <ChevronUp size={12} className="text-slate-300" />
+    )
+  )}
+</div>
                   </th>
                 ))}
               </tr>
