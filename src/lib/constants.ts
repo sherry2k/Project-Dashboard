@@ -48,6 +48,7 @@ export const NOC_COLORS: Record<string, { bg: string; text: string }> = {
   "Waiting": { bg: "bg-blue-100", text: "text-blue-800" },
   "Waiting Payment": ALERT_STYLE,
   "Rejected": { bg: "bg-red-100", text: "text-red-800" },
+  "Submitted": { bg: "bg-blue-200", text: "text-blue-900 font-medium" },
 };
 
 // 3D Perspective — teal family
