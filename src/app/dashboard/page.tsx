@@ -32,31 +32,6 @@ const EMPTY_STATS: ProjectStats = {
 };
 
 
-// In handleStatFilter, add a branch so clicking it doesn't collide with status/noc filters:
-const handleStatFilter = (type: StatFilterType, value: string) => {
-  setStatFilter({ type, value });
-  setFilters((prev) => {
-    const next = { ...prev };
-    if (type === "none") {
-      delete next.status;
-      delete next.noc;
-    } else if (type === "status") {
-      delete next.status;
-      delete next.noc;
-    } else if (type === "noc") {
-      delete next.status;
-      delete next.noc;
-    } else if (type === "active") {
-      delete next.status;
-    } else if (type === "dataQuality") {   // ← new branch, everything else unchanged
-      delete next.status;
-      delete next.noc;
-    }
-    return next;
-  });
-};
-
-
 const NOTIF_POLL_MS = 15000;
 const NOTIF_SEEN_KEY = "ubec:notifications:lastSeen";
 
@@ -266,24 +241,27 @@ export default function Dashboard() {
    * is hidden from the user.
    */
   const handleStatFilter = (type: StatFilterType, value: string) => {
-    setStatFilter({ type, value });
-    setFilters((prev) => {
-      const next = { ...prev };
-      if (type === "none") {
-        delete next.status;
-        delete next.noc;
-      } else if (type === "status") {
-        delete next.status;
-        delete next.noc;
-      } else if (type === "noc") {
-        delete next.status;
-        delete next.noc;
-      } else if (type === "active") {
-        delete next.status;
-      }
-      return next;
-    });
-  };
+  setStatFilter({ type, value });
+  setFilters((prev) => {
+    const next = { ...prev };
+    if (type === "none") {
+      delete next.status;
+      delete next.noc;
+    } else if (type === "status") {
+      delete next.status;
+      delete next.noc;
+    } else if (type === "noc") {
+      delete next.status;
+      delete next.noc;
+    } else if (type === "active") {
+      delete next.status;
+    } else if (type === "dataQuality") {
+      delete next.status;
+      delete next.noc;
+    }
+    return next;
+  });
+};
 
   // Sidebar filter changes take over from the stat card selection
   const handleSidebarFilterChange = (next: Record<string, string>) => {
@@ -352,6 +330,7 @@ export default function Dashboard() {
               onDuplicate={handleDuplicateProject}
               onArchive={handleArchiveProject}
               onEdit={handleEditProject}
+              dataQualityFilter={statFilter.type === "dataQuality"}
             />
           </div>
 
