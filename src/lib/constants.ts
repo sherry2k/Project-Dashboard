@@ -73,6 +73,7 @@ export const ARCH_COLORS: Record<string, { bg: string; text: string }> = {
 export const STRUCT_COLORS: Record<string, { bg: string; text: string }> = {
   "Approved": { bg: "bg-violet-600", text: "text-white font-medium" },
   "In Progress": { bg: "bg-violet-100", text: "text-violet-800" },
+  "Not Required": { bg: "bg-gray-100", text: "text-gray-500" },
   "Comments": COMMENTS_STYLE,
   "Pending": { bg: "bg-violet-50", text: "text-violet-900 font-semibold border border-violet-300" },
   "Submitted": { bg: "bg-violet-300", text: "text-violet-900 font-medium" },
