@@ -109,14 +109,7 @@ function EditorTag({ name }: { name?: string }) {
     </span>
   );
 }
-
-function SoilReportProgress({ project }: { project: Project }) {
-  const requested = project.soilReportRequestedDate ? new Date(project.soilReportRequestedDate) : null;
-  const expected = project.soilReportExpectedDate ? new Date(project.soilReportExpectedDate) : null;
-
-  if (!requested || !expected) {
-    return <span className="text-xs text-slate-300 italic">Not started</span>;
-  }
+ }
   function getCurrentActivity(project: Project): { icon: string; label: string } {
   if (project.status === "Project Cancelled") return { icon: "❌", label: "Cancelled" };
   if (project.status === "On Hold") return { icon: "⏸", label: "On Hold" };
@@ -132,7 +125,14 @@ function SoilReportProgress({ project }: { project: Project }) {
   if (["In Progress", "Pending"].includes(project.perspective3d)) return { icon: "🎨", label: "3D Perspective" };
   return { icon: "📌", label: project.status };
 }
-  const now = new Date();
+
+function SoilReportProgress({ project }: { project: Project }) {
+  const requested = project.soilReportRequestedDate ? new Date(project.soilReportRequestedDate) : null;
+  const expected = project.soilReportExpectedDate ? new Date(project.soilReportExpectedDate) : null;
+
+  if (!requested || !expected) {
+    return <span className="text-xs text-slate-300 italic">Not started</span>;
+   const now = new Date();
   const totalDays = Math.round((expected.getTime() - requested.getTime()) / 86400000);
   const daysElapsed = Math.round((now.getTime() - requested.getTime()) / 86400000);
   const daysRemaining = totalDays - daysElapsed;
