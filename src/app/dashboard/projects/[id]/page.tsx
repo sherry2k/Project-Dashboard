@@ -70,10 +70,6 @@ interface WorkflowStep {
 }
 
 function getWorkflowSteps(project: Project): WorkflowStep[] {
-  const soil = getSoilProgress(project);
-  const soilDone = !!project.soilReportActualDate && new Date(project.soilReportActualDate).getTime() <= Date.now();
-  const soilStarted = !!project.soilReportRequestedDate;
-
   const archState: WorkflowState =
     project.architecture === "Approved" ? "done"
     : ["In Progress", "Ready", "Comments"].includes(project.architecture) ? "active"
@@ -82,6 +78,11 @@ function getWorkflowSteps(project: Project): WorkflowStep[] {
   const structState: WorkflowState =
     project.structure === "Approved" ? "done"
     : ["In Progress", "Comments"].includes(project.structure) ? "active"
+    : "pending";
+
+  const perspectiveState: WorkflowState =
+    project.perspective3d === "Ready" ? "done"
+    : project.perspective3d === "In Progress" ? "active"
     : "pending";
 
   const nocState: WorkflowState =
@@ -99,18 +100,18 @@ function getWorkflowSteps(project: Project): WorkflowStep[] {
     : project.status === "Waiting Tender" ? "active"
     : "pending";
 
+  const contractorState: WorkflowState =
+    project.contractor?.trim() ? "done" : "pending";
+
   return [
     { label: "Registration", state: "done" },
-    {
-      label: "Soil Investigation",
-      state: soilDone ? "done" : soilStarted ? "active" : "pending",
-      detail: soil?.text,
-    },
+    { label: "Municipality (NOC)", state: nocState },
+    { label: "3D Perspective", state: perspectiveState },
     { label: "Architecture", state: archState },
     { label: "Structure", state: structState },
-    { label: "Municipality (NOC)", state: nocState },
     { label: "Permit", state: permitState },
     { label: "Tender", state: tenderState },
+    { label: "Contractor Assignment", state: contractorState },
   ];
 }
 
