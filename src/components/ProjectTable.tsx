@@ -135,22 +135,22 @@ function SoilReportProgress({ project }: { project: Project }) {
     return <span className="text-xs text-slate-300 italic">Not started</span>;
   }
 
-  if (actual) {
-    const daysTaken = Math.round((actual.getTime() - requested.getTime()) / 86400000);
-    return (
-      <div className="min-w-[130px]">
-        <div className="text-xs font-semibold text-emerald-700 flex items-center gap-1">
-          ✅ Completed
-        </div>
-        <div className="text-[10px] text-slate-400 mt-0.5">
-          Took {daysTaken} days
-        </div>
-        {project.soilReportLab && (
-          <div className="text-[10px] text-slate-400 mt-0.5 truncate">{project.soilReportLab}</div>
-        )}
+  if (actual && actual.getTime() <= new Date().getTime()) {
+  const daysTaken = Math.round((actual.getTime() - requested.getTime()) / 86400000);
+  return (
+    <div className="min-w-[130px]">
+      <div className="text-xs font-semibold text-emerald-700 flex items-center gap-1">
+        ✅ Completed
       </div>
-    );
-  }
+      <div className="text-[10px] text-slate-400 mt-0.5">
+        Took {daysTaken} days
+      </div>
+      {project.soilReportLab && (
+        <div className="text-[10px] text-slate-400 mt-0.5 truncate">{project.soilReportLab}</div>
+      )}
+    </div>
+  );
+}
      const now = new Date();
   const totalDays = Math.round((expected.getTime() - requested.getTime()) / 86400000);
   const daysElapsed = Math.round((now.getTime() - requested.getTime()) / 86400000);
