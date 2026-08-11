@@ -1,5 +1,5 @@
 "use client";
-
+import Link from "next/link";
 import { useState, useRef, useCallback, useEffect } from "react";
 import {
   Eye,
@@ -503,24 +503,34 @@ const visibleProjects = dataQualityFilter
                     </td>
 
                     {/* Editable text fields */}
-                    {(["ownerName", "projectNo", "plotNo"] as const).map((field) => (
-                      <td key={field} className="px-3 py-2">
-                        {editingCell?.rowId === project.id && editingCell?.field === field ? (
-                          <InlineTextEdit
-                            value={project[field]}
-                            onSave={(v) => handleCellEdit(project.id, field, v)}
-                            onClose={() => setEditingCell(null)}
-                          />
-                        ) : (
-                          <div onDoubleClick={() => setEditingCell({ rowId: project.id, field })}>
-                            <div className="editable-cell text-sm text-slate-800">
-                              {project[field] || <span className="text-slate-300">—</span>}
-                            </div>
-                            <EditorTag name={project.fieldEditors?.[field]} />
-                          </div>
-                        )}
-                      </td>
-                    ))}
+{(["ownerName", "projectNo", "plotNo"] as const).map((field) => (
+  <td key={field} className="px-3 py-2">
+    {editingCell?.rowId === project.id && editingCell?.field === field ? (
+      <InlineTextEdit
+        value={project[field]}
+        onSave={(v) => handleCellEdit(project.id, field, v)}
+        onClose={() => setEditingCell(null)}
+      />
+    ) : (
+      <div onDoubleClick={() => setEditingCell({ rowId: project.id, field })}>
+        <div className="editable-cell text-sm text-slate-800">
+          {field === "projectNo" && project[field] ? (
+            <Link
+              href={`/dashboard/projects/${project.id}`}
+              onClick={(e) => e.stopPropagation()}
+              className="text-blue-600 hover:text-blue-800 hover:underline font-medium"
+            >
+              {project[field]}
+            </Link>
+          ) : (
+            project[field] || <span className="text-slate-300">—</span>
+          )}
+        </div>
+        <EditorTag name={project.fieldEditors?.[field]} />
+      </div>
+    )}
+  </td>
+))}
 
                     {/* Dropdown fields */}
                     {(["projectLocation", "noc", "perspective3d", "architecture", "structure", "status"] as const).map((field) => (
