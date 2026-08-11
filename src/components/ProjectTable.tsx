@@ -109,7 +109,7 @@ function EditorTag({ name }: { name?: string }) {
     </span>
   );
 }
- }
+ 
   function getCurrentActivity(project: Project): { icon: string; label: string } {
   if (project.status === "Project Cancelled") return { icon: "❌", label: "Cancelled" };
   if (project.status === "On Hold") return { icon: "⏸", label: "On Hold" };
@@ -133,6 +133,7 @@ function SoilReportProgress({ project }: { project: Project }) {
   if (!requested || !expected) {
     return <span className="text-xs text-slate-300 italic">Not started</span>;
    const now = new Date();
+    }
   const totalDays = Math.round((expected.getTime() - requested.getTime()) / 86400000);
   const daysElapsed = Math.round((now.getTime() - requested.getTime()) / 86400000);
   const daysRemaining = totalDays - daysElapsed;
