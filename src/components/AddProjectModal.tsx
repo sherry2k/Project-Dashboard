@@ -155,18 +155,6 @@ export default function AddProjectModal({ project, onSave, onClose }: AddProject
     return next;
   });
 };
-  const handleRequestedDateChange = (value: string) => {
-  setForm((prev) => {
-    const next = { ...prev, soilReportRequestedDate: value };
-    // Auto-suggest expected date as +30 days, only if expected isn't already set
-    if (value && !prev.soilReportExpectedDate) {
-      const d = new Date(value);
-      d.setDate(d.getDate() + 30);
-      next.soilReportExpectedDate = d.toISOString().slice(0, 10);
-    }
-    return next;
-  });
-};
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
