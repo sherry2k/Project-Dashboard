@@ -27,7 +27,7 @@ interface UserInfo {
 
 const EMPTY_STATS: ProjectStats = {
   total: 0, active: 0, permitIssued: 0, waitingOwner: 0,
-  waitingSoilReport: 0, waitingTender: 0, waitingPayment: 0,
+  soilReportOverdue: 0, waitingTender: 0, waitingPayment: 0,
   projectCancelled: 0, completed: 0, inProgress: 0,
 };
 
