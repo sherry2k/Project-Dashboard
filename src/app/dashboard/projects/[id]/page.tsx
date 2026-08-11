@@ -33,7 +33,6 @@ function getWaitingFor(project: Project): { icon: string; label: string } | null
   if (project.noc === "Waiting Payment") return { icon: "💰", label: "Payment" };
   return null;
 }
-
 function getSoilProgress(project: Project): { text: string; percent: number | null; color: string } | null {
   if (!project.soilReportRequestedDate || !project.soilReportExpectedDate) return null;
   const requested = new Date(project.soilReportRequestedDate);
@@ -44,6 +43,24 @@ function getSoilProgress(project: Project): { text: string; percent: number | nu
     const daysTaken = Math.round((actual.getTime() - requested.getTime()) / 86400000);
     return { text: `Completed — took ${daysTaken} days`, percent: 100, color: "bg-emerald-500" };
   }
+
+  const now = new Date();
+  const totalDays = Math.round((expected.getTime() - requested.getTime()) / 86400000);
+  const daysElapsed = Math.round((now.getTime() - requested.getTime()) / 86400000);
+  const daysRemaining = totalDays - daysElapsed;
+  const percent = Math.min(100, Math.max(0, (daysElapsed / totalDays) * 100));
+
+  let color = "bg-emerald-500";
+  if (daysRemaining < 0) color = "bg-red-500";
+  else if (daysRemaining <= totalDays * 0.25) color = "bg-amber-500";
+
+  return {
+    text: daysRemaining < 0 ? `Overdue by ${Math.abs(daysRemaining)}d` : `${daysElapsed} / ${totalDays} days`,
+    percent,
+    color,
+  };
+}
+
 type WorkflowState = "done" | "active" | "pending";
 
 interface WorkflowStep {
@@ -96,22 +113,7 @@ function getWorkflowSteps(project: Project): WorkflowStep[] {
     { label: "Tender", state: tenderState },
   ];
 }
-  const now = new Date();
-  const totalDays = Math.round((expected.getTime() - requested.getTime()) / 86400000);
-  const daysElapsed = Math.round((now.getTime() - requested.getTime()) / 86400000);
-  const daysRemaining = totalDays - daysElapsed;
-  const percent = Math.min(100, Math.max(0, (daysElapsed / totalDays) * 100));
 
-  let color = "bg-emerald-500";
-  if (daysRemaining < 0) color = "bg-red-500";
-  else if (daysRemaining <= totalDays * 0.25) color = "bg-amber-500";
-
-  return {
-    text: daysRemaining < 0 ? `Overdue by ${Math.abs(daysRemaining)}d` : `${daysElapsed} / ${totalDays} days`,
-    percent,
-    color,
-  };
-}
 function WorkflowStepIcon({ state }: { state: WorkflowState }) {
   if (state === "done") {
     return (
@@ -131,10 +133,7 @@ function WorkflowStepIcon({ state }: { state: WorkflowState }) {
     <div className="w-7 h-7 rounded-full border-2 border-slate-300 shrink-0"></div>
   );
 }
-  return (
-    <div className="w-7 h-7 rounded-full border-2 border-slate-300 shrink-0"></div>
-  );
-}
+
 export default function ProjectDetailPage() {
   const params = useParams();
   const router = useRouter();
