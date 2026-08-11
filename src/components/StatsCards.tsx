@@ -29,7 +29,7 @@ const cards = [
   { key: "active", label: "Active Projects", icon: Activity, color: "from-blue-500 to-blue-600", type: "active", value: "active" },
   { key: "permitIssued", label: "Permit Issued", icon: CheckCircle2, color: "from-emerald-500 to-emerald-600", type: "status", value: "Permit Issued" },
   { key: "waitingOwner", label: "Waiting Owner", icon: Clock, color: "from-amber-500 to-amber-600", type: "status", value: "Waiting Owner" },
-  { key: "waitingSoilReport", label: "Waiting Soil Report", icon: FileWarning, color: "from-orange-500 to-orange-600", type: "status", value: "Waiting Soil Report" },
+  { key: "soilReportOverdue", label: "Soil Reports Overdue", icon: FileWarning, color: "from-red-500 to-red-600", type: "status", value: "Waiting Soil Report" },
   { key: "waitingTender", label: "Waiting Tender", icon: Gavel, color: "from-indigo-500 to-indigo-600", type: "status", value: "Waiting Tender" },
   { key: "waitingPayment", label: "Waiting Payment", icon: CreditCard, color: "from-red-600 to-red-700", type: "noc", value: "Waiting Payment" },
   { key: "projectCancelled", label: "Cancelled", icon: XCircle, color: "from-red-500 to-red-600", type: "status", value: "Project Cancelled" },
