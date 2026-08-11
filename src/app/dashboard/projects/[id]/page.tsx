@@ -131,6 +131,10 @@ function WorkflowStepIcon({ state }: { state: WorkflowState }) {
     <div className="w-7 h-7 rounded-full border-2 border-slate-300 shrink-0"></div>
   );
 }
+  return (
+    <div className="w-7 h-7 rounded-full border-2 border-slate-300 shrink-0"></div>
+  );
+}
 export default function ProjectDetailPage() {
   const params = useParams();
   const router = useRouter();
