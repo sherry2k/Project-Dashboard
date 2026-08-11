@@ -74,12 +74,18 @@ export async function PATCH(
     }
   }
 
-  const updateData: Record<string, unknown> = { updatedAt: new Date() };
-  for (const field of editableFields) {
-    if (body[field] !== undefined) {
+ const dateFields = ["soilReportRequestedDate", "soilReportExpectedDate", "soilReportActualDate"];
+
+const updateData: Record<string, unknown> = { updatedAt: new Date() };
+for (const field of editableFields) {
+  if (body[field] !== undefined) {
+    if (dateFields.includes(field) && body[field] === "") {
+      updateData[field] = null;
+    } else {
       updateData[field] = body[field];
     }
   }
+}
 
   const result = await db
     .update(projects)
