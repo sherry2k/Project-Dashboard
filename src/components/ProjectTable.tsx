@@ -114,11 +114,24 @@ function SoilReportProgress({ project }: { project: Project }) {
   const requested = project.soilReportRequestedDate ? new Date(project.soilReportRequestedDate) : null;
   const expected = project.soilReportExpectedDate ? new Date(project.soilReportExpectedDate) : null;
 
-  // No tracking dates set yet — fall back to the plain badge
   if (!requested || !expected) {
-    return <StatusBadge value={project.status} colors={STATUS_COLORS} />;
+    return <span className="text-xs text-slate-300 italic">Not started</span>;
   }
-
+  function getCurrentActivity(project: Project): { icon: string; label: string } {
+  if (project.status === "Project Cancelled") return { icon: "❌", label: "Cancelled" };
+  if (project.status === "On Hold") return { icon: "⏸", label: "On Hold" };
+  if (project.status === "Completed") return { icon: "✅", label: "Completed" };
+  if (project.status === "Waiting Payment" || project.noc === "Waiting Payment") return { icon: "💰", label: "Payment" };
+  if (project.status === "Waiting Tender") return { icon: "📋", label: "Tender" };
+  if (project.status === "Waiting Soil Report") return { icon: "🧪", label: "Soil Investigation" };
+  if (project.status === "Waiting Owner") return { icon: "👤", label: "Waiting Owner" };
+  if (project.status === "Permit Issued") return { icon: "📄", label: "Permit Processing" };
+  if (["Pending", "Waiting", "Submitted"].includes(project.noc)) return { icon: "🏛", label: "Municipality Review" };
+  if (["In Progress", "Pending", "Comments"].includes(project.structure)) return { icon: "🏗", label: "Structure" };
+  if (["In Progress", "Pending", "Comments"].includes(project.architecture)) return { icon: "📐", label: "Architecture" };
+  if (["In Progress", "Pending"].includes(project.perspective3d)) return { icon: "🎨", label: "3D Perspective" };
+  return { icon: "📌", label: project.status };
+}
   const now = new Date();
   const totalDays = Math.round((expected.getTime() - requested.getTime()) / 86400000);
   const daysElapsed = Math.round((now.getTime() - requested.getTime()) / 86400000);
@@ -272,6 +285,8 @@ const visibleProjects = dataQualityFilter
     { key: "architecture", label: "Architecture", width: "min-w-[130px]", sortable: true },
     { key: "structure", label: "Structure", width: "min-w-[130px]", sortable: true },
     { key: "status", label: "Status", width: "min-w-[160px]", sortable: true },
+    { key: "currentActivity", label: "Current Activity", width: "min-w-[160px]", sortable: false },
+    { key: "soilReport", label: "Soil Report", width: "min-w-[140px]", sortable: false },
     { key: "contractor", label: "Contractor", width: "min-w-[150px]", sortable: true },
     { key: "remarks", label: "Remarks", width: "w-20", sortable: false },
     { key: "updatedAt", label: "Last Updated", width: "min-w-[140px]", sortable: true },
@@ -503,14 +518,12 @@ const visibleProjects = dataQualityFilter
                             className="cursor-pointer"
                             onDoubleClick={() => setEditingCell({ rowId: project.id, field })}
                           >
-                           <div className="editable-cell">
-                           {field === "status" && project.status === "Waiting Soil Report" ? (
-                             <SoilReportProgress project={project} />
-                                ) : badgeFields[field] ? (
+                         <div className="editable-cell">
+                              {badgeFields[field] ? (
                              <StatusBadge value={project[field]} colors={badgeFields[field]} />
-                                 ) : (
-                             <span className="text-sm text-slate-700">{project[field]}</span>
-                               )}
+                                ) : (
+                            <span className="text-sm text-slate-700">{project[field]}</span>
+                                  )}
                                </div>
                             <EditorTag name={project.fieldEditors?.[field]} />
                           </div>
@@ -518,6 +531,24 @@ const visibleProjects = dataQualityFilter
                       </td>
                     ))}
 
+ {/* Current Activity */}
+                    <td className="px-3 py-2">
+                      {(() => {
+                        const activity = getCurrentActivity(project);
+                        return (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700">
+                            <span>{activity.icon}</span>
+                            {activity.label}
+                          </span>
+                        );
+                      })()}
+                    </td>
+
+                    {/* Soil Report */}
+                    <td className="px-3 py-2">
+                      <SoilReportProgress project={project} />
+                    </td>
+                    
                     {/* Contractor */}
 <td className="px-3 py-2">
   {editingCell?.rowId === project.id && editingCell?.field === "contractor" ? (
