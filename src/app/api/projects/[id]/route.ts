@@ -41,20 +41,24 @@ export async function PATCH(
   const currentProject = current[0];
 
   // Create audit log entries for changed fields
-  const editableFields = [
-    "ownerName",
-    "projectNo",
-    "plotNo",
-    "projectLocation",
-    "noc",
-    "perspective3d",
-    "architecture",
-    "structure",
-    "status",
-    "contractor",
-    "remarks",
-    "archived",
-  ] as const;
+ const editableFields = [
+  "ownerName",
+  "projectNo",
+  "plotNo",
+  "projectLocation",
+  "noc",
+  "perspective3d",
+  "architecture",
+  "structure",
+  "status",
+  "contractor",
+  "remarks",
+  "archived",
+  "soilReportRequestedDate",
+  "soilReportExpectedDate",
+  "soilReportActualDate",
+  "soilReportLab",
+] as const;
 
   type EditableField = typeof editableFields[number];
 
