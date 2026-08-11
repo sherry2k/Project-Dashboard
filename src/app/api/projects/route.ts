@@ -129,6 +129,10 @@ export async function POST(request: NextRequest) {
       contractor: body.contractor || "",
       remarks: body.remarks || "",
       lastEditedBy: editedBy,
+      soilReportRequestedDate: body.soilReportRequestedDate ? new Date(body.soilReportRequestedDate) : null,
+      soilReportExpectedDate: body.soilReportExpectedDate ? new Date(body.soilReportExpectedDate) : null,
+      soilReportActualDate: body.soilReportActualDate ? new Date(body.soilReportActualDate) : null,
+      soilReportLab: body.soilReportLab || null,
     })
     .returning();
 
