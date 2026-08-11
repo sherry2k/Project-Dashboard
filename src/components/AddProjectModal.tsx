@@ -76,42 +76,97 @@ function TextField({
   );
 }
 
+function DateField({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  return (
+    <div>
+      <label className="block text-sm font-medium text-slate-700 mb-1.5">{label}</label>
+      <input
+        type="date"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#5E9E3A] focus:border-[#5E9E3A]"
+      />
+    </div>
+  );
+}
+
 export default function AddProjectModal({ project, onSave, onClose }: AddProjectModalProps) {
-  const [form, setForm] = useState({
-    ownerName: "",
-    projectNo: "",
-    plotNo: "",
-    projectLocation: "Abu Dhabi",
-    noc: "Pending",
-    perspective3d: "Pending",
-    architecture: "Pending",
-    structure: "Pending",
-    status: "In Progress",
-    contractor: "",
-    remarks: "",
-  });
+ const [form, setForm] = useState({
+  ownerName: "",
+  projectNo: "",
+  plotNo: "",
+  projectLocation: "Abu Dhabi",
+  noc: "Pending",
+  perspective3d: "Pending",
+  architecture: "Pending",
+  structure: "Pending",
+  status: "In Progress",
+  contractor: "",
+  remarks: "",
+  soilReportRequestedDate: "",
+  soilReportExpectedDate: "",
+  soilReportActualDate: "",
+  soilReportLab: "",
+});
 
   useEffect(() => {
-    if (project) {
-      setForm({
-        ownerName: project.ownerName,
-        projectNo: project.projectNo,
-        plotNo: project.plotNo,
-        projectLocation: project.projectLocation,
-        noc: project.noc,
-        perspective3d: project.perspective3d,
-        architecture: project.architecture,
-        structure: project.structure,
-        status: project.status,
-        contractor: project.contractor,
-        remarks: project.remarks,
-      });
-    }
-  }, [project]);
+  if (project) {
+    setForm({
+      ownerName: project.ownerName,
+      projectNo: project.projectNo,
+      plotNo: project.plotNo,
+      projectLocation: project.projectLocation,
+      noc: project.noc,
+      perspective3d: project.perspective3d,
+      architecture: project.architecture,
+      structure: project.structure,
+      status: project.status,
+      contractor: project.contractor,
+      remarks: project.remarks,
+      soilReportRequestedDate: project.soilReportRequestedDate ? project.soilReportRequestedDate.slice(0, 10) : "",
+      soilReportExpectedDate: project.soilReportExpectedDate ? project.soilReportExpectedDate.slice(0, 10) : "",
+      soilReportActualDate: project.soilReportActualDate ? project.soilReportActualDate.slice(0, 10) : "",
+      soilReportLab: project.soilReportLab || "",
+    });
+  }
+}, [project]);
 
   const updateField = (field: string, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
+  
+  const handleRequestedDateChange = (value: string) => {
+  setForm((prev) => {
+    const next = { ...prev, soilReportRequestedDate: value };
+    // Auto-suggest expected date as +30 days, only if expected isn't already set
+    if (value && !prev.soilReportExpectedDate) {
+      const d = new Date(value);
+      d.setDate(d.getDate() + 30);
+      next.soilReportExpectedDate = d.toISOString().slice(0, 10);
+    }
+    return next;
+  });
+};
+  const handleRequestedDateChange = (value: string) => {
+  setForm((prev) => {
+    const next = { ...prev, soilReportRequestedDate: value };
+    // Auto-suggest expected date as +30 days, only if expected isn't already set
+    if (value && !prev.soilReportExpectedDate) {
+      const d = new Date(value);
+      d.setDate(d.getDate() + 30);
+      next.soilReportExpectedDate = d.toISOString().slice(0, 10);
+    }
+    return next;
+  });
+};
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -235,6 +290,34 @@ export default function AddProjectModal({ project, onSave, onClose }: AddProject
             ))}
           </div>
 
+          {/* Soil Report Tracking */}
+<div className="mt-6 pt-5 border-t border-slate-200">
+  <h3 className="text-sm font-semibold text-slate-700 mb-3">Soil Report Tracking</h3>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <DateField
+      label="Requested Date"
+      value={form.soilReportRequestedDate}
+      onChange={handleRequestedDateChange}
+    />
+    <DateField
+      label="Expected Completion"
+      value={form.soilReportExpectedDate}
+      onChange={(v) => updateField("soilReportExpectedDate", v)}
+    />
+    <DateField
+      label="Actual Completion"
+      value={form.soilReportActualDate}
+      onChange={(v) => updateField("soilReportActualDate", v)}
+    />
+    <TextField
+      label="Laboratory"
+      value={form.soilReportLab}
+      onChange={(v) => updateField("soilReportLab", v)}
+      placeholder="e.g., ABC Soil Testing Laboratory"
+    />
+  </div>
+</div>
+          
           {/* Actions */}
           <div className="mt-6 flex items-center justify-end gap-3 pt-4 border-t border-slate-200">
             <button
