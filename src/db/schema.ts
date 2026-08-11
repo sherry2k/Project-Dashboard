@@ -27,6 +27,10 @@ export const projects = pgTable("projects", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
   lastEditedBy: varchar("last_edited_by", { length: 255 }).notNull().default("Admin"),
+  soilReportRequestedDate: timestamp("soil_report_requested_date"),
+  soilReportExpectedDate: timestamp("soil_report_expected_date"),
+  soilReportActualDate: timestamp("soil_report_actual_date"),
+  soilReportLab: varchar("soil_report_lab", { length: 255 }),
 });
 
 export const auditLogs = pgTable("audit_logs", {
