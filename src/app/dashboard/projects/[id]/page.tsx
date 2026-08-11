@@ -44,7 +44,58 @@ function getSoilProgress(project: Project): { text: string; percent: number | nu
     const daysTaken = Math.round((actual.getTime() - requested.getTime()) / 86400000);
     return { text: `Completed — took ${daysTaken} days`, percent: 100, color: "bg-emerald-500" };
   }
+type WorkflowState = "done" | "active" | "pending";
 
+interface WorkflowStep {
+  label: string;
+  state: WorkflowState;
+  detail?: string;
+}
+
+function getWorkflowSteps(project: Project): WorkflowStep[] {
+  const soil = getSoilProgress(project);
+  const soilDone = !!project.soilReportActualDate && new Date(project.soilReportActualDate).getTime() <= Date.now();
+  const soilStarted = !!project.soilReportRequestedDate;
+
+  const archState: WorkflowState =
+    project.architecture === "Approved" ? "done"
+    : ["In Progress", "Ready", "Comments"].includes(project.architecture) ? "active"
+    : "pending";
+
+  const structState: WorkflowState =
+    project.structure === "Approved" ? "done"
+    : ["In Progress", "Comments"].includes(project.structure) ? "active"
+    : "pending";
+
+  const nocState: WorkflowState =
+    ["Done", "Not Required"].includes(project.noc) ? "done"
+    : ["Pending", "Waiting", "Submitted"].includes(project.noc) ? "active"
+    : "pending";
+
+  const permitState: WorkflowState =
+    ["Permit Issued", "Completed"].includes(project.status) ? "done"
+    : project.status === "Waiting Owner" ? "active"
+    : "pending";
+
+  const tenderState: WorkflowState =
+    project.status === "Completed" ? "done"
+    : project.status === "Waiting Tender" ? "active"
+    : "pending";
+
+  return [
+    { label: "Registration", state: "done" },
+    {
+      label: "Soil Investigation",
+      state: soilDone ? "done" : soilStarted ? "active" : "pending",
+      detail: soil?.text,
+    },
+    { label: "Architecture", state: archState },
+    { label: "Structure", state: structState },
+    { label: "Municipality (NOC)", state: nocState },
+    { label: "Permit", state: permitState },
+    { label: "Tender", state: tenderState },
+  ];
+}
   const now = new Date();
   const totalDays = Math.round((expected.getTime() - requested.getTime()) / 86400000);
   const daysElapsed = Math.round((now.getTime() - requested.getTime()) / 86400000);
@@ -61,7 +112,25 @@ function getSoilProgress(project: Project): { text: string; percent: number | nu
     color,
   };
 }
-
+function WorkflowStepIcon({ state }: { state: WorkflowState }) {
+  if (state === "done") {
+    return (
+      <div className="w-7 h-7 rounded-full bg-emerald-500 flex items-center justify-center text-white text-xs font-bold shrink-0">
+        ✓
+      </div>
+    );
+  }
+  if (state === "active") {
+    return (
+      <div className="w-7 h-7 rounded-full bg-amber-100 border-2 border-amber-500 flex items-center justify-center shrink-0">
+        <div className="w-2 h-2 rounded-full bg-amber-500"></div>
+      </div>
+    );
+  }
+  return (
+    <div className="w-7 h-7 rounded-full border-2 border-slate-300 shrink-0"></div>
+  );
+}
 export default function ProjectDetailPage() {
   const params = useParams();
   const router = useRouter();
@@ -176,6 +245,35 @@ export default function ProjectDetailPage() {
                 {project.updatedAt ? format(new Date(project.updatedAt), "dd MMM yyyy — HH:mm") : "—"}
               </p>
             </div>
+          </div>
+        </div>
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 mt-5">
+          <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-5">Workflow</h2>
+          <div>
+            {getWorkflowSteps(project).map((step, i, arr) => (
+              <div key={step.label} className="flex gap-3">
+                <div className="flex flex-col items-center">
+                  <WorkflowStepIcon state={step.state} />
+                  {i < arr.length - 1 && (
+                    <div className={`w-0.5 flex-1 min-h-[28px] ${step.state === "done" ? "bg-emerald-300" : "bg-slate-200"}`}></div>
+                  )}
+                </div>
+                <div className="pb-6">
+                  <p className={`text-sm font-medium ${step.state === "pending" ? "text-slate-400" : "text-slate-800"}`}>
+                    {step.label}
+                  </p>
+                  {step.detail && (
+                    <p className="text-xs text-amber-600 mt-0.5">{step.detail}</p>
+                  )}
+                  {step.state === "done" && !step.detail && (
+                    <p className="text-xs text-emerald-600 mt-0.5">Done</p>
+                  )}
+                  {step.state === "pending" && (
+                    <p className="text-xs text-slate-400 mt-0.5">Pending</p>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </main>
