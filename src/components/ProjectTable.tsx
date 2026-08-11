@@ -110,6 +110,52 @@ function EditorTag({ name }: { name?: string }) {
   );
 }
 
+function SoilReportProgress({ project }: { project: Project }) {
+  const requested = project.soilReportRequestedDate ? new Date(project.soilReportRequestedDate) : null;
+  const expected = project.soilReportExpectedDate ? new Date(project.soilReportExpectedDate) : null;
+
+  // No tracking dates set yet — fall back to the plain badge
+  if (!requested || !expected) {
+    return <StatusBadge value={project.status} colors={STATUS_COLORS} />;
+  }
+
+  const now = new Date();
+  const totalDays = Math.round((expected.getTime() - requested.getTime()) / 86400000);
+  const daysElapsed = Math.round((now.getTime() - requested.getTime()) / 86400000);
+  const daysRemaining = totalDays - daysElapsed;
+
+  let color = "text-emerald-700";
+  let barColor = "bg-emerald-500";
+  if (daysRemaining < 0) {
+    color = "text-red-700";
+    barColor = "bg-red-500";
+  } else if (daysRemaining <= totalDays * 0.25) {
+    color = "text-amber-700";
+    barColor = "bg-amber-500";
+  }
+
+  const percent = Math.min(100, Math.max(0, (daysElapsed / totalDays) * 100));
+
+  return (
+    <div className="min-w-[130px]">
+      <div className={`text-xs font-semibold ${color}`}>
+        {daysRemaining < 0
+          ? `Overdue by ${Math.abs(daysRemaining)}d`
+          : `${daysElapsed} / ${totalDays} days`}
+      </div>
+      <div className="w-full h-1.5 bg-slate-100 rounded-full mt-1 overflow-hidden">
+        <div
+          className={`h-full ${barColor} transition-all`}
+          style={{ width: `${percent}%` }}
+        ></div>
+      </div>
+      {project.soilReportLab && (
+        <div className="text-[10px] text-slate-400 mt-0.5 truncate">{project.soilReportLab}</div>
+      )}
+    </div>
+  );
+}
+
 function InlineTextEdit({
   value,
   onSave,
@@ -457,13 +503,15 @@ const visibleProjects = dataQualityFilter
                             className="cursor-pointer"
                             onDoubleClick={() => setEditingCell({ rowId: project.id, field })}
                           >
-                            <div className="editable-cell">
-                              {badgeFields[field] ? (
-                                <StatusBadge value={project[field]} colors={badgeFields[field]} />
-                              ) : (
-                                <span className="text-sm text-slate-700">{project[field]}</span>
-                              )}
-                            </div>
+                           <div className="editable-cell">
+                           {field === "status" && project.status === "Waiting Soil Report" ? (
+                             <SoilReportProgress project={project} />
+                                ) : badgeFields[field] ? (
+                             <StatusBadge value={project[field]} colors={badgeFields[field]} />
+                                 ) : (
+                             <span className="text-sm text-slate-700">{project[field]}</span>
+                               )}
+                               </div>
                             <EditorTag name={project.fieldEditors?.[field]} />
                           </div>
                         )}
