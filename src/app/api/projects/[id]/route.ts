@@ -75,13 +75,12 @@ export async function PATCH(
     }
   }
 
- const dateFields = ["soilReportRequestedDate", "soilReportExpectedDate", "soilReportActualDate"];
-
+const dateFields = ["soilReportRequestedDate", "soilReportExpectedDate", "soilReportActualDate"];
 const updateData: Record<string, unknown> = { updatedAt: new Date() };
 for (const field of editableFields) {
   if (body[field] !== undefined) {
-    if (dateFields.includes(field) && body[field] === "") {
-      updateData[field] = null;
+    if (dateFields.includes(field)) {
+      updateData[field] = body[field] === "" ? null : new Date(body[field]);
     } else {
       updateData[field] = body[field];
     }
