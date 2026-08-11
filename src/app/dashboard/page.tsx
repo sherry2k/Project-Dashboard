@@ -197,14 +197,18 @@ export default function Dashboard() {
   };
 
   const handleUpdateProject = async (id: number, data: Record<string, unknown>) => {
-    await fetch(`/api/projects/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...data, editedBy: user?.username || "unknown" }),
-    });
-    fetchProjects();
-    fetchNotifications();
-  };
+  const res = await fetch(`/api/projects/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ...data, editedBy: user?.username || "unknown" }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    alert(`Failed to save: ${err.error || "Unknown error"}`);
+  }
+  fetchProjects();
+  fetchNotifications();
+};
 
   const handleDeleteProject = async (id: number) => {
     await fetch(`/api/projects/${id}`, { method: "DELETE" });
