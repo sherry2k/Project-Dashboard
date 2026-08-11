@@ -24,9 +24,10 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await params;
-  const body = await request.json();
-  const projectId = parseInt(id);
+  try {
+    const { id } = await params;
+    const body = await request.json();
+    const projectId = parseInt(id);
 
   // Fetch current project for audit log
   const current = await db
@@ -87,13 +88,17 @@ for (const field of editableFields) {
   }
 }
 
-  const result = await db
-    .update(projects)
-    .set(updateData)
-    .where(eq(projects.id, projectId))
-    .returning();
-
-  return NextResponse.json(result[0]);
+const result = await db
+      .update(projects)
+      .set(updateData)
+      .where(eq(projects.id, projectId))
+      .returning();
+    return NextResponse.json(result[0]);
+  } catch (error) {
+    console.error("PATCH /api/projects/[id] failed:", error);
+    const message = error instanceof Error ? error.message : "Unknown server error";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
 }
 
 export async function DELETE(
