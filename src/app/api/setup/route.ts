@@ -57,6 +57,11 @@ export async function GET() {
         last_edited_by VARCHAR(255) NOT NULL DEFAULT 'Admin'
       );
 
+      ALTER TABLE projects ADD COLUMN IF NOT EXISTS soil_report_requested_date TIMESTAMP;
+      ALTER TABLE projects ADD COLUMN IF NOT EXISTS soil_report_expected_date TIMESTAMP;
+      ALTER TABLE projects ADD COLUMN IF NOT EXISTS soil_report_actual_date TIMESTAMP;
+      ALTER TABLE projects ADD COLUMN IF NOT EXISTS soil_report_lab VARCHAR(255);
+
       CREATE TABLE IF NOT EXISTS audit_logs (
         id SERIAL PRIMARY KEY,
         project_id INTEGER NOT NULL,
