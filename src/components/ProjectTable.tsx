@@ -126,8 +126,8 @@ function EditorTag({ name }: { name?: string }) {
   ) {
     return { icon: "🏛", label: "Municipality Review" };
   }
-  if (["In Progress", "Pending", "Comments"].includes(project.structure)) return { icon: "🏗", label: "Structure" };
-  if (["In Progress", "Pending", "Comments"].includes(project.architecture)) return { icon: "📐", label: "Architecture" };
+  if (["In Progress", "Comments"].includes(project.structure)) return { icon: "🏗", label: "Structure" };
+  if (["In Progress", "Comments"].includes(project.architecture)) return { icon: "📐", label: "Architecture" };
   if (["In Progress", "Pending"].includes(project.perspective3d)) return { icon: "🎨", label: "3D Perspective" };
   return { icon: "📌", label: project.status };
 }
