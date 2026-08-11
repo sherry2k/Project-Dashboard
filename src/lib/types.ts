@@ -16,8 +16,11 @@ export interface Project {
   updatedAt: string;
   lastEditedBy: string;
   fieldEditors?: Record<string, string>;
+  soilReportRequestedDate?: string | null;
+  soilReportExpectedDate?: string | null;
+  soilReportActualDate?: string | null;
+  soilReportLab?: string | null;
 }
-
 export interface ProjectStats {
   total: number;
   active: number;
