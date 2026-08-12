@@ -351,7 +351,7 @@ export default function AddProjectModal({ project, onSave, onClose }: AddProject
     placeholder="0–100"
   />
 </div>
-</div>
+
           
           {/* Actions */}
           <div className="mt-6 flex items-center justify-end gap-3 pt-4 border-t border-slate-200">
