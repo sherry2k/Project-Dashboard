@@ -362,8 +362,7 @@ useEffect(() => {
    { key: "status", label: "Status", width: "min-w-[160px]", sortable: true },
   { key: "currentActivity", label: "Current Activity", width: "min-w-[140px]", sortable: false },
   { key: "soilReport", label: "Soil Report", width: "min-w-[120px]", sortable: false },
-  { key: "remarks", label: "Remarks", width: "w-20", sortable: false },
-  { key: "updatedAt", label: "Last Updated", width: "min-w-[120px]", sortable: true },
+   { key: "updatedAt", label: "Last Updated", width: "min-w-[120px]", sortable: true },
   { key: "actions", label: "Actions", width: "w-20", sortable: false },
 ];
 
