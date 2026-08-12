@@ -247,7 +247,6 @@ export default function ProjectTable({
   const [viewProject, setViewProject] = useState<Project | null>(null);
   const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
   const menuRef = useRef<HTMLDivElement>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
   const tableScrollRef = useRef<HTMLDivElement>(null);
   const bottomScrollRef = useRef<HTMLDivElement>(null);
   const [tableWidth, setTableWidth] = useState(0);
