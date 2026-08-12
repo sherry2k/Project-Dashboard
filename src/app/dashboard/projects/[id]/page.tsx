@@ -49,8 +49,8 @@ function getSoilInvestigationStatus(project: Project): {
   badgeColor: string;
 } {
   if (project.soilReportRequired === "Not Required") {
-    return { status: "Not Required", percent: null, color: "bg-slate-300", badgeColor: "bg-slate-100 text-slate-600" };
-  }
+  return { status: "Not Required", percent: null, color: "bg-slate-300", badgeColor: "bg-slate-200 text-slate-700" };
+}
 
   const requested = project.soilReportRequestedDate ? new Date(project.soilReportRequestedDate) : null;
 const expected = project.soilReportExpectedDate ? new Date(project.soilReportExpectedDate) : null;
