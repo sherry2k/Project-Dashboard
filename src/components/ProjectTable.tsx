@@ -312,7 +312,6 @@ const visibleProjects = dataQualityFilter
    { key: "status", label: "Status", width: "min-w-[160px]", sortable: true },
   { key: "currentActivity", label: "Current Activity", width: "min-w-[140px]", sortable: false },
   { key: "soilReport", label: "Soil Report", width: "min-w-[120px]", sortable: false },
-  { key: "contractor", label: "Contractor", width: "min-w-[120px]", sortable: true },
   { key: "remarks", label: "Remarks", width: "w-20", sortable: false },
   { key: "updatedAt", label: "Last Updated", width: "min-w-[120px]", sortable: true },
   { key: "actions", label: "Actions", width: "w-20", sortable: false },
@@ -584,35 +583,7 @@ const visibleProjects = dataQualityFilter
                       <SoilReportProgress project={project} />
                     </td>
                     
-                    {/* Contractor */}
-<td className="px-3 py-2">
-  {editingCell?.rowId === project.id && editingCell?.field === "contractor" ? (
-    <InlineTextEdit
-      value={project.contractor}
-      onSave={(v) => handleCellEdit(project.id, "contractor", v)}
-      onClose={() => setEditingCell(null)}
-    />
-  ) : (
-    <div
-      onDoubleClick={() => setEditingCell({ rowId: project.id, field: "contractor" })}
-      className="group cursor-pointer"
-    >
-      <div className="editable-cell text-sm">
-        {project.contractor ? (
-          <span className="text-slate-700">{project.contractor}</span>
-        ) : (
-          <span className="flex items-center gap-1 text-slate-300 italic group-hover:text-blue-400 transition-colors">
-            <Pencil size={11} className="opacity-0 group-hover:opacity-100 transition-opacity" />
-            Add contractor
-          </span>
-        )}
-      </div>
-      <EditorTag name={project.fieldEditors?.contractor} />
-    </div>
-  )}
-</td>
-
-{/* Remarks */}
+  {/* Remarks */}
 <td className="px-3 py-2">
   {editingCell?.rowId === project.id && editingCell?.field === "remarks" ? (
     <InlineTextEdit
