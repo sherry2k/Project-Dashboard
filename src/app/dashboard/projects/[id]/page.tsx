@@ -241,8 +241,8 @@ return (
     <ArrowLeft size={16} /> Back to Dashboard
   </button>
 
-  <div className="absolute top-5 right-6 w-11 h-11 rounded-full bg-white flex items-center justify-center overflow-hidden">
-    <img src="/images/logo.png" alt="UBEC" className="w-8 h-8 object-contain" />
+  <div className="absolute top-10 right-10 w-11 h-11 rounded-full bg-white flex items-center justify-center overflow-hidden">
+    <img src="/images/logo.png" alt="UBEC" className="w-10 h-10 object-contain" />
   </div>
 
   <div className="text-center pt-10">
