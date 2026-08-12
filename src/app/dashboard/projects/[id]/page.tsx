@@ -233,23 +233,28 @@ export default function ProjectDetailPage() {
   const statusColor = STATUS_COLORS[project.status] || { bg: "bg-gray-100", text: "text-gray-700" };
 return (
     <div className="min-h-screen bg-[#F1F5F9]">
-     <div className="bg-gradient-to-r from-[#5E9E3A] to-[#4a8230] px-6 py-8 relative">
-  <button
-    onClick={() => router.push("/dashboard")}
-    className="absolute top-5 left-6 flex items-center gap-2 bg-white/15 hover:bg-white/25 text-white text-sm font-medium px-3 py-1.5 rounded-lg transition-colors"
-  >
-    <ArrowLeft size={16} /> Back to Dashboard
-  </button>
+    <div className="bg-gradient-to-r from-[#5E9E3A] to-[#4a8230] px-6 py-3">
+  <div className="max-w-6xl mx-auto flex items-center gap-4">
+    <button
+      onClick={() => router.push("/dashboard")}
+      className="flex items-center gap-1.5 text-white/80 hover:text-white text-sm font-medium transition-colors shrink-0"
+    >
+      <ArrowLeft size={16} /> Back
+    </button>
 
-  <div className="absolute top-10 right-10 w-11 h-11 rounded-full bg-white flex items-center justify-center overflow-hidden">
-    <img src="/images/logo.png" alt="UBEC" className="w-10 h-10 object-contain" />
-  </div>
+    <div className="w-px h-6 bg-white/25 shrink-0"></div>
 
-  <div className="text-center pt-10">
-    <p className="text-green-100 text-xs uppercase tracking-[0.15em] font-semibold mb-2">Project Overview</p>
-    <h1 className="text-4xl font-bold text-white">{project.projectNo}</h1>
-    <p className="text-green-100 text-xl font-semibold mt-2">{project.ownerName}</p>
-    <p className="text-green-200 text-sm mt-1">Plot {project.plotNo} — {project.projectLocation}</p>
+    <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center overflow-hidden shrink-0">
+      <img src="/images/logo.png" alt="UBEC" className="w-6 h-6 object-contain" />
+    </div>
+
+    <h1 className="text-lg font-bold text-white shrink-0">{project.projectNo}</h1>
+
+    <div className="w-px h-6 bg-white/25 shrink-0"></div>
+
+    <p className="text-sm text-green-50 truncate">
+      {project.ownerName} <span className="text-white/30 mx-1">|</span> Plot {project.plotNo} <span className="text-white/30 mx-1">|</span> {project.projectLocation}
+    </p>
   </div>
 </div>
 <main className="px-6 py-6 max-w-6xl mx-auto">
