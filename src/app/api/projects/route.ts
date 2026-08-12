@@ -96,9 +96,10 @@ export async function GET(request: NextRequest) {
     active: allProjects.filter((p) => !INACTIVE_STATUSES.includes(p.status)).length,
     permitIssued: allProjects.filter((p) => p.status === "Permit Issued").length,
     waitingOwner: allProjects.filter((p) => p.status === "Waiting Owner").length,
-   soilReportOverdue: allProjects.filter((p) => {
-  if (p.status !== "Waiting Soil Report") return false;
+    soilReportOverdue: allProjects.filter((p) => {
+  if (p.soilReportRequired === "Not Required") return false;
   if (!p.soilReportExpectedDate) return false;
+  if (p.soilReportActualDate) return false;
   return new Date(p.soilReportExpectedDate) < new Date();
 }).length,
     waitingTender: allProjects.filter((p) => p.status === "Waiting Tender").length,
