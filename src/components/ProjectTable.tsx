@@ -259,7 +259,29 @@ export default function ProjectTable({
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
-  useEffect(() => {
+  
+  const handleSort = (field: string) => {
+    if (sortField === field) {
+      setSortDir(sortDir === "asc" ? "desc" : sortDir === "desc" ? null : "asc");
+      if (sortDir === "desc") setSortField(null);
+    } else {
+      setSortField(field);
+      setSortDir("asc");
+    }
+  };
+  
+  
+  const sortedProjects = [...projects].sort((a, b) => {
+    if (!sortField || !sortDir) return 0;
+    const aVal = String((a as unknown as Record<string, unknown>)[sortField] || "");
+    const bVal = String((b as unknown as Record<string, unknown>)[sortField] || "");
+    return sortDir === "asc" ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+  });
+  
+const visibleProjects = dataQualityFilter
+  ? sortedProjects.filter((p) => !p.contractor?.trim() || !p.remarks?.trim())
+  : sortedProjects;
+useEffect(() => {
   const table = tableScrollRef.current;
   if (!table) return;
 
@@ -290,27 +312,6 @@ export default function ProjectTable({
   };
 }, [visibleProjects]);
 
-  const handleSort = (field: string) => {
-    if (sortField === field) {
-      setSortDir(sortDir === "asc" ? "desc" : sortDir === "desc" ? null : "asc");
-      if (sortDir === "desc") setSortField(null);
-    } else {
-      setSortField(field);
-      setSortDir("asc");
-    }
-  };
-  
-  
-  const sortedProjects = [...projects].sort((a, b) => {
-    if (!sortField || !sortDir) return 0;
-    const aVal = String((a as unknown as Record<string, unknown>)[sortField] || "");
-    const bVal = String((b as unknown as Record<string, unknown>)[sortField] || "");
-    return sortDir === "asc" ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
-  });
-  
-const visibleProjects = dataQualityFilter
-  ? sortedProjects.filter((p) => !p.contractor?.trim() || !p.remarks?.trim())
-  : sortedProjects;
   
   const handleCellEdit = useCallback(
     async (id: number, field: string, value: string) => {
