@@ -635,36 +635,6 @@ useEffect(() => {
                       <SoilReportProgress project={project} />
                     </td>
                     
-  {/* Remarks */}
-<td className="px-3 py-2">
-  {editingCell?.rowId === project.id && editingCell?.field === "remarks" ? (
-    <InlineTextEdit
-      value={project.remarks}
-      onSave={(v) => handleCellEdit(project.id, "remarks", v)}
-      onClose={() => setEditingCell(null)}
-    />
-  ) : (
-    <div
-      onDoubleClick={() => setEditingCell({ rowId: project.id, field: "remarks" })}
-      className="group cursor-pointer"
-    >
-      <div
-        className="editable-cell text-sm max-w-[200px] truncate"
-        title={project.remarks}
-      >
-        {project.remarks ? (
-          <span className="text-slate-600">{project.remarks}</span>
-        ) : (
-          <span className="flex items-center gap-1 text-slate-300 italic group-hover:text-blue-400 transition-colors">
-            <Pencil size={11} className="opacity-0 group-hover:opacity-100 transition-opacity" />
-            Add remark
-          </span>
-        )}
-      </div>
-      <EditorTag name={project.fieldEditors?.remarks} />
-    </div>
-  )}
-</td>
 
                     {/* Last Updated */}
                     <td className="px-2 py-2 text-xs text-slate-500">
