@@ -15,6 +15,7 @@ export async function GET(request: NextRequest) {
   const architecture = searchParams.get("architecture") || "";
   const structure = searchParams.get("structure") || "";
   const showArchived = searchParams.get("archived") === "true";
+  const activeOnly = searchParams.get("activeOnly") === "true";
   const soilOverdueOnly = searchParams.get("soilOverdueOnly") === "true";
 
   const conditions = [];
