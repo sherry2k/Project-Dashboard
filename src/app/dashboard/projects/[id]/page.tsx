@@ -257,6 +257,15 @@ export default function ProjectDetailPage() {
                 <span className="text-sm text-slate-400 italic">Not started</span>
               )}
             </div>
+            
+            <div className="sm:col-span-2 pt-3 border-t border-slate-100">
+  <p className="text-xs text-slate-500 mb-1.5">Remarks</p>
+  {project.remarks?.trim() ? (
+    <p className="text-sm text-slate-700">{project.remarks}</p>
+  ) : (
+    <p className="text-sm text-slate-400 italic">No remarks added</p>
+  )}
+</div>
 
             <div className="sm:col-span-2 pt-3 border-t border-slate-100">
               <p className="text-xs text-slate-500 mb-1">Last Updated</p>
