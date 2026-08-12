@@ -80,10 +80,10 @@ function getWorkflowSteps(project: Project): WorkflowStep[] {
     : ["In Progress", "Comments"].includes(project.structure) ? "active"
     : "pending";
 
-  const perspectiveState: WorkflowState =
-    project.perspective3d === "Ready" ? "done"
-    : project.perspective3d === "In Progress" ? "active"
-    : "pending";
+ const perspectiveState: WorkflowState =
+  ["Ready", "Not Required"].includes(project.perspective3d) ? "done"
+  : project.perspective3d === "In Progress" ? "active"
+  : "pending";
 
   const nocState: WorkflowState =
     ["Done", "Not Required"].includes(project.noc) ? "done"
