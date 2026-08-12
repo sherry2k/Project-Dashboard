@@ -80,12 +80,14 @@ export default function Dashboard() {
 
     // Stat card selection wins over the sidebar status/noc filters
     if (statFilter.type === "status") {
-      params.set("status", statFilter.value);
-    } else if (statFilter.type === "noc") {
-      params.set("noc", statFilter.value);
-    } else if (statFilter.type === "active") {
-      params.set("activeOnly", "true");
-    }
+  params.set("status", statFilter.value);
+ } else if (statFilter.type === "noc") {
+  params.set("noc", statFilter.value);
+} else if (statFilter.type === "active") {
+  params.set("activeOnly", "true");
+} else if (statFilter.type === "soilOverdue") {
+  params.set("soilOverdueOnly", "true");
+}
 
     if (statFilter.type !== "status" && filters.status) params.set("status", filters.status);
     if (statFilter.type !== "noc" && filters.noc) params.set("noc", filters.noc);
@@ -262,6 +264,9 @@ export default function Dashboard() {
     } else if (type === "dataQuality") {
       delete next.status;
       delete next.noc;
+      } else if (type === "soilOverdue") {
+        delete next.status;
+        delete next.noc;
     }
     return next;
   });
