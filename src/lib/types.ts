@@ -20,6 +20,8 @@ export interface Project {
   soilReportExpectedDate?: string | null;
   soilReportActualDate?: string | null;
   soilReportLab?: string | null;
+  soilReportRequired?: string;
+  siteProgressPercent?: number;
 }
 export interface ProjectStats {
   total: number;
