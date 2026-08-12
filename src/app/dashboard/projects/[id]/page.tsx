@@ -192,16 +192,16 @@ export default function ProjectDetailPage() {
     <ArrowLeft size={16} /> Back to Dashboard
   </button>
 
-  <div className="absolute top-5 right-6 w-11 h-11 rounded-full bg-white/15 flex items-center justify-center">
-   <img src="public/images/logo.png" alt="UBEC" className="w-12 h-12 object-contain" />
-  </div>
+  <div className="absolute top-5 right-6 w-11 h-11 rounded-full bg-white flex items-center justify-center overflow-hidden">
+  <img src="/images/logo.png" alt="UBEC" className="w-8 h-8 object-contain" />
+</div>
 
   <div className="text-center pt-10">
-    <p className="text-green-100 text-xs uppercase tracking-[0.15em] font-semibold mb-2">Project Overview</p>
-    <h1 className="text-4xl font-bold text-white">{project.projectNo}</h1>
-    <p className="text-green-100 text-base mt-2">{project.ownerName}</p>
-    <p className="text-green-200 text-sm mt-1">Plot {project.plotNo} — {project.projectLocation}</p>
-  </div>
+  <p className="text-green-100 text-xs uppercase tracking-[0.15em] font-semibold mb-2">Project Overview</p>
+  <h1 className="text-4xl font-bold text-white">{project.projectNo}</h1>
+  <p className="text-green-100 text-xl font-semibold mt-2">{project.ownerName}</p>
+  <p className="text-green-200 text-sm mt-1">Plot {project.plotNo} — {project.projectLocation}</p>
+</div>
 </div>
 
       <main className="px-6 py-6 max-w-3xl mx-auto">
