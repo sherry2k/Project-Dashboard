@@ -133,6 +133,8 @@ export async function POST(request: NextRequest) {
       soilReportExpectedDate: body.soilReportExpectedDate ? new Date(body.soilReportExpectedDate) : null,
       soilReportActualDate: body.soilReportActualDate ? new Date(body.soilReportActualDate) : null,
       soilReportLab: body.soilReportLab || null,
+      soilReportRequired: body.soilReportRequired || "Required",
+      siteProgressPercent: body.siteProgressPercent ? Number(body.siteProgressPercent) : 0,
     })
     .returning();
 
