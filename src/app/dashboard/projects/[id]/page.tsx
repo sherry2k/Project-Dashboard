@@ -16,7 +16,13 @@ function getCurrentActivity(project: Project): { icon: string; label: string } {
   if (project.status === "Waiting Soil Report") return { icon: "🧪", label: "Soil Investigation" };
   if (project.status === "Waiting Owner") return { icon: "👤", label: "Waiting Owner" };
   if (project.status === "Permit Issued") return { icon: "📄", label: "Permit Processed" };
-  if (["Pending", "Waiting", "Submitted"].includes(project.noc)) return { icon: "🏛", label: "Municipality Review" };
+  if (
+    ["Pending", "Waiting", "Submitted"].includes(project.noc) ||
+    project.architecture === "Submitted" ||
+    project.structure === "Submitted"
+  ) {
+    return { icon: "🏛", label: "Municipality Review" };
+  }
   if (["In Progress", "Pending", "Comments"].includes(project.structure)) return { icon: "🏗", label: "Structure" };
   if (["In Progress", "Pending", "Comments"].includes(project.architecture)) return { icon: "📐", label: "Architecture" };
   if (["In Progress", "Pending"].includes(project.perspective3d)) return { icon: "🎨", label: "3D Perspective" };
@@ -108,14 +114,14 @@ interface WorkflowStep {
 
 function getWorkflowSteps(project: Project): WorkflowStep[] {
   const archState: WorkflowState =
-    project.architecture === "Approved" ? "done"
-    : ["In Progress", "Ready", "Comments"].includes(project.architecture) ? "active"
-    : "pending";
+  project.architecture === "Approved" ? "done"
+  : ["In Progress", "Ready", "Comments", "Submitted"].includes(project.architecture) ? "active"
+  : "pending";
 
   const structState: WorkflowState =
-    project.structure === "Approved" ? "done"
-    : ["In Progress", "Comments"].includes(project.structure) ? "active"
-    : "pending";
+  project.structure === "Approved" ? "done"
+  : ["In Progress", "Comments", "Submitted"].includes(project.structure) ? "active"
+  : "pending";
 
  const perspectiveState: WorkflowState =
   ["Ready", "Not Required"].includes(project.perspective3d) ? "done"
