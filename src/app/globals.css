@@ -128,10 +128,12 @@ body {
     overflow: visible;
   }
 }
-.hide-native-scrollbar {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-.hide-native-scrollbar::-webkit-scrollbar {
-  display: none;
+@media (min-width: 768px) {
+  .hide-native-scrollbar-desktop-only {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .hide-native-scrollbar-desktop-only::-webkit-scrollbar {
+    display: none;
+  }
 }
