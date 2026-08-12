@@ -33,31 +33,68 @@ function getWaitingFor(project: Project): { icon: string; label: string } | null
   if (project.noc === "Waiting Payment") return { icon: "💰", label: "Payment" };
   return null;
 }
-function getSoilProgress(project: Project): { text: string; percent: number | null; color: string } | null {
-  if (!project.soilReportRequestedDate || !project.soilReportExpectedDate) return null;
-  const requested = new Date(project.soilReportRequestedDate);
-  const expected = new Date(project.soilReportExpectedDate);
-  const actual = project.soilReportActualDate ? new Date(project.soilReportActualDate) : null;
+type SoilStatus = "Not Required" | "Not Started" | "Requested" | "In Progress" | "Report Received" | "Overdue";
 
-  if (actual && actual.getTime() <= Date.now()) {
-    const daysTaken = Math.round((actual.getTime() - requested.getTime()) / 86400000);
-    return { text: `Completed — took ${daysTaken} days`, percent: 100, color: "bg-emerald-500" };
+function getSoilInvestigationStatus(project: Project): {
+  status: SoilStatus;
+  detail?: string;
+  percent: number | null;
+  color: string;
+  badgeColor: string;
+} {
+  if (project.soilReportRequired === "Not Required") {
+    return { status: "Not Required", percent: null, color: "bg-slate-300", badgeColor: "bg-slate-100 text-slate-600" };
   }
 
+  const requested = project.soilReportRequestedDate ? new Date(project.soilReportRequestedDate) : null;
+  if (!requested) {
+    return { status: "Not Started", percent: null, color: "bg-slate-300", badgeColor: "bg-slate-100 text-slate-500" };
+  }
+
+  const expected = project.soilReportExpectedDate ? new Date(project.soilReportExpectedDate) : null;
+  const actual = project.soilReportActualDate ? new Date(project.soilReportActualDate) : null;
   const now = new Date();
+
+  if (actual && actual.getTime() <= now.getTime()) {
+    const daysTaken = Math.round((actual.getTime() - requested.getTime()) / 86400000);
+    return {
+      status: "Report Received",
+      detail: `Took ${daysTaken} days`,
+      percent: 100,
+      color: "bg-emerald-500",
+      badgeColor: "bg-emerald-100 text-emerald-800",
+    };
+  }
+
+  if (!expected) {
+    return { status: "Requested", percent: 5, color: "bg-blue-400", badgeColor: "bg-blue-100 text-blue-800" };
+  }
+
   const totalDays = Math.round((expected.getTime() - requested.getTime()) / 86400000);
   const daysElapsed = Math.round((now.getTime() - requested.getTime()) / 86400000);
   const daysRemaining = totalDays - daysElapsed;
   const percent = Math.min(100, Math.max(0, (daysElapsed / totalDays) * 100));
 
-  let color = "bg-emerald-500";
-  if (daysRemaining < 0) color = "bg-red-500";
-  else if (daysRemaining <= totalDays * 0.25) color = "bg-amber-500";
+  if (daysRemaining < 0) {
+    return {
+      status: "Overdue",
+      detail: `${Math.abs(daysRemaining)} days overdue`,
+      percent: 100,
+      color: "bg-red-500",
+      badgeColor: "bg-red-100 text-red-800",
+    };
+  }
+
+  if (daysElapsed <= 1) {
+    return { status: "Requested", percent, color: "bg-blue-400", badgeColor: "bg-blue-100 text-blue-800" };
+  }
 
   return {
-    text: daysRemaining < 0 ? `Overdue by ${Math.abs(daysRemaining)}d` : `${daysElapsed} / ${totalDays} days`,
+    status: "In Progress",
+    detail: `${daysElapsed} / ${totalDays} days`,
     percent,
-    color,
+    color: daysRemaining <= totalDays * 0.25 ? "bg-amber-500" : "bg-emerald-500",
+    badgeColor: "bg-amber-100 text-amber-800",
   };
 }
 
@@ -113,6 +150,13 @@ function getWorkflowSteps(project: Project): WorkflowStep[] {
     { label: "Tender", state: tenderState },
     { label: "Contractor Assignment", state: contractorState },
   ];
+}
+
+function getConsultancyProgress(project: Project): number {
+  const steps = getWorkflowSteps(project);
+  const relevant = steps.filter((s) => s.label !== "Contractor Assignment");
+  const doneCount = relevant.filter((s) => s.state === "done").length;
+  return Math.round((doneCount / relevant.length) * 100);
 }
 
 function WorkflowStepIcon({ state }: { state: WorkflowState }) {
@@ -179,7 +223,7 @@ export default function ProjectDetailPage() {
 
   const activity = getCurrentActivity(project);
   const waitingFor = getWaitingFor(project);
-  const soilProgress = getSoilProgress(project);
+  const soilStatus = getSoilInvestigationStatus(project);
   const statusColor = STATUS_COLORS[project.status] || { bg: "bg-gray-100", text: "text-gray-700" };
 
   return (
@@ -243,20 +287,17 @@ export default function ProjectDetailPage() {
 </div>
 
             <div>
-              <p className="text-xs text-slate-500 mb-1.5">Soil Progress</p>
-              {soilProgress ? (
-                <div>
-                  <p className="text-sm font-semibold text-slate-800">{soilProgress.text}</p>
-                  {soilProgress.percent !== null && (
-                    <div className="w-full h-1.5 bg-slate-100 rounded-full mt-1.5 overflow-hidden">
-                      <div className={`h-full ${soilProgress.color}`} style={{ width: `${soilProgress.percent}%` }}></div>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <span className="text-sm text-slate-400 italic">Not started</span>
-              )}
-            </div>
+  <p className="text-xs text-slate-500 mb-1.5">Soil Investigation</p>
+  <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-sm font-medium ${soilStatus.badgeColor}`}>
+    {soilStatus.status}
+  </span>
+  {soilStatus.detail && <p className="text-xs text-slate-500 mt-1">{soilStatus.detail}</p>}
+  {soilStatus.percent !== null && (
+    <div className="w-full h-1.5 bg-slate-100 rounded-full mt-1.5 overflow-hidden max-w-[160px]">
+      <div className={`h-full ${soilStatus.color}`} style={{ width: `${soilStatus.percent}%` }}></div>
+    </div>
+  )}
+</div>
             
             <div className="sm:col-span-2 pt-3 border-t border-slate-100">
   <p className="text-xs text-slate-500 mb-1.5">Remarks</p>
@@ -275,7 +316,40 @@ export default function ProjectDetailPage() {
             </div>
           </div>
         </div>
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 mt-5">
+
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 mt-5">
+          <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-5">Progress Overview</h2>
+          <div className="space-y-6">
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <p className="text-sm font-medium text-slate-700">Consultancy / Approval Progress</p>
+                <p className="text-sm font-bold text-slate-800">{getConsultancyProgress(project)}%</p>
+              </div>
+              <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-blue-500 transition-all"
+                  style={{ width: `${getConsultancyProgress(project)}%` }}
+                ></div>
+              </div>
+              <p className="text-xs text-slate-400 mt-1.5">Registration → NOC → Architecture → Structure → Permit</p>
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <p className="text-sm font-medium text-slate-700">Site / Construction Progress</p>
+                <p className="text-sm font-bold text-slate-800">{project.siteProgressPercent ?? 0}%</p>
+              </div>
+              <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-[#5E9E3A] transition-all"
+                  style={{ width: `${project.siteProgressPercent ?? 0}%` }}
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 mt-5">
           <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-5">Workflow</h2>
           <div>
             {getWorkflowSteps(project).map((step, i, arr) => (
