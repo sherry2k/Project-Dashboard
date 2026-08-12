@@ -247,6 +247,10 @@ export default function ProjectTable({
   const [viewProject, setViewProject] = useState<Project | null>(null);
   const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
   const menuRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const tableScrollRef = useRef<HTMLDivElement>(null);
+  const bottomScrollRef = useRef<HTMLDivElement>(null);
+  const [tableWidth, setTableWidth] = useState(0);
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -255,6 +259,37 @@ export default function ProjectTable({
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
+
+  useEffect(() => {
+  const table = tableScrollRef.current;
+  if (!table) return;
+
+  const updateWidth = () => setTableWidth(table.scrollWidth);
+  updateWidth();
+
+  const resizeObserver = new ResizeObserver(updateWidth);
+  resizeObserver.observe(table);
+
+  const onTableScroll = () => {
+    if (bottomScrollRef.current) {
+      bottomScrollRef.current.scrollLeft = table.scrollLeft;
+    }
+  };
+  const onBottomScroll = () => {
+    if (bottomScrollRef.current) {
+      table.scrollLeft = bottomScrollRef.current.scrollLeft;
+    }
+  };
+
+  table.addEventListener("scroll", onTableScroll);
+  bottomScrollRef.current?.addEventListener("scroll", onBottomScroll);
+
+  return () => {
+    resizeObserver.disconnect();
+    table.removeEventListener("scroll", onTableScroll);
+    bottomScrollRef.current?.removeEventListener("scroll", onBottomScroll);
+  };
+}, [visibleProjects]);
 
   const handleSort = (field: string) => {
     if (sortField === field) {
@@ -429,7 +464,7 @@ const visibleProjects = dataQualityFilter
 
       {/* Table */}
       <div className="table-container bg-white rounded-b-xl border border-slate-200 shadow-sm min-h-[400px]">
-      <div className="overflow-x-scroll" style={{ scrollbarWidth: "auto", scrollbarGutter: "stable" }}>
+     <div ref={tableScrollRef} className="overflow-x-scroll" style={{ scrollbarWidth: "auto", scrollbarGutter: "stable" }}>
           <table className="w-full border-collapse">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-200">
@@ -687,7 +722,18 @@ const visibleProjects = dataQualityFilter
           </table>
         </div>
       </div>
+      
+{tableWidth > 0 && (
+        <div
+          ref={bottomScrollRef}
+          className="sticky bottom-0 left-0 right-0 overflow-x-scroll bg-white border-t border-slate-200 z-30"
+          style={{ height: "16px", scrollbarWidth: "auto" }}
+        >
+          <div style={{ width: `${tableWidth}px`, height: "1px" }}></div>
+        </div>
+      )}
 
+      
       {/* View Project Modal */}
       {viewProject && (
         <div className="fixed inset-0 z-50 modal-overlay flex items-center justify-center p-4" onClick={() => setViewProject(null)}>
