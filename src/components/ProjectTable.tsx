@@ -478,8 +478,11 @@ useEffect(() => {
 
       {/* Table */}
       <div className="table-container bg-white rounded-b-xl border border-slate-200 shadow-sm min-h-[400px]">
-    <div  ref={tableScrollRef}  className="overflow-x-scroll hide-native-scrollbar"  style={{ scrollbarGutter: "stable" }}
-        >
+    <div
+  ref={tableScrollRef}
+  className="overflow-x-scroll hide-native-scrollbar-desktop-only"
+  style={{ scrollbarGutter: "stable" }}
+>
           <table className="w-full border-collapse">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-200">
@@ -710,14 +713,14 @@ useEffect(() => {
       </div>
       
 {tableWidth > 0 && (
-        <div
-          ref={bottomScrollRef}
-          className="sticky bottom-0 left-0 right-0 overflow-x-scroll bg-white border-t border-slate-200 z-30"
-          style={{ height: "16px", scrollbarWidth: "auto" }}
-        >
-          <div style={{ width: `${tableWidth}px`, height: "1px" }}></div>
-        </div>
-      )}
+  <div
+    ref={bottomScrollRef}
+    className="hidden md:block sticky bottom-0 left-0 right-0 overflow-x-scroll bg-white border-t border-slate-200 z-30"
+    style={{ height: "16px", scrollbarWidth: "auto" }}
+  >
+    <div style={{ width: `${tableWidth}px`, height: "1px" }}></div>
+  </div>
+)}
 
       
       {/* View Project Modal */}
