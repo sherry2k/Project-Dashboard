@@ -31,6 +31,8 @@ export const projects = pgTable("projects", {
   soilReportExpectedDate: timestamp("soil_report_expected_date"),
   soilReportActualDate: timestamp("soil_report_actual_date"),
   soilReportLab: varchar("soil_report_lab", { length: 255 }),
+  soilReportRequired: varchar("soil_report_required", { length: 20 }).notNull().default("Required"),
+  siteProgressPercent: integer("site_progress_percent").notNull().default(0),
 });
 
 export const auditLogs = pgTable("audit_logs", {
