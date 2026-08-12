@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2, Building2 } from "lucide-react";
 import type { Project } from "@/lib/types";
 import { STATUS_COLORS } from "@/lib/constants";
 import { format } from "date-fns";
@@ -184,18 +184,25 @@ export default function ProjectDetailPage() {
 
   return (
     <div className="min-h-screen bg-[#F1F5F9]">
-      <div className="bg-gradient-to-r from-[#5E9E3A] to-[#4a8230] px-6 py-5">
-        <button
-          onClick={() => router.push("/dashboard")}
-          className="flex items-center gap-1.5 text-white/80 hover:text-white text-sm mb-3 transition-colors"
-        >
-          <ArrowLeft size={16} /> Back to Dashboard
-        </button>
-        <p className="text-green-100 text-xs uppercase tracking-wider font-semibold mb-1">Project Overview</p>
-        <h1 className="text-2xl font-bold text-white">{project.projectNo}</h1>
-        <p className="text-green-100 text-sm mt-1">{project.ownerName}</p>
-        <p className="text-green-200 text-xs mt-0.5">Plot {project.plotNo} — {project.projectLocation}</p>
-      </div>
+      <div className="bg-gradient-to-r from-[#5E9E3A] to-[#4a8230] px-6 py-8 relative">
+  <button
+    onClick={() => router.push("/dashboard")}
+    className="absolute top-5 left-6 flex items-center gap-2 bg-white/15 hover:bg-white/25 text-white text-sm font-medium px-3 py-1.5 rounded-lg transition-colors"
+  >
+    <ArrowLeft size={16} /> Back to Dashboard
+  </button>
+
+  <div className="absolute top-5 right-6 w-11 h-11 rounded-full bg-white/15 flex items-center justify-center">
+    <Building2 size={22} className="text-white" />
+  </div>
+
+  <div className="text-center pt-10">
+    <p className="text-green-100 text-xs uppercase tracking-[0.15em] font-semibold mb-2">Project Overview</p>
+    <h1 className="text-4xl font-bold text-white">{project.projectNo}</h1>
+    <p className="text-green-100 text-base mt-2">{project.ownerName}</p>
+    <p className="text-green-200 text-sm mt-1">Plot {project.plotNo} — {project.projectLocation}</p>
+  </div>
+</div>
 
       <main className="px-6 py-6 max-w-3xl mx-auto">
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
