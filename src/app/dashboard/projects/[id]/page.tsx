@@ -233,25 +233,34 @@ export default function ProjectDetailPage() {
   const statusColor = STATUS_COLORS[project.status] || { bg: "bg-gray-100", text: "text-gray-700" };
 return (
     <div className="min-h-screen bg-[#F1F5F9]">
-      <div className="bg-gradient-to-r from-[#5E9E3A] to-[#4a8230] px-6 py-8 relative">
-        <button
-          onClick={() => router.push("/dashboard")}
-          className="absolute top-5 left-6 flex items-center gap-2 bg-white/15 hover:bg-white/25 text-white text-sm font-medium px-3 py-1.5 rounded-lg transition-colors"
-        >
-          <ArrowLeft size={16} /> Back to Dashboard
-        </button>
+      <div className="bg-white border-b border-slate-200 px-6 py-3">
+  <div className="max-w-6xl mx-auto flex items-center gap-4">
+    <button
+      onClick={() => router.push("/dashboard")}
+      className="flex items-center gap-1.5 text-slate-500 hover:text-slate-800 text-sm font-medium transition-colors shrink-0"
+    >
+      <ArrowLeft size={16} /> Back
+    </button>
 
-        <div className="absolute top-5 right-6 w-11 h-11 rounded-full bg-white flex items-center justify-center overflow-hidden">
-          <img src="/images/logo.png" alt="UBEC" className="w-8 h-8 object-contain" />
-        </div>
+    <div className="w-px h-6 bg-slate-200 shrink-0"></div>
 
-        <div className="text-center pt-10">
-          <p className="text-green-100 text-xs uppercase tracking-[0.15em] font-semibold mb-2">Project Overview</p>
-          <h1 className="text-4xl font-bold text-white">{project.projectNo}</h1>
-          <p className="text-green-100 text-xl font-semibold mt-2">{project.ownerName}</p>
-          <p className="text-green-200 text-sm mt-1">Plot {project.plotNo} — {project.projectLocation}</p>
-        </div>
-      </div>
+    <div className="w-8 h-8 rounded-full bg-white border border-slate-200 flex items-center justify-center overflow-hidden shrink-0">
+      <img src="/images/logo.png" alt="UBEC" className="w-6 h-6 object-contain" />
+    </div>
+
+    <h1 className="text-lg font-bold text-slate-800 shrink-0">{project.projectNo}</h1>
+
+    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium shrink-0 ${statusColor.bg} ${statusColor.text}`}>
+      {project.status}
+    </span>
+
+    <div className="w-px h-6 bg-slate-200 shrink-0"></div>
+
+    <p className="text-sm text-slate-600 truncate">
+      {project.ownerName} <span className="text-slate-300 mx-1">|</span> Plot {project.plotNo} <span className="text-slate-300 mx-1">|</span> {project.projectLocation}
+    </p>
+  </div>
+</div>
 
       <main className="px-6 py-6 max-w-6xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-4">
