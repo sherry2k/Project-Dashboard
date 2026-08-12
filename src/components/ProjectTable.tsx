@@ -134,7 +134,11 @@ function EditorTag({ name }: { name?: string }) {
 
 function SoilReportProgress({ project }: { project: Project }) {
   if (project.soilReportRequired === "Not Required") {
-    return <span className="text-xs text-slate-400 italic">Not required</span>;
+    return (
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-200 text-slate-700">
+        Not Required
+      </span>
+    );
   }
 
   const requested = project.soilReportRequestedDate ? new Date(project.soilReportRequestedDate) : null;
