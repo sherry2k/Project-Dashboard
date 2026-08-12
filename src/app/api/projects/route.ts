@@ -1,6 +1,6 @@
 import { db, pool } from "@/db";
 import { projects, auditLogs } from "@/db/schema";
-import { eq, desc, ilike, or, and, notInArray } from "drizzle-orm";
+import { eq, desc, ilike, or, and, notInArray, isNotNull, isNull, lt } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
 /** Statuses that are NOT considered "active" work */
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
   const architecture = searchParams.get("architecture") || "";
   const structure = searchParams.get("structure") || "";
   const showArchived = searchParams.get("archived") === "true";
-  const activeOnly = searchParams.get("activeOnly") === "true";
+  const soilOverdueOnly = searchParams.get("soilOverdueOnly") === "true";
 
   const conditions = [];
 
@@ -27,6 +27,18 @@ export async function GET(request: NextRequest) {
   if (activeOnly) {
     conditions.push(notInArray(projects.status, INACTIVE_STATUSES));
   }
+  
+  if (soilOverdueOnly) {
+  const nowIso = new Date();
+  conditions.push(
+    and(
+      eq(projects.soilReportRequired, "Required"),
+      isNotNull(projects.soilReportExpectedDate),
+      isNull(projects.soilReportActualDate),
+      lt(projects.soilReportExpectedDate, nowIso)
+    )!
+  );
+}
 
   if (search) {
     conditions.push(
