@@ -67,7 +67,7 @@ export interface NotificationsResponse {
 }
 
 /** Which stat card is currently driving the project list */
-export type StatFilterType = "none" | "status" | "noc" | "active" | "dataQuality";
+export type StatFilterType = "none" | "status" | "noc" | "active" | "dataQuality" | "soilOverdue";
 
 export interface StatFilter {
   type: StatFilterType;
