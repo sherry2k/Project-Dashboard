@@ -314,7 +314,8 @@ export default function AddProjectModal({ project, onSave, onClose }: AddProject
     </div>
   </div>
 
-  {form.soilReportRequired === "Required" && (
+ {form.soilReportRequired === "Required" && (
+  <div>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
       <DateField
         label="Requested Date"
@@ -338,7 +339,21 @@ export default function AddProjectModal({ project, onSave, onClose }: AddProject
         placeholder="e.g., ABC Soil Testing Laboratory"
       />
     </div>
-  )}
+
+    {!form.soilReportActualDate && (
+      <button
+        type="button"
+        onClick={() => {
+          const today = new Date().toISOString().slice(0, 10);
+          updateField("soilReportActualDate", today);
+        }}
+        className="mt-3 flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-lg transition-colors"
+      >
+        ✅ Soil Report is Complete
+      </button>
+    )}
+  </div>
+)}
 </div>
 
 {/* Site Progress */}
