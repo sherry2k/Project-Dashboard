@@ -133,6 +133,10 @@ function EditorTag({ name }: { name?: string }) {
 }
 
 function SoilReportProgress({ project }: { project: Project }) {
+  if (project.soilReportRequired === "Not Required") {
+    return <span className="text-xs text-slate-400 italic">Not required</span>;
+  }
+
   const requested = project.soilReportRequestedDate ? new Date(project.soilReportRequestedDate) : null;
   const expected = project.soilReportExpectedDate ? new Date(project.soilReportExpectedDate) : null;
   const actual = project.soilReportActualDate ? new Date(project.soilReportActualDate) : null;
