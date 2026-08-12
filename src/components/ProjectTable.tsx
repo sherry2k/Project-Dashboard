@@ -306,7 +306,7 @@ const visibleProjects = dataQualityFilter
  const columns = [
   { key: "sno", label: "S.No", width: "w-14", sortable: false },
   { key: "ownerName", label: "Owner Name", width: "min-w-[160px]", sortable: true },
-  { key: "projectNo", label: "Project No", width: "min-w-[120px]", sortable: true },
+  { key: "projectNo", label: "Project No", width: "min-w-[160px]", sortable: true },
   { key: "plotNo", label: "Plot No", width: "w-14", sortable: true },
   { key: "projectLocation", label: "Project Location", width: "min-w-[140px]", sortable: true },
   { key: "noc", label: "NOC", width: "min-w-[120px]", sortable: true },
