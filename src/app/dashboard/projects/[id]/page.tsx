@@ -53,24 +53,24 @@ function getSoilInvestigationStatus(project: Project): {
   }
 
   const requested = project.soilReportRequestedDate ? new Date(project.soilReportRequestedDate) : null;
-  if (!requested) {
-    return { status: "Not Started", percent: null, color: "bg-slate-300", badgeColor: "bg-slate-100 text-slate-500" };
-  }
+const expected = project.soilReportExpectedDate ? new Date(project.soilReportExpectedDate) : null;
+const actual = project.soilReportActualDate ? new Date(project.soilReportActualDate) : null;
+const now = new Date();
 
-  const expected = project.soilReportExpectedDate ? new Date(project.soilReportExpectedDate) : null;
-  const actual = project.soilReportActualDate ? new Date(project.soilReportActualDate) : null;
-  const now = new Date();
+if (actual && actual.getTime() <= now.getTime()) {
+  const daysTaken = requested ? Math.round((actual.getTime() - requested.getTime()) / 86400000) : null;
+  return {
+    status: "Report Received",
+    detail: daysTaken !== null ? `Took ${daysTaken} days` : undefined,
+    percent: 100,
+    color: "bg-emerald-500",
+    badgeColor: "bg-emerald-100 text-emerald-800",
+  };
+}
 
-  if (actual && actual.getTime() <= now.getTime()) {
-    const daysTaken = Math.round((actual.getTime() - requested.getTime()) / 86400000);
-    return {
-      status: "Report Received",
-      detail: `Took ${daysTaken} days`,
-      percent: 100,
-      color: "bg-emerald-500",
-      badgeColor: "bg-emerald-100 text-emerald-800",
-    };
-  }
+if (!requested) {
+  return { status: "Not Started", percent: null, color: "bg-slate-300", badgeColor: "bg-slate-100 text-slate-500" };
+}
 
   if (!expected) {
     return { status: "Requested", percent: 5, color: "bg-blue-400", badgeColor: "bg-blue-100 text-blue-800" };
