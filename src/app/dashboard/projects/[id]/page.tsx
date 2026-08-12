@@ -226,6 +226,14 @@ export default function ProjectDetailPage() {
                 <span className="text-sm text-slate-400 italic">Nothing pending</span>
               )}
             </div>
+            <div>
+  <p className="text-xs text-slate-500 mb-1.5">Contractor</p>
+  {project.contractor?.trim() ? (
+    <span className="text-sm font-medium text-slate-800">{project.contractor}</span>
+  ) : (
+    <span className="text-sm text-slate-400 italic">Not assigned yet</span>
+  )}
+</div>
 
             <div>
               <p className="text-xs text-slate-500 mb-1.5">Soil Progress</p>
