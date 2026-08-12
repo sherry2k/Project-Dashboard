@@ -428,8 +428,8 @@ const visibleProjects = dataQualityFilter
       </div>
 
       {/* Table */}
-      <div className="table-container bg-white rounded-b-xl border border-slate-200 shadow-sm">
-        <div className="overflow-x-auto">
+      <div className="table-container bg-white rounded-b-xl border border-slate-200 shadow-sm min-h-[400px]">
+      <div className="overflow-x-scroll" style={{ scrollbarWidth: "auto", scrollbarGutter: "stable" }}>
           <table className="w-full border-collapse">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-200">
