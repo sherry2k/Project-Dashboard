@@ -115,6 +115,8 @@ export default function AddProjectModal({ project, onSave, onClose }: AddProject
   soilReportExpectedDate: "",
   soilReportActualDate: "",
   soilReportLab: "",
+  soilReportRequired: "Required",
+  siteProgressPercent: "0",
 });
 
   useEffect(() => {
@@ -132,9 +134,11 @@ export default function AddProjectModal({ project, onSave, onClose }: AddProject
       contractor: project.contractor,
       remarks: project.remarks,
       soilReportRequestedDate: project.soilReportRequestedDate ? project.soilReportRequestedDate.slice(0, 10) : "",
-      soilReportExpectedDate: project.soilReportExpectedDate ? project.soilReportExpectedDate.slice(0, 10) : "",
-      soilReportActualDate: project.soilReportActualDate ? project.soilReportActualDate.slice(0, 10) : "",
-      soilReportLab: project.soilReportLab || "",
+     soilReportExpectedDate: project.soilReportExpectedDate ? project.soilReportExpectedDate.slice(0, 10) : "",
+     soilReportActualDate: project.soilReportActualDate ? project.soilReportActualDate.slice(0, 10) : "",
+     soilReportLab: project.soilReportLab || "",
+   soilReportRequired: project.soilReportRequired || "Required",
+   siteProgressPercent: String(project.siteProgressPercent ?? 0),
     });
   }
 }, [project]);
@@ -278,32 +282,75 @@ export default function AddProjectModal({ project, onSave, onClose }: AddProject
             ))}
           </div>
 
-          {/* Soil Report Tracking */}
+{/* Soil Report Tracking */}
 <div className="mt-6 pt-5 border-t border-slate-200">
   <h3 className="text-sm font-semibold text-slate-700 mb-3">Soil Report Tracking</h3>
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-    <DateField
-      label="Requested Date"
-      value={form.soilReportRequestedDate}
-      onChange={handleRequestedDateChange}
-    />
-    <DateField
-      label="Expected Completion"
-      value={form.soilReportExpectedDate}
-      onChange={(v) => updateField("soilReportExpectedDate", v)}
-    />
-    <DateField
-      label="Actual Completion"
-      value={form.soilReportActualDate}
-      onChange={(v) => updateField("soilReportActualDate", v)}
-    />
-    <TextField
-      label="Laboratory"
-      value={form.soilReportLab}
-      onChange={(v) => updateField("soilReportLab", v)}
-      placeholder="e.g., ABC Soil Testing Laboratory"
-    />
+
+  <div className="mb-4">
+    <label className="block text-sm font-medium text-slate-700 mb-1.5">Is a Soil Report Required?</label>
+    <div className="flex gap-2">
+      <button
+        type="button"
+        onClick={() => updateField("soilReportRequired", "Required")}
+        className={`px-4 py-2 rounded-lg text-sm font-medium border transition-colors ${
+          form.soilReportRequired === "Required"
+            ? "bg-[#5E9E3A] text-white border-[#5E9E3A]"
+            : "bg-white text-slate-600 border-slate-300"
+        }`}
+      >
+        Required
+      </button>
+      <button
+        type="button"
+        onClick={() => updateField("soilReportRequired", "Not Required")}
+        className={`px-4 py-2 rounded-lg text-sm font-medium border transition-colors ${
+          form.soilReportRequired === "Not Required"
+            ? "bg-slate-600 text-white border-slate-600"
+            : "bg-white text-slate-600 border-slate-300"
+        }`}
+      >
+        Not Required
+      </button>
+    </div>
   </div>
+
+  {form.soilReportRequired === "Required" && (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <DateField
+        label="Requested Date"
+        value={form.soilReportRequestedDate}
+        onChange={handleRequestedDateChange}
+      />
+      <DateField
+        label="Expected Completion"
+        value={form.soilReportExpectedDate}
+        onChange={(v) => updateField("soilReportExpectedDate", v)}
+      />
+      <DateField
+        label="Actual Completion"
+        value={form.soilReportActualDate}
+        onChange={(v) => updateField("soilReportActualDate", v)}
+      />
+      <TextField
+        label="Laboratory"
+        value={form.soilReportLab}
+        onChange={(v) => updateField("soilReportLab", v)}
+        placeholder="e.g., ABC Soil Testing Laboratory"
+      />
+    </div>
+  )}
+</div>
+
+{/* Site Progress */}
+<div className="mt-6 pt-5 border-t border-slate-200">
+  <h3 className="text-sm font-semibold text-slate-700 mb-3">Site / Construction Progress</h3>
+  <TextField
+    label="Progress (%)"
+    value={form.siteProgressPercent}
+    onChange={(v) => updateField("siteProgressPercent", v.replace(/[^0-9]/g, ""))}
+    placeholder="0–100"
+  />
+</div>
 </div>
           
           {/* Actions */}
