@@ -141,6 +141,17 @@ function SoilReportProgress({ project }: { project: Project }) {
   const expected = project.soilReportExpectedDate ? new Date(project.soilReportExpectedDate) : null;
   const actual = project.soilReportActualDate ? new Date(project.soilReportActualDate) : null;
 
+  if (actual && actual.getTime() <= Date.now()) {
+    return (
+      <div className="min-w-[130px]">
+        <div className="text-xs font-semibold text-emerald-700">✅ Completed</div>
+        {project.soilReportLab && (
+          <div className="text-[10px] text-slate-400 mt-0.5 truncate">{project.soilReportLab}</div>
+        )}
+      </div>
+    );
+  }
+
   if (!requested || !expected) {
     return <span className="text-xs text-slate-300 italic">Not started</span>;
   }
