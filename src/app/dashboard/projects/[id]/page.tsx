@@ -237,20 +237,20 @@ return (
   <div className="max-w-6xl mx-auto flex items-center gap-4">
     <button
     onClick={() => router.push("/dashboard")}
-    className="absolute top-5 left-6 flex items-center gap-2 bg-white/15 hover:bg-white/25 text-white text-sm font-medium px-3 py-1.5 rounded-lg transition-colors"
+    className="absolute top-4 left-6 flex items-center gap-2 bg-white/15 hover:bg-white/25 text-white text-sm font-medium px-3 py-1.5 rounded-lg transition-colors"
   >
     <ArrowLeft size={16} /> Back to Dashboard
   </button>
 
-    <div className="w-px h-6 bg-white/25 shrink-0"></div>
+    <div className="w-px h-8 bg-white/25 shrink-0"></div>
 
-    <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center overflow-hidden shrink-0">
-      <img src="/images/logo.png" alt="UBEC" className="w-6 h-6 object-contain" />
+    <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center overflow-hidden shrink-0">
+      <img src="/images/logo.png" alt="UBEC" className="w-8 h-8 object-contain" />
     </div>
 
     <h1 className="text-lg font-bold text-white shrink-0">{project.projectNo}</h1>
 
-    <div className="w-px h-6 bg-white/25 shrink-0"></div>
+    <div className="w-px h-8 bg-white/25 shrink-0"></div>
 
     <p className="text-sm text-green-50 truncate">
       {project.ownerName} <span className="text-white/30 mx-1">|</span> Plot {project.plotNo} <span className="text-white/30 mx-1">|</span> {project.projectLocation}
