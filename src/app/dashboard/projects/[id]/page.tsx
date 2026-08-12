@@ -96,12 +96,12 @@ function getWorkflowSteps(project: Project): WorkflowStep[] {
     : "pending";
 
   const tenderState: WorkflowState =
-  project.status === "Completed" || project.contractor?.trim() ? "done"
+  ["Completed", "Permit Issued"].includes(project.status) || project.contractor?.trim() ? "done"
   : project.status === "Waiting Tender" ? "active"
   : "pending";
 
   const contractorState: WorkflowState =
-    project.contractor?.trim() ? "done" : "pending";
+  project.contractor?.trim() || ["Completed", "Permit Issued"].includes(project.status) ? "done" : "pending";
 
   return [
     { label: "Registration", state: "done" },
