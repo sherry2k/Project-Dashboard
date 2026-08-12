@@ -193,7 +193,7 @@ export default function ProjectDetailPage() {
   </button>
 
   <div className="absolute top-5 right-6 w-11 h-11 rounded-full bg-white/15 flex items-center justify-center">
-   <img src="images/logo.png" alt="UBEC" className="w-8 h-8 object-contain" />
+   <img src="public/images/logo.png" alt="UBEC" className="w-12 h-12 object-contain" />
   </div>
 
   <div className="text-center pt-10">
