@@ -261,90 +261,66 @@ return (
     </p>
   </div>
 </div>
+<main className="px-6 py-6 max-w-6xl mx-auto">
+        <div className="flex flex-col gap-4">
 
-      <main className="px-6 py-6 max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-4">
-
-          {/* Sidebar */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 h-fit">
-            <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">Quick Info</h2>
-            <div className="space-y-4">
+          {/* Management Summary */}
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+            <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">Management Summary</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-5">
               <div>
-                <p className="text-xs text-slate-500 mb-1">Location</p>
-                <p className="text-sm font-medium text-slate-800">{project.projectLocation}</p>
+                <p className="text-xs text-slate-500 mb-1.5">Current Activity</p>
+                <span className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-800">
+                  {activity.icon} {activity.label}
+                </span>
               </div>
               <div>
-                <p className="text-xs text-slate-500 mb-1">Contractor</p>
+                <p className="text-xs text-slate-500 mb-1.5">Waiting For</p>
+                {waitingFor ? (
+                  <span className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-800">
+                    {waitingFor.icon} {waitingFor.label}
+                  </span>
+                ) : (
+                  <span className="text-sm text-slate-400 italic">Nothing pending</span>
+                )}
+              </div>
+              <div>
+                <p className="text-xs text-slate-500 mb-1.5">Soil Investigation</p>
+                <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-sm font-medium ${soilStatus.badgeColor}`}>
+                  {soilStatus.status}
+                </span>
+                {soilStatus.detail && <p className="text-xs text-slate-500 mt-1">{soilStatus.detail}</p>}
+                {soilStatus.percent !== null && (
+                  <div className="w-full h-1.5 bg-slate-100 rounded-full mt-1.5 overflow-hidden max-w-[160px]">
+                    <div className={`h-full ${soilStatus.color}`} style={{ width: `${soilStatus.percent}%` }}></div>
+                  </div>
+                )}
+              </div>
+              <div>
+                <p className="text-xs text-slate-500 mb-1.5">Contractor</p>
                 {project.contractor?.trim() ? (
                   <p className="text-sm font-medium text-slate-800">{project.contractor}</p>
                 ) : (
                   <p className="text-sm text-slate-400 italic">Not assigned yet</p>
                 )}
               </div>
-              <div className="pt-3 border-t border-slate-100">
-                <p className="text-xs text-slate-500 mb-1">Last Updated</p>
+              <div>
+                <p className="text-xs text-slate-500 mb-1.5">Last Updated</p>
                 <p className="text-sm text-slate-700">
-                  {project.updatedAt ? format(new Date(project.updatedAt), "dd MMM yyyy") : "—"}
+                  {project.updatedAt ? format(new Date(project.updatedAt), "dd MMM yyyy — HH:mm") : "—"}
                 </p>
-                <p className="text-xs text-slate-400">
-                  {project.updatedAt ? format(new Date(project.updatedAt), "HH:mm") : ""}
-                </p>
+              </div>
+              <div className="col-span-2 sm:col-span-3">
+                <p className="text-xs text-slate-500 mb-1.5">Remarks</p>
+                {project.remarks?.trim() ? (
+                  <p className="text-sm text-slate-700">{project.remarks}</p>
+                ) : (
+                  <p className="text-sm text-slate-400 italic">No remarks added</p>
+                )}
               </div>
             </div>
           </div>
-
-          {/* Main content */}
-          <div className="flex flex-col gap-4">
-
-            {/* Management Summary */}
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
-              <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">Management Summary</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                <div>
-                  <p className="text-xs text-slate-500 mb-1.5">Status</p>
-                  <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium ${statusColor.bg} ${statusColor.text}`}>
-                    {project.status}
-                  </span>
-                </div>
-                <div>
-                  <p className="text-xs text-slate-500 mb-1.5">Current Activity</p>
-                  <span className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-800">
-                    {activity.icon} {activity.label}
-                  </span>
-                </div>
-                <div>
-                  <p className="text-xs text-slate-500 mb-1.5">Waiting For</p>
-                  {waitingFor ? (
-                    <span className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-800">
-                      {waitingFor.icon} {waitingFor.label}
-                    </span>
-                  ) : (
-                    <span className="text-sm text-slate-400 italic">Nothing pending</span>
-                  )}
-                </div>
-                <div>
-                  <p className="text-xs text-slate-500 mb-1.5">Soil Investigation</p>
-                  <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-sm font-medium ${soilStatus.badgeColor}`}>
-                    {soilStatus.status}
-                  </span>
-                  {soilStatus.detail && <p className="text-xs text-slate-500 mt-1">{soilStatus.detail}</p>}
-                  {soilStatus.percent !== null && (
-                    <div className="w-full h-1.5 bg-slate-100 rounded-full mt-1.5 overflow-hidden max-w-[160px]">
-                      <div className={`h-full ${soilStatus.color}`} style={{ width: `${soilStatus.percent}%` }}></div>
-                    </div>
-                  )}
-                </div>
-                <div className="sm:col-span-2">
-                  <p className="text-xs text-slate-500 mb-1.5">Remarks</p>
-                  {project.remarks?.trim() ? (
-                    <p className="text-sm text-slate-700">{project.remarks}</p>
-                  ) : (
-                    <p className="text-sm text-slate-400 italic">No remarks added</p>
-                  )}
-                </div>
-              </div>
-            </div>
-
+     
             {/* Progress Overview */}
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
               <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-5">Progress Overview</h2>
@@ -415,7 +391,7 @@ return (
               </div>
             </div>
 
-          </div>
+          
         </div>
       </main>
     </div>
