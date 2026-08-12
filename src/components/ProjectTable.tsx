@@ -547,7 +547,8 @@ useEffect(() => {
                       {index + 1}
                     </td>
 
-                    {/* Editable text fields */}
+                    
+{/* Editable text fields */}
 {(["ownerName", "projectNo", "plotNo"] as const).map((field) => (
   <td key={field} className="px-3 py-2">
     {editingCell?.rowId === project.id && editingCell?.field === field ? (
@@ -559,7 +560,7 @@ useEffect(() => {
     ) : (
       <div onDoubleClick={() => setEditingCell({ rowId: project.id, field })}>
         <div className="editable-cell text-sm text-slate-800">
-          {field === "projectNo" && project[field] ? (
+          {(field === "projectNo" || field === "ownerName") && project[field] ? (
             <Link
               href={`/dashboard/projects/${project.id}`}
               onClick={(e) => e.stopPropagation()}
