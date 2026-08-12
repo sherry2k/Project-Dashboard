@@ -59,6 +59,8 @@ export async function PATCH(
   "soilReportExpectedDate",
   "soilReportActualDate",
   "soilReportLab",
+   "soilReportRequired",
+  "siteProgressPercent",
 ] as const;
 
   type EditableField = typeof editableFields[number];
