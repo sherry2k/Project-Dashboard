@@ -205,6 +205,7 @@ const FIELD_LABELS: Record<string, string> = {
   siteProgressPercent: "Site progress",
 };
 
+
 /** Fields whose every change is worth showing in the activity feed. Skip noisy/low-value fields. */
 const ACTIVITY_VISIBLE_FIELDS = new Set([
   "status",
