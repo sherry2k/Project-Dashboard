@@ -6,6 +6,7 @@ import { ArrowLeft, Loader2, Building2 } from "lucide-react";
 import type { Project } from "@/lib/types";
 import { STATUS_COLORS } from "@/lib/constants";
 import { format } from "date-fns";
+import type { Project, AuditLog } from "@/lib/types";
 
 function getCurrentActivity(project: Project): { icon: string; label: string } {
   if (project.status === "Project Cancelled") return { icon: "❌", label: "Cancelled" };
@@ -157,6 +158,38 @@ function getWorkflowSteps(project: Project): WorkflowStep[] {
     { label: "Contractor Assignment", state: contractorState },
   ];
 }
+const STAGE_FIELD_MAP: Record<string, string> = {
+  "Municipality (NOC)": "noc",
+  "3D Perspective": "perspective3d",
+  "Architecture": "architecture",
+  "Structure": "structure",
+  "Permit": "status",
+  "Tender": "status",
+  "Contractor Assignment": "contractor",
+};
+
+function getStageDetail(field: string, logs: AuditLog[]) {
+  const fieldLogs = logs
+    .filter((l) => l.field === field)
+    .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+
+  if (fieldLogs.length === 0) return null;
+
+  const first = fieldLogs[0];
+  const last = fieldLogs[fieldLogs.length - 1];
+  const started = new Date(first.createdAt);
+  const completed = new Date(last.createdAt);
+  const durationDays = Math.max(0, Math.round((completed.getTime() - started.getTime()) / 86400000));
+
+  return {
+    started,
+    completed,
+    durationDays,
+    lastEditedBy: last.editedBy,
+    currentValue: last.newValue,
+    history: fieldLogs,
+  };
+}
 
 function getConsultancyProgress(project: Project): number {
   const steps = getWorkflowSteps(project);
@@ -191,17 +224,24 @@ export default function ProjectDetailPage() {
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
+  const [selectedStage, setSelectedStage] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetch(`/api/projects/${params.id}`)
-      .then((res) => {
-        if (!res.ok) throw new Error("not found");
-        return res.json();
-      })
-      .then((data) => setProject(data))
-      .catch(() => setNotFound(true))
-      .finally(() => setLoading(false));
-  }, [params.id]);
+ useEffect(() => {
+  fetch(`/api/projects/${params.id}`)
+    .then((res) => {
+      if (!res.ok) throw new Error("not found");
+      return res.json();
+    })
+    .then((data) => setProject(data))
+    .catch(() => setNotFound(true))
+    .finally(() => setLoading(false));
+
+  fetch(`/api/audit?projectId=${params.id}&limit=100`)
+    .then((res) => res.json())
+    .then((data) => setAuditLogs(data))
+    .catch(() => setAuditLogs([]));
+}, [params.id]);
 
   if (loading) {
     return (
@@ -350,42 +390,114 @@ return (
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
               <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-5">Workflow</h2>
               <div>
-                {getWorkflowSteps(project).map((step, i, arr) => (
-                  <div key={step.label} className="flex gap-3">
-                    <div className="flex flex-col items-center">
-                      <WorkflowStepIcon state={step.state} />
-                      {i < arr.length - 1 && (
-                        <div className={`w-0.5 flex-1 min-h-[28px] ${step.state === "done" ? "bg-emerald-300" : "bg-slate-200"}`}></div>
-                      )}
-                    </div>
-                    <div className="pb-6 flex-1 flex items-start justify-between gap-4">
-                      <div>
-                        <p className={`text-sm font-medium ${step.state === "pending" ? "text-slate-400" : "text-slate-800"}`}>
-                          {step.label}
-                        </p>
-                        {step.detail && (
-                          <p className="text-xs text-amber-600 mt-0.5">{step.detail}</p>
-                        )}
-                        {step.state === "done" && !step.detail && (
-                          <p className="text-xs text-emerald-600 mt-0.5">Done</p>
-                        )}
-                        {step.state === "pending" && (
-                          <p className="text-xs text-slate-400 mt-0.5">Pending</p>
-                        )}
-                      </div>
-                      {step.state === "active" && project.updatedAt && (
-                        <p className="text-xs text-slate-400 shrink-0 whitespace-nowrap">
-                          {format(new Date(project.updatedAt), "dd MMM yyyy")}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                ))}
+               {getWorkflowSteps(project).map((step, i, arr) => (
+  <div key={step.label} className="flex gap-3">
+    <div className="flex flex-col items-center">
+      <WorkflowStepIcon state={step.state} />
+      {i < arr.length - 1 && (
+        <div className={`w-0.5 flex-1 min-h-[28px] ${step.state === "done" ? "bg-emerald-300" : "bg-slate-200"}`}></div>
+      )}
+    </div>
+    <div
+      onClick={() => setSelectedStage(step.label)}
+      className="pb-6 flex-1 flex items-start justify-between gap-4 cursor-pointer hover:bg-slate-50 rounded-lg -mx-2 px-2 transition-colors"
+    >
+      <div>
+        <p className={`text-sm font-medium ${step.state === "pending" ? "text-slate-400" : "text-slate-800"}`}>
+          {step.label}
+        </p>
+        {step.detail && (
+          <p className="text-xs text-amber-600 mt-0.5">{step.detail}</p>
+        )}
+        {step.state === "done" && !step.detail && (
+          <p className="text-xs text-emerald-600 mt-0.5">Done</p>
+        )}
+        {step.state === "pending" && (
+          <p className="text-xs text-slate-400 mt-0.5">Pending</p>
+        )}
+      </div>
+      {step.state === "active" && project.updatedAt && (
+        <p className="text-xs text-slate-400 shrink-0 whitespace-nowrap">
+          {format(new Date(project.updatedAt), "dd MMM yyyy")}
+        </p>
+      )}
+    </div>
+  </div>
+))}
               </div>
             </div>
-
-          
+         
         </div>
+<div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+  <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">Activity History</h2>
+  {auditLogs.length === 0 ? (
+    <p className="text-sm text-slate-400 italic">No activity recorded yet.</p>
+  ) : (
+    <div className="space-y-2.5">
+      {auditLogs.slice(0, 10).map((log) => (
+        <div key={log.id} className="flex items-center gap-3 text-sm">
+          <span className="text-slate-400 shrink-0 w-16">{format(new Date(log.createdAt), "dd MMM")}</span>
+          <span className="text-slate-700">
+            <span className="font-medium">{log.field}</span> changed to <span className="font-medium">{log.newValue}</span>
+          </span>
+        </div>
+      ))}
+    </div>
+  )}
+</div>
+  
+  {selectedStage && (() => {
+  const fieldName = STAGE_FIELD_MAP[selectedStage];
+  const detail = fieldName ? getStageDetail(fieldName, auditLogs) : null;
+
+  return (
+    <div
+      className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4"
+      onClick={() => setSelectedStage(null)}
+    >
+      <div
+        className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider">{selectedStage}</h3>
+          <button onClick={() => setSelectedStage(null)} className="text-slate-400 hover:text-slate-600">
+            ✕
+          </button>
+        </div>
+
+        {detail ? (
+          <div className="space-y-3">
+            <div>
+              <p className="text-xs text-slate-500">Status</p>
+              <p className="text-sm font-medium text-slate-800">{detail.currentValue}</p>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <p className="text-xs text-slate-500">Started</p>
+                <p className="text-sm text-slate-700">{format(detail.started, "dd MMM yyyy")}</p>
+              </div>
+              <div>
+                <p className="text-xs text-slate-500">Last Updated</p>
+                <p className="text-sm text-slate-700">{format(detail.completed, "dd MMM yyyy")}</p>
+              </div>
+            </div>
+            <div>
+              <p className="text-xs text-slate-500">Duration</p>
+              <p className="text-sm text-slate-700">{detail.durationDays} days</p>
+            </div>
+            <div>
+              <p className="text-xs text-slate-500">Last Updated By</p>
+              <p className="text-sm text-slate-700">{detail.lastEditedBy}</p>
+            </div>
+          </div>
+        ) : (
+          <p className="text-sm text-slate-400 italic">No history recorded for this stage yet.</p>
+        )}
+      </div>
+    </div>
+  );
+})()}
       </main>
     </div>
   );
