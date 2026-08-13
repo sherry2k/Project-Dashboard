@@ -30,6 +30,7 @@ import {
   PROJECT_LOCATIONS,
 } from "@/lib/constants";
 import { format } from "date-fns";
+import { getCurrentActivity } from "@/lib/projectHelpers";
 
 interface ProjectTableProps {
   projects: Project[];
@@ -110,28 +111,7 @@ function EditorTag({ name }: { name?: string }) {
   );
 }
  
- function getCurrentActivity(project: Project): { icon: string; label: string } {
-  if (project.status === "Project Cancelled") return { icon: "❌", label: "Cancelled" };
-  if (project.status === "On Hold") return { icon: "⏸", label: "On Hold" };
-  if (project.status === "Completed") return { icon: "✅", label: "Completed" };
-  if (project.status === "Waiting Payment" || project.noc === "Waiting Payment") return { icon: "💰", label: "Payment" };
-  if (project.status === "Waiting Tender") return { icon: "📋", label: "Tender" };
-  if (project.status === "Waiting Soil Report") return { icon: "🧪", label: "Soil Investigation" };
-  if (project.status === "Waiting Owner") return { icon: "👤", label: "Waiting Owner" };
-  if (project.status === "Permit Issued") return { icon: "📄", label: "Permit Processed" };
-  if (
-    ["Pending", "Waiting", "Submitted"].includes(project.noc) ||
-    project.architecture === "Submitted" ||
-    project.structure === "Submitted"
-  ) {
-    return { icon: "🏛", label: "Municipality Review" };
-  }
- if (["In Progress", "Pending"].includes(project.perspective3d)) return { icon: "🎨", label: "3D Perspective" };
-if (["In Progress", "Pending", "Comments"].includes(project.architecture)) return { icon: "📐", label: "Architecture" };
-if (["In Progress", "Pending", "Comments"].includes(project.structure)) return { icon: "🏗", label: "Structure" };
-return { icon: "📌", label: project.status };
-}
-
+ 
 function SoilReportProgress({ project }: { project: Project }) {
   if (project.soilReportRequired === "Not Required") {
     return (
