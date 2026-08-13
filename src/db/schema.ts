@@ -35,6 +35,18 @@ export const projects = pgTable("projects", {
   siteProgressPercent: integer("site_progress_percent").notNull().default(0),
 });
 
+export const constructionStages = pgTable("construction_stages", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").notNull(),
+  stageName: varchar("stage_name", { length: 100 }).notNull(),
+  weight: integer("weight").notNull().default(0),
+  status: varchar("status", { length: 20 }).notNull().default("pending"), // 'done' | 'active' | 'pending'
+  subPercent: integer("sub_percent").notNull().default(0), // 0-100, only meaningful when status = 'active'
+  sortOrder: integer("sort_order").notNull().default(0),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
 export const auditLogs = pgTable("audit_logs", {
   id: serial("id").primaryKey(),
   projectId: integer("project_id").notNull(),
