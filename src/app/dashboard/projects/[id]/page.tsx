@@ -3,10 +3,9 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, Loader2, Building2 } from "lucide-react";
-import type { Project } from "@/lib/types";
+import type { Project, AuditLog } from "@/lib/types";
 import { STATUS_COLORS } from "@/lib/constants";
 import { format } from "date-fns";
-import type { Project, AuditLog } from "@/lib/types";
 
 function getCurrentActivity(project: Project): { icon: string; label: string } {
   if (project.status === "Project Cancelled") return { icon: "❌", label: "Cancelled" };
