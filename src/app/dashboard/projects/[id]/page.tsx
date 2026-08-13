@@ -496,8 +496,8 @@ return (
       </div>
     ))}
 </div>
-  
-  {selectedStage && (() => {
+  )}
+    {selectedStage && (() => {
   const fieldName = STAGE_FIELD_MAP[selectedStage];
   const detail = fieldName ? getStageDetail(fieldName, auditLogs) : null;
 
