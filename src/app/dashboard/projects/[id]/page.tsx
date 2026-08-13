@@ -119,12 +119,6 @@ function formatActivityLine(log: AuditLog): string | null {
   return `${label} changed to ${log.newValue}`;
 }
 
-function getConsultancyProgress(project: Project): number {
-  const steps = getWorkflowSteps(project);
-  const relevant = steps.filter((s) => s.label !== "Contractor Assignment");
-  const doneCount = relevant.filter((s) => s.state === "done").length;
-  return Math.round((doneCount / relevant.length) * 100);
-}
 
 function WorkflowStepIcon({ state }: { state: WorkflowState }) {
   if (state === "done") {
