@@ -576,35 +576,52 @@ return (
       ) : (
         <>
           <div className="space-y-1">
-            {constructionStages.map((stage) => (
-              <div
-                key={stage.id}
-                onClick={() => cycleStage(stage)}
-                className="flex items-center gap-3 py-2 px-2 rounded-lg hover:bg-slate-50 cursor-pointer transition-colors"
-              >
-                <div className="shrink-0">
-                  {stage.status === "done" ? (
-                    <div className="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center text-white text-xs">✓</div>
-                  ) : stage.status === "active" ? (
-                    <div className="w-6 h-6 rounded-full bg-amber-100 border-2 border-amber-500 flex items-center justify-center">
-                      <div className="w-2 h-2 rounded-full bg-amber-500"></div>
-                    </div>
-                  ) : (
-                    <div className="w-6 h-6 rounded-full border-2 border-slate-300"></div>
-                  )}
-                </div>
-                <div className="flex-1">
-                  <p className={`text-sm font-medium ${stage.status === "pending" ? "text-slate-400" : "text-slate-800"}`}>
-                    {stage.stageName}
-                  </p>
-                  {stage.status === "active" && (
-                    <p className="text-xs text-amber-600">{stage.subPercent}% complete</p>
-                  )}
-                </div>
-                <p className="text-xs text-slate-400 shrink-0">{stage.weight}%</p>
-              </div>
-            ))}
-          </div>
+  {constructionStages.map((stage) => (
+    <div key={stage.id} className={`py-2 px-2 rounded-lg transition-colors ${stage.status === "active" ? "bg-amber-50" : "hover:bg-slate-50"}`}>
+      <div
+        onClick={() => cycleStage(stage)}
+        className="flex items-center gap-3 cursor-pointer"
+      >
+        <div className="shrink-0">
+          {stage.status === "done" ? (
+            <div className="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center text-white text-xs">✓</div>
+          ) : stage.status === "active" ? (
+            <div className="w-6 h-6 rounded-full bg-amber-100 border-2 border-amber-500 flex items-center justify-center">
+              <div className="w-2 h-2 rounded-full bg-amber-500"></div>
+            </div>
+          ) : (
+            <div className="w-6 h-6 rounded-full border-2 border-slate-300"></div>
+          )}
+        </div>
+        <div className="flex-1">
+          <p className={`text-sm font-medium ${stage.status === "pending" ? "text-slate-400" : "text-slate-800"}`}>
+            {stage.stageName}
+            {stage.status === "active" && <span className="text-xs font-normal text-slate-400"> — active stage</span>}
+          </p>
+        </div>
+        <p className="text-xs text-slate-400 shrink-0">{stage.weight}%</p>
+      </div>
+
+      {stage.status === "active" && (
+        <div
+          className="flex items-center gap-2.5 mt-2 pl-9"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <input
+            type="range"
+            min={0}
+            max={100}
+            step={5}
+            value={stage.subPercent}
+            onChange={(e) => updateStage(stage.id, { subPercent: Number(e.target.value) })}
+            className="flex-1 accent-amber-500"
+          />
+          <span className="text-xs font-medium text-amber-700 w-9 text-right">{stage.subPercent}%</span>
+        </div>
+      )}
+    </div>
+  ))}
+</div>
 
           <div className="border-t border-slate-200 mt-4 pt-4">
             <div className="flex items-center justify-between mb-1.5">
