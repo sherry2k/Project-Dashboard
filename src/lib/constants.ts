@@ -78,3 +78,19 @@ export const STRUCT_COLORS: Record<string, { bg: string; text: string }> = {
   "Pending": { bg: "bg-violet-50", text: "text-violet-900 font-semibold border border-violet-300" },
   "Submitted": { bg: "bg-violet-300", text: "text-violet-900 font-medium" },
 };
+export const CONSTRUCTION_STAGE_TEMPLATES = [
+  { name: "Site Preparation", defaultWeight: 5 },
+  { name: "Excavation", defaultWeight: 8 },
+  { name: "Foundations", defaultWeight: 15 },
+  { name: "Ground Beams", defaultWeight: 8 },
+  { name: "Columns", defaultWeight: 12 },
+  { name: "Ground Floor Slab", defaultWeight: 12 },
+  { name: "Upper Floor Structure", defaultWeight: 10 },
+  { name: "Roof Slab", defaultWeight: 10 },
+  { name: "Blockwork", defaultWeight: 8 },
+  { name: "MEP / Plaster / Finishes", defaultWeight: 7 },
+  { name: "External Works", defaultWeight: 5 },
+  { name: "Pool Shell", defaultWeight: 0 },
+  { name: "Waterproofing", defaultWeight: 0 },
+] as const;
+
