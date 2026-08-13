@@ -691,7 +691,7 @@ return (
 
   <div className="flex items-center justify-end gap-3 mt-5">
     <button
-      onClick={() => { fetchConstructionStages(); setShowConstructionPanel(false); }}
+      onClick={() => { fetchConstructionStages(); setShowConstructionPanel(true); }}
       className="px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors"
     >
       Cancel
