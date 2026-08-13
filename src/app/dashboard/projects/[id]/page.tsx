@@ -307,15 +307,32 @@ const [showConfigPanel, setShowConfigPanel] = useState(false);
   fetchConstructionStages();
 };
 
+  const saveAllStages = async () => {
+  await Promise.all(
+    constructionStages.map((stage) =>
+      fetch(`/api/construction-stages/${stage.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: stage.status, subPercent: stage.subPercent }),
+      })
+    )
+  );
+  fetchConstructionStages();
+  setShowConstructionPanel(false);
+};
+  
 /** Cycle a stage: pending → active → done → pending */
 const cycleStage = (stage: ConstructionStage) => {
-  if (stage.status === "pending") {
-    updateStage(stage.id, { status: "active", subPercent: 0 });
-  } else if (stage.status === "active") {
-    updateStage(stage.id, { status: "done", subPercent: 100 });
-  } else {
-    updateStage(stage.id, { status: "pending", subPercent: 0 });
-  }
+  const next: { status: "pending" | "active" | "done"; subPercent: number } =
+    stage.status === "pending"
+      ? { status: "active", subPercent: 0 }
+      : stage.status === "active"
+      ? { status: "done", subPercent: 100 }
+      : { status: "pending", subPercent: 0 };
+
+  setConstructionStages((prev) =>
+    prev.map((s) => (s.id === stage.id ? { ...s, ...next } : s))
+  );
 };
 
 const saveStageConfig = async (selected: { stageName: string; weight: number }[]) => {
@@ -456,25 +473,32 @@ return (
                   </div>
                   <p className="text-xs text-slate-400 mt-1.5">Registration → NOC → Architecture → Structure → Permit</p>
                 </div>
-              <div
-  onClick={() => setShowConstructionPanel(true)}
-  className="cursor-pointer hover:bg-slate-50 rounded-lg -mx-2 px-2 py-1 transition-colors"
->
-  <div className="flex items-center justify-between mb-1.5">
-    <p className="text-sm font-medium text-slate-700">Site / Construction</p>
-    <p className="text-sm font-bold text-slate-800">{getConstructionProgress(constructionStages)}%</p>
+              <div className="cursor-pointer hover:bg-slate-50 rounded-lg -mx-2 px-2 py-1 transition-colors">
+  <div
+    onClick={() => setShowConstructionPanel(true)}
+  >
+    <div className="flex items-center justify-between mb-1.5">
+      <p className="text-sm font-medium text-slate-700">Site / Construction</p>
+      <p className="text-sm font-bold text-slate-800">{getConstructionProgress(constructionStages)}%</p>
+    </div>
+    <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+      <div
+        className="h-full bg-[#5E9E3A] transition-all"
+        style={{ width: `${getConstructionProgress(constructionStages)}%` }}
+      ></div>
+    </div>
+    {getCurrentConstructionStage(constructionStages) && (
+      <p className="text-xs text-slate-400 mt-1.5">
+        Current Stage: {getCurrentConstructionStage(constructionStages)}
+      </p>
+    )}
   </div>
-  <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
-    <div
-      className="h-full bg-[#5E9E3A] transition-all"
-      style={{ width: `${getConstructionProgress(constructionStages)}%` }}
-    ></div>
-  </div>
-  {getCurrentConstructionStage(constructionStages) && (
-    <p className="text-xs text-slate-400 mt-1.5">
-      Current Stage: {getCurrentConstructionStage(constructionStages)}
-    </p>
-  )}
+  <button
+    onClick={(e) => { e.stopPropagation(); setShowConstructionPanel(true); }}
+    className="mt-2 flex items-center gap-1.5 text-xs font-medium text-blue-600 hover:text-blue-800"
+  >
+    🔧 Update Construction Progress
+  </button>
 </div>
               </div>
             </div>
@@ -619,8 +643,6 @@ return (
           prev.map((s) => (s.id === stage.id ? { ...s, subPercent: newValue } : s))
         );
       }}
-      onMouseUp={(e) => updateStage(stage.id, { subPercent: Number((e.target as HTMLInputElement).value) })}
-      onTouchEnd={(e) => updateStage(stage.id, { subPercent: Number((e.target as HTMLInputElement).value) })}
       className="flex-1 accent-amber-500"
     />
     <span className="text-xs font-medium text-amber-700 w-9 text-right">{stage.subPercent}%</span>
@@ -631,17 +653,32 @@ return (
 </div>
 
           <div className="border-t border-slate-200 mt-4 pt-4">
-            <div className="flex items-center justify-between mb-1.5">
-              <p className="text-sm font-semibold text-slate-700">Overall Construction Progress</p>
-              <p className="text-sm font-bold text-slate-800">{getConstructionProgress(constructionStages)}%</p>
-            </div>
-            <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-[#5E9E3A] transition-all"
-                style={{ width: `${getConstructionProgress(constructionStages)}%` }}
-              ></div>
-            </div>
-          </div>
+  <div className="flex items-center justify-between mb-1.5">
+    <p className="text-sm font-semibold text-slate-700">Overall Construction Progress</p>
+    <p className="text-sm font-bold text-slate-800">{getConstructionProgress(constructionStages)}%</p>
+  </div>
+  <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+    <div
+      className="h-full bg-[#5E9E3A] transition-all"
+      style={{ width: `${getConstructionProgress(constructionStages)}%` }}
+    ></div>
+  </div>
+
+  <div className="flex items-center justify-end gap-3 mt-5">
+    <button
+      onClick={() => { fetchConstructionStages(); setShowConstructionPanel(false); }}
+      className="px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors"
+    >
+      Cancel
+    </button>
+    <button
+      onClick={saveAllStages}
+      className="px-4 py-2 text-sm font-medium text-white bg-[#5E9E3A] rounded-lg hover:bg-[#5E9E3A]/90 transition-colors"
+    >
+      Save
+    </button>
+  </div>
+</div>
         </>
       )}
     </div>
