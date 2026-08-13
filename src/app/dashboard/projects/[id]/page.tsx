@@ -603,24 +603,29 @@ return (
       </div>
 
       {stage.status === "active" && (
-        <div
-          className="flex items-center gap-2.5 mt-2 pl-9"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <input
-            type="range"
-            min={0}
-            max={100}
-            step={5}
-            value={stage.subPercent}
-            onChange={(e) => updateStage(stage.id, { subPercent: Number(e.target.value) })}
-            className="flex-1 accent-amber-500"
-          />
-          <span className="text-xs font-medium text-amber-700 w-9 text-right">{stage.subPercent}%</span>
-        </div>
-      )}
-    </div>
-  ))}
+  <div
+    className="flex items-center gap-2.5 mt-2 pl-9"
+    onClick={(e) => e.stopPropagation()}
+  >
+    <input
+      type="range"
+      min={0}
+      max={100}
+      step={5}
+      value={stage.subPercent}
+      onChange={(e) => {
+        const newValue = Number(e.target.value);
+        setConstructionStages((prev) =>
+          prev.map((s) => (s.id === stage.id ? { ...s, subPercent: newValue } : s))
+        );
+      }}
+      onMouseUp={(e) => updateStage(stage.id, { subPercent: Number((e.target as HTMLInputElement).value) })}
+      onTouchEnd={(e) => updateStage(stage.id, { subPercent: Number((e.target as HTMLInputElement).value) })}
+      className="flex-1 accent-amber-500"
+    />
+    <span className="text-xs font-medium text-amber-700 w-9 text-right">{stage.subPercent}%</span>
+  </div>
+)}
 </div>
 
           <div className="border-t border-slate-200 mt-4 pt-4">
