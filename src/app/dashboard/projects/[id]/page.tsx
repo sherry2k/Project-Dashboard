@@ -331,12 +331,15 @@ const saveAllStages = async () => {
   
 /** Cycle a stage: pending → active → done → pending and update local state */
 const cycleStage = (stage: ConstructionStage) => {
-  const next: { status: "pending" | "active" | "done"; subPercent: number } =
-    stage.status === "pending"
-      ? { status: "active", subPercent: 0 }
-      : stage.status === "active"
-      ? { status: "done", subPercent: 100 }
-      : { status: "pending", subPercent: 0 };
+  let next: { status: "pending" | "active" | "done"; subPercent: number };
+
+  if (stage.status === "pending") {
+    next = { status: "active", subPercent: stage.subPercent > 0 ? stage.subPercent : 0 };
+  } else if (stage.status === "active") {
+    next = { status: "done", subPercent: 100 };
+  } else {
+    next = { status: "pending", subPercent: 0 };
+  }
 
   setConstructionStages((prev) =>
     prev.map((s) => (s.id === stage.id ? { ...s, ...next } : s))
@@ -640,19 +643,33 @@ return (
     onClick={(e) => e.stopPropagation()}
   >
     <input
-      type="range"
-      min={0}
-      max={100}
-      step={5}
-      value={stage.subPercent}
-      onChange={(e) => {
-        const newValue = Number(e.target.value);
-        setConstructionStages((prev) =>
-          prev.map((s) => (s.id === stage.id ? { ...s, subPercent: newValue } : s))
-        );
-      }}
-      className="flex-1 accent-amber-500"
-    />
+  type="range"
+  min={0}
+  max={100}
+  step={5}
+  value={stage.subPercent}
+  onChange={(e) => {
+    const newValue = Number(e.target.value);
+    setConstructionStages((prev) =>
+      prev.map((s) => {
+        if (s.id !== stage.id) return s;
+        
+        // Auto-compute status based on slider value!
+        let computedStatus: "pending" | "active" | "done" = s.status;
+        if (newValue === 100) {
+          computedStatus = "done";
+        } else if (newValue > 0) {
+          computedStatus = "active";
+        } else {
+          computedStatus = "pending";
+        }
+
+        return { ...s, subPercent: newValue, status: computedStatus };
+      })
+    );
+  }}
+  className="flex-1 accent-amber-500"
+/>
     <span className="text-xs font-medium text-amber-700 w-9 text-right">{stage.subPercent}%</span>
   </div>
 )}
