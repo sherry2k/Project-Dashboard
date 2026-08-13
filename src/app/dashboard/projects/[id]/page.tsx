@@ -189,6 +189,58 @@ function getStageDetail(field: string, logs: AuditLog[]) {
     history: fieldLogs,
   };
 }
+const FIELD_LABELS: Record<string, string> = {
+  status: "Status",
+  noc: "NOC",
+  architecture: "Architecture",
+  structure: "Structure",
+  perspective3d: "3D Perspective",
+  contractor: "Contractor",
+  remarks: "Remarks",
+  soilReportRequestedDate: "🧪 Soil report requested date",
+  soilReportExpectedDate: "🧪 Soil report expected date",
+  soilReportActualDate: "🧪 Soil report received",
+  soilReportLab: "Soil report lab",
+  soilReportRequired: "Soil report requirement",
+  siteProgressPercent: "Site progress",
+};
+
+/** Fields whose every change is worth showing in the activity feed. Skip noisy/low-value fields. */
+const ACTIVITY_VISIBLE_FIELDS = new Set([
+  "status",
+  "noc",
+  "architecture",
+  "structure",
+  "perspective3d",
+  "contractor",
+  "soilReportRequestedDate",
+  "soilReportExpectedDate",
+  "soilReportActualDate",
+]);
+
+function formatActivityLine(log: AuditLog): string | null {
+  if (!ACTIVITY_VISIBLE_FIELDS.has(log.field)) return null;
+
+  const label = FIELD_LABELS[log.field] || log.field;
+
+  if (log.field === "soilReportRequestedDate") {
+    return `🧪 Soil report requested date set to ${format(new Date(log.newValue), "dd MMM yyyy")}`;
+  }
+  if (log.field === "soilReportExpectedDate") {
+    return `🧪 Soil report expected date changed to ${format(new Date(log.newValue), "dd MMM yyyy")}`;
+  }
+  if (log.field === "soilReportActualDate") {
+    return `🧪 Soil report received on ${format(new Date(log.newValue), "dd MMM yyyy")}`;
+  }
+  if (log.field === "status" && log.newValue === "In Progress") {
+    return "Soil investigation started";
+  }
+  if (log.field === "status") {
+    return `Status changed to ${log.newValue}`;
+  }
+
+  return `${label} changed to ${log.newValue}`;
+}
 
 function getConsultancyProgress(project: Project): number {
   const steps = getWorkflowSteps(project);
@@ -433,16 +485,16 @@ return (
     <p className="text-sm text-slate-400 italic">No activity recorded yet.</p>
   ) : (
     <div className="space-y-2.5">
-      {auditLogs.slice(0, 10).map((log) => (
-        <div key={log.id} className="flex items-center gap-3 text-sm">
-          <span className="text-slate-400 shrink-0 w-16">{format(new Date(log.createdAt), "dd MMM")}</span>
-          <span className="text-slate-700">
-            <span className="font-medium">{log.field}</span> changed to <span className="font-medium">{log.newValue}</span>
-          </span>
-        </div>
-      ))}
-    </div>
-  )}
+  {auditLogs
+    .map((log) => ({ log, text: formatActivityLine(log) }))
+    .filter((item): item is { log: AuditLog; text: string } => item.text !== null)
+    .slice(0, 10)
+    .map(({ log, text }) => (
+      <div key={log.id} className="flex items-center gap-3 text-sm">
+        <span className="text-slate-400 shrink-0 w-16">{format(new Date(log.createdAt), "dd MMM")}</span>
+        <span className="text-slate-700">{text}</span>
+      </div>
+    ))}
 </div>
   
   {selectedStage && (() => {
