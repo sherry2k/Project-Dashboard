@@ -1,4 +1,23 @@
 import type { Project } from "@/lib/types";
+import type { ConstructionStage } from "@/lib/types";
+
+export function getConstructionProgress(stages: ConstructionStage[]): number {
+  if (stages.length === 0) return 0;
+  const totalWeight = stages.reduce((sum, s) => sum + s.weight, 0);
+  if (totalWeight === 0) return 0;
+
+  const weightedDone = stages.reduce((sum, s) => {
+    const completion = s.status === "done" ? 1 : s.status === "active" ? s.subPercent / 100 : 0;
+    return sum + s.weight * completion;
+  }, 0);
+
+  return Math.round((weightedDone / totalWeight) * 100);
+}
+
+export function getCurrentConstructionStage(stages: ConstructionStage[]): string | null {
+  const active = stages.find((s) => s.status === "active");
+  return active ? active.stageName : null;
+}
 
 export function getCurrentActivity(project: Project): { icon: string; label: string } {
   if (project.status === "Project Cancelled") return { icon: "❌", label: "Cancelled" };
