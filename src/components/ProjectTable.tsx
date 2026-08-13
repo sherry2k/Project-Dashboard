@@ -140,7 +140,6 @@ function SoilReportProgress({ project }: { project: Project }) {
       </span>
     );
   }
-
   const requested = project.soilReportRequestedDate ? new Date(project.soilReportRequestedDate) : null;
   const expected = project.soilReportExpectedDate ? new Date(project.soilReportExpectedDate) : null;
   const actual = project.soilReportActualDate ? new Date(project.soilReportActualDate) : null;
