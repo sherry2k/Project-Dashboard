@@ -73,3 +73,13 @@ export interface StatFilter {
   type: StatFilterType;
   value: string;
 }
+
+export interface ConstructionStage {
+  id: number;
+  projectId: number;
+  stageName: string;
+  weight: number;
+  status: "done" | "active" | "pending";
+  subPercent: number;
+  sortOrder: number;
+}
