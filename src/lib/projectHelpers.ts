@@ -155,6 +155,17 @@ export function getWorkflowSteps(project: Project): WorkflowStep[] {
 export function getConsultancyProgress(project: Project): number {
   const steps = getWorkflowSteps(project);
   const relevant = steps.filter((s) => s.label !== "Contractor Assignment");
-  const doneCount = relevant.filter((s) => s.state === "done").length;
-  return Math.round((doneCount / relevant.length) * 100);
+
+  // "Not Required" fields are excluded from both numerator and denominator,
+  // since they were never applicable to this project in the first place.
+  const applicable = relevant.filter((s) => {
+    if (s.label === "Municipality (NOC)") return project.noc !== "Not Required";
+    if (s.label === "3D Perspective") return project.perspective3d !== "Not Required";
+    return true;
+  });
+
+  if (applicable.length === 0) return 100;
+
+  const doneCount = applicable.filter((s) => s.state === "done").length;
+  return Math.round((doneCount / applicable.length) * 100);
 }
