@@ -307,21 +307,29 @@ const [showConfigPanel, setShowConfigPanel] = useState(false);
   fetchConstructionStages();
 };
 
-  const saveAllStages = async () => {
-  await Promise.all(
-    constructionStages.map((stage) =>
-      fetch(`/api/construction-stages/${stage.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: stage.status, subPercent: stage.subPercent }),
-      })
-    )
-  );
-  fetchConstructionStages();
-  setShowConstructionPanel(false);
+const saveAllStages = async () => {
+  try {
+    await Promise.all(
+      constructionStages.map((stage) =>
+        fetch(`/api/construction-stages/${stage.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ 
+            status: stage.status, 
+            subPercent: stage.subPercent 
+          }),
+        })
+      )
+    );
+    // Fetch fresh data AFTER all PATCH requests complete
+    await fetchConstructionStages();
+    setShowConstructionPanel(false);
+  } catch (error) {
+    console.error("Failed to save stages:", error);
+  }
 };
   
-/** Cycle a stage: pending → active → done → pending */
+/** Cycle a stage: pending → active → done → pending and update local state */
 const cycleStage = (stage: ConstructionStage) => {
   const next: { status: "pending" | "active" | "done"; subPercent: number } =
     stage.status === "pending"
