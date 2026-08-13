@@ -233,27 +233,24 @@ export default function ProjectDetailPage() {
   const statusColor = STATUS_COLORS[project.status] || { bg: "bg-gray-100", text: "text-gray-700" };
 return (
     <div className="min-h-screen bg-[#F1F5F9]">
- <div className="bg-gradient-to-r from-[#5E9E3A] to-[#4a8230] px-6 py-3">
-  <div className="max-w-6xl mx-auto flex items-center gap-4">
+ <div className="bg-gradient-to-r from-[#5E9E3A] to-[#4a8230] px-4 sm:px-6 py-4 sm:py-5">
+  <div className="flex items-center justify-between mb-3 sm:mb-0 sm:absolute sm:top-5 sm:left-6 sm:right-6">
     <button
-    onClick={() => router.push("/dashboard")}
-    className="absolute top-4 left-6 flex items-center gap-2 bg-white/15 hover:bg-white/25 text-white text-sm font-medium px-3 py-1.5 rounded-lg transition-colors"
-  >
-    <ArrowLeft size={16} /> Back to Dashboard
-  </button>
+      onClick={() => router.push("/dashboard")}
+      className="flex items-center gap-1.5 sm:gap-2 bg-white/15 hover:bg-white/25 text-white text-xs sm:text-sm font-medium px-2.5 sm:px-3 py-1.5 rounded-lg transition-colors shrink-0"
+    >
+      <ArrowLeft size={16} /> <span className="hidden sm:inline">Back to Dashboard</span>
+    </button>
 
-    <div className="w-px h-8 bg-white/25 shrink-0"></div>
-
-    <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center overflow-hidden shrink-0">
-      <img src="/images/logo.png" alt="UBEC" className="w-8 h-8 object-contain" />
+    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white flex items-center justify-center overflow-hidden shrink-0">
+      <img src="/images/logo.png" alt="UBEC" className="w-6 h-6 sm:w-7 sm:h-7 object-contain" />
     </div>
+  </div>
 
-    <h1 className="text-lg font-bold text-white shrink-0">{project.projectNo}</h1>
-
-    <div className="w-px h-8 bg-white/25 shrink-0"></div>
-
-    <p className="text-sm text-green-50 truncate">
-      {project.ownerName} <span className="text-white/30 mx-1">|</span> Plot {project.plotNo} <span className="text-white/30 mx-1">|</span> {project.projectLocation}
+  <div className="text-center sm:pt-9">
+    <h1 className="text-xl sm:text-2xl font-bold text-white">{project.projectNo}</h1>
+    <p className="text-green-100 text-xs sm:text-sm mt-1">
+      {project.ownerName} <span className="text-white/40 mx-1.5">|</span> Plot {project.plotNo} <span className="text-white/40 mx-1.5">|</span> {project.projectLocation}
     </p>
   </div>
 </div>
