@@ -602,7 +602,7 @@ return (
         <p className="text-xs text-slate-400 shrink-0">{stage.weight}%</p>
       </div>
 
-      {stage.status === "active" && (
+       {stage.status === "active" && (
   <div
     className="flex items-center gap-2.5 mt-2 pl-9"
     onClick={(e) => e.stopPropagation()}
@@ -626,6 +626,8 @@ return (
     <span className="text-xs font-medium text-amber-700 w-9 text-right">{stage.subPercent}%</span>
   </div>
 )}
+</div>
+  ))}
 </div>
 
           <div className="border-t border-slate-200 mt-4 pt-4">
