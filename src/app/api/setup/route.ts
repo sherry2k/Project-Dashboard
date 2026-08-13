@@ -73,7 +73,20 @@ export async function GET() {
         edited_by VARCHAR(255) NOT NULL DEFAULT 'Admin',
         created_at TIMESTAMP NOT NULL DEFAULT NOW()
       );
+      
+      CREATE TABLE IF NOT EXISTS construction_stages (
+  id SERIAL PRIMARY KEY,
+  project_id INTEGER NOT NULL,
+  stage_name VARCHAR(100) NOT NULL,
+  weight INTEGER NOT NULL DEFAULT 0,
+  status VARCHAR(20) NOT NULL DEFAULT 'pending',
+  sub_percent INTEGER NOT NULL DEFAULT 0,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+   );
     `);
+    
 
     return NextResponse.json({
       success: true,
