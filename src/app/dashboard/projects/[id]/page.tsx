@@ -178,6 +178,9 @@ function getStageDetail(field: string, logs: AuditLog[]) {
   const last = fieldLogs[fieldLogs.length - 1];
   const started = new Date(first.createdAt);
   const completed = new Date(last.createdAt);
+
+  if (isNaN(started.getTime()) || isNaN(completed.getTime())) return null;
+
   const durationDays = Math.max(0, Math.round((completed.getTime() - started.getTime()) / 86400000));
 
   return {
@@ -223,16 +226,28 @@ function formatActivityLine(log: AuditLog): string | null {
   if (!ACTIVITY_VISIBLE_FIELDS.has(log.field)) return null;
 
   const label = FIELD_LABELS[log.field] || log.field;
+  const isSoilDateField = [
+    "soilReportRequestedDate",
+    "soilReportExpectedDate",
+    "soilReportActualDate",
+  ].includes(log.field);
 
-  if (log.field === "soilReportRequestedDate") {
-    return `🧪 Soil report requested date set to ${format(new Date(log.newValue), "dd MMM yyyy")}`;
+  if (isSoilDateField) {
+    const parsed = new Date(log.newValue);
+    const isValidDate = !isNaN(parsed.getTime());
+    const dateText = isValidDate ? format(parsed, "dd MMM yyyy") : "an unknown date";
+
+    if (log.field === "soilReportRequestedDate") {
+      return `🧪 Soil report requested date set to ${dateText}`;
+    }
+    if (log.field === "soilReportExpectedDate") {
+      return `🧪 Soil report expected date changed to ${dateText}`;
+    }
+    if (log.field === "soilReportActualDate") {
+      return `🧪 Soil report received on ${dateText}`;
+    }
   }
-  if (log.field === "soilReportExpectedDate") {
-    return `🧪 Soil report expected date changed to ${format(new Date(log.newValue), "dd MMM yyyy")}`;
-  }
-  if (log.field === "soilReportActualDate") {
-    return `🧪 Soil report received on ${format(new Date(log.newValue), "dd MMM yyyy")}`;
-  }
+
   if (log.field === "status" && log.newValue === "In Progress") {
     return "Soil investigation started";
   }
