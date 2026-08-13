@@ -356,17 +356,6 @@ export default function AddProjectModal({ project, onSave, onClose }: AddProject
 )}
 </div>
 
-{/* Site Progress */}
-<div className="mt-6 pt-5 border-t border-slate-200">
-  <h3 className="text-sm font-semibold text-slate-700 mb-3">Site / Construction Progress</h3>
-  <TextField
-    label="Progress (%)"
-    value={form.siteProgressPercent}
-    onChange={(v) => updateField("siteProgressPercent", v.replace(/[^0-9]/g, ""))}
-    placeholder="0–100"
-  />
-</div>
-
           
           {/* Actions */}
           <div className="mt-6 flex items-center justify-end gap-3 pt-4 border-t border-slate-200">
