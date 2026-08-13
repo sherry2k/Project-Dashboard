@@ -14,7 +14,7 @@ import {
   getCurrentConstructionStage,
   type WorkflowState,
 } from "@/lib/projectHelpers";
-import { STATUS_COLORS } from "@/lib/constants";
+import { STATUS_COLORS, CONSTRUCTION_STAGE_TEMPLATES } from "@/lib/constants";
 import { format } from "date-fns";
 
 
@@ -141,6 +141,126 @@ function WorkflowStepIcon({ state }: { state: WorkflowState }) {
     <div className="w-7 h-7 rounded-full border-2 border-slate-300 shrink-0"></div>
   );
 }
+
+function ConfigureStagesPanel({
+  existingStages,
+  onSave,
+  onClose,
+}: {
+  existingStages: ConstructionStage[];
+  onSave: (stages: { stageName: string; weight: number }[]) => void;
+  onClose: () => void;
+}) {
+  const [selected, setSelected] = useState<Record<string, number>>(() => {
+    const initial: Record<string, number> = {};
+    if (existingStages.length > 0) {
+      existingStages.forEach((s) => {
+        initial[s.stageName] = s.weight;
+      });
+    } else {
+      CONSTRUCTION_STAGE_TEMPLATES.forEach((t) => {
+        if (t.defaultWeight > 0) initial[t.name] = t.defaultWeight;
+      });
+    }
+    return initial;
+  });
+
+  const toggleStage = (name: string, defaultWeight: number) => {
+    setSelected((prev) => {
+      const next = { ...prev };
+      if (name in next) {
+        delete next[name];
+      } else {
+        next[name] = defaultWeight;
+      }
+      return next;
+    });
+  };
+
+  const updateWeight = (name: string, weight: number) => {
+    setSelected((prev) => ({ ...prev, [name]: weight }));
+  };
+
+  const totalWeight = Object.values(selected).reduce((sum, w) => sum + w, 0);
+
+  const handleSave = () => {
+    const stages = Object.entries(selected).map(([stageName, weight]) => ({ stageName, weight }));
+    onSave(stages);
+  };
+
+  return (
+    <div className="fixed inset-0 z-[60] bg-black/40 flex items-center justify-center p-4" onClick={onClose}>
+      <div
+        className="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[85vh] overflow-y-auto p-6"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Configure Construction Stages</h3>
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-600">✕</button>
+        </div>
+
+        <p className="text-xs text-slate-500 mb-4">
+          Select the stages that apply to this project and adjust their weights so they total 100%.
+        </p>
+
+        <div className="space-y-2">
+          {CONSTRUCTION_STAGE_TEMPLATES.map((template) => {
+            const isSelected = template.name in selected;
+            return (
+              <div key={template.name} className="flex items-center gap-3">
+                <input
+                  type="checkbox"
+                  checked={isSelected}
+                  onChange={() => toggleStage(template.name, template.defaultWeight || 10)}
+                  className="rounded border-slate-300 accent-[#5E9E3A]"
+                />
+                <span className={`flex-1 text-sm ${isSelected ? "text-slate-800 font-medium" : "text-slate-400"}`}>
+                  {template.name}
+                </span>
+                {isSelected && (
+                  <input
+                    type="number"
+                    min={0}
+                    max={100}
+                    value={selected[template.name]}
+                    onChange={(e) => updateWeight(template.name, Number(e.target.value))}
+                    className="w-16 border border-slate-300 rounded-lg px-2 py-1 text-sm text-right"
+                  />
+                )}
+                {isSelected && <span className="text-xs text-slate-400 w-3">%</span>}
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="border-t border-slate-200 mt-4 pt-4 flex items-center justify-between">
+          <p className={`text-sm font-medium ${totalWeight === 100 ? "text-emerald-600" : "text-amber-600"}`}>
+            Total: {totalWeight}%
+          </p>
+          {totalWeight !== 100 && (
+            <p className="text-xs text-amber-600">Should total 100%</p>
+          )}
+        </div>
+
+        <div className="flex items-center justify-end gap-3 mt-5">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleSave}
+            className="px-4 py-2 text-sm font-medium text-white bg-[#5E9E3A] rounded-lg hover:bg-[#5E9E3A]/90 transition-colors"
+          >
+            Save Stages
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 
 export default function ProjectDetailPage() {
   const params = useParams();
@@ -503,7 +623,13 @@ return (
     </div>
   </div>
 )}
-  
+  {showConfigPanel && (
+  <ConfigureStagesPanel
+    existingStages={constructionStages}
+    onSave={saveStageConfig}
+    onClose={() => setShowConfigPanel(false)}
+  />
+)}
     {selectedStage && (() => {
   const fieldName = STAGE_FIELD_MAP[selectedStage];
   const detail = fieldName ? getStageDetail(fieldName, auditLogs) : null;
