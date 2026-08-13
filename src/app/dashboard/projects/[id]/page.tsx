@@ -289,6 +289,9 @@ const [showConfigPanel, setShowConfigPanel] = useState(false);
     .then((res) => res.json())
     .then((data) => setAuditLogs(data))
     .catch(() => setAuditLogs([]));
+
+  // 🔴 ADD THIS LINE HERE:
+  fetchConstructionStages();
 }, [params.id]);
 
   const fetchConstructionStages = () => {
@@ -309,6 +312,7 @@ const [showConfigPanel, setShowConfigPanel] = useState(false);
 
 const saveAllStages = async () => {
   try {
+    // 1. Save all stage updates
     await Promise.all(
       constructionStages.map((stage) =>
         fetch(`/api/construction-stages/${stage.id}`, {
@@ -321,29 +325,31 @@ const saveAllStages = async () => {
         })
       )
     );
-    // Fetch fresh data AFTER all PATCH requests complete
+
+    // 2. Calculate new total construction progress percentage
+    const newOverallProgress = getConstructionProgress(constructionStages);
+
+    // 3. Update parent project siteProgressPercent in the DB
+    await fetch(`/api/projects/${params.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ siteProgressPercent: newOverallProgress }),
+    });
+
+    // 4. Refresh local page data
     await fetchConstructionStages();
+    
+    // Refresh project data to show updated stats
+    const updatedProjRes = await fetch(`/api/projects/${params.id}`);
+    if (updatedProjRes.ok) {
+      const updatedProj = await updatedProjRes.json();
+      setProject(updatedProj);
+    }
+
     setShowConstructionPanel(false);
-  } catch (error) {
-    console.error("Failed to save stages:", error);
+  } catch (err) {
+    console.error("Failed to save progress:", err);
   }
-};
-  
-/** Cycle a stage: pending → active → done → pending and update local state */
-const cycleStage = (stage: ConstructionStage) => {
-  let next: { status: "pending" | "active" | "done"; subPercent: number };
-
-  if (stage.status === "pending") {
-    next = { status: "active", subPercent: stage.subPercent > 0 ? stage.subPercent : 0 };
-  } else if (stage.status === "active") {
-    next = { status: "done", subPercent: 100 };
-  } else {
-    next = { status: "pending", subPercent: 0 };
-  }
-
-  setConstructionStages((prev) =>
-    prev.map((s) => (s.id === stage.id ? { ...s, ...next } : s))
-  );
 };
 
 const saveStageConfig = async (selected: { stageName: string; weight: number }[]) => {
