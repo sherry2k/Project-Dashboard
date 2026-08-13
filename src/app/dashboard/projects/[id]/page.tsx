@@ -243,7 +243,7 @@ return (
     </button>
 
     <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white flex items-center justify-center overflow-hidden shrink-0">
-      <img src="/images/logo.png" alt="UBEC" className="w-6 h-6 sm:w-7 sm:h-7 object-contain" />
+      <img src="/images/logo.png" alt="UBEC" className="w-8 h-8 sm:w-7 sm:h-7 object-contain" />
     </div>
   </div>
 
