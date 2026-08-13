@@ -3,13 +3,15 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, Loader2, Building2 } from "lucide-react";
-import type { Project, AuditLog } from "@/lib/types";
+import type { Project, AuditLog, ConstructionStage } from "@/lib/types";
 import {
   getCurrentActivity,
   getWaitingFor,
   getSoilInvestigationStatus,
   getWorkflowSteps,
   getConsultancyProgress,
+  getConstructionProgress,
+  getCurrentConstructionStage,
   type WorkflowState,
 } from "@/lib/projectHelpers";
 import { STATUS_COLORS } from "@/lib/constants";
@@ -148,6 +150,10 @@ export default function ProjectDetailPage() {
   const [notFound, setNotFound] = useState(false);
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
   const [selectedStage, setSelectedStage] = useState<string | null>(null);
+const [constructionStages, setConstructionStages] = useState<ConstructionStage[]>([]);
+const [showConstructionPanel, setShowConstructionPanel] = useState(false);
+const [showConfigPanel, setShowConfigPanel] = useState(false);
+  
 
  useEffect(() => {
   fetch(`/api/projects/${params.id}`)
@@ -164,6 +170,43 @@ export default function ProjectDetailPage() {
     .then((data) => setAuditLogs(data))
     .catch(() => setAuditLogs([]));
 }, [params.id]);
+
+  const fetchConstructionStages = () => {
+  fetch(`/api/projects/${params.id}/construction-stages`)
+    .then((res) => res.json())
+    .then((data) => setConstructionStages(data))
+    .catch(() => setConstructionStages([]));
+};
+
+  const updateStage = async (stageId: number, data: Record<string, unknown>) => {
+  await fetch(`/api/construction-stages/${stageId}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  fetchConstructionStages();
+};
+
+/** Cycle a stage: pending → active → done → pending */
+const cycleStage = (stage: ConstructionStage) => {
+  if (stage.status === "pending") {
+    updateStage(stage.id, { status: "active", subPercent: 0 });
+  } else if (stage.status === "active") {
+    updateStage(stage.id, { status: "done", subPercent: 100 });
+  } else {
+    updateStage(stage.id, { status: "pending", subPercent: 0 });
+  }
+};
+
+const saveStageConfig = async (selected: { stageName: string; weight: number }[]) => {
+  await fetch(`/api/projects/${params.id}/construction-stages`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ stages: selected }),
+  });
+  setShowConfigPanel(false);
+  fetchConstructionStages();
+};
 
   if (loading) {
     return (
@@ -293,18 +336,26 @@ return (
                   </div>
                   <p className="text-xs text-slate-400 mt-1.5">Registration → NOC → Architecture → Structure → Permit</p>
                 </div>
-                <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <p className="text-sm font-medium text-slate-700">Site / Construction</p>
-                    <p className="text-sm font-bold text-slate-800">{project.siteProgressPercent ?? 0}%</p>
-                  </div>
-                  <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-[#5E9E3A] transition-all"
-                      style={{ width: `${project.siteProgressPercent ?? 0}%` }}
-                    ></div>
-                  </div>
-                </div>
+              <div
+  onClick={() => setShowConstructionPanel(true)}
+  className="cursor-pointer hover:bg-slate-50 rounded-lg -mx-2 px-2 py-1 transition-colors"
+>
+  <div className="flex items-center justify-between mb-1.5">
+    <p className="text-sm font-medium text-slate-700">Site / Construction</p>
+    <p className="text-sm font-bold text-slate-800">{getConstructionProgress(constructionStages)}%</p>
+  </div>
+  <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+    <div
+      className="h-full bg-[#5E9E3A] transition-all"
+      style={{ width: `${getConstructionProgress(constructionStages)}%` }}
+    ></div>
+  </div>
+  {getCurrentConstructionStage(constructionStages) && (
+    <p className="text-xs text-slate-400 mt-1.5">
+      Current Stage: {getCurrentConstructionStage(constructionStages)}
+    </p>
+  )}
+</div>
               </div>
             </div>
 
@@ -368,6 +419,91 @@ return (
     ))}
 </div>
   )}
+{showConstructionPanel && (
+  <div
+    className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4"
+    onClick={() => setShowConstructionPanel(false)}
+  >
+    <div
+      className="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[85vh] overflow-y-auto p-6"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Construction Progress</h3>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowConfigPanel(true)}
+            className="text-xs font-medium text-blue-600 hover:text-blue-800"
+          >
+            Configure Stages
+          </button>
+          <button onClick={() => setShowConstructionPanel(false)} className="text-slate-400 hover:text-slate-600">
+            ✕
+          </button>
+        </div>
+      </div>
+
+      {constructionStages.length === 0 ? (
+        <div className="text-center py-8">
+          <p className="text-sm text-slate-400 italic mb-3">No construction stages configured yet.</p>
+          <button
+            onClick={() => setShowConfigPanel(true)}
+            className="px-4 py-2 bg-[#5E9E3A] text-white rounded-lg text-sm font-medium"
+          >
+            Set Up Stages
+          </button>
+        </div>
+      ) : (
+        <>
+          <div className="space-y-1">
+            {constructionStages.map((stage) => (
+              <div
+                key={stage.id}
+                onClick={() => cycleStage(stage)}
+                className="flex items-center gap-3 py-2 px-2 rounded-lg hover:bg-slate-50 cursor-pointer transition-colors"
+              >
+                <div className="shrink-0">
+                  {stage.status === "done" ? (
+                    <div className="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center text-white text-xs">✓</div>
+                  ) : stage.status === "active" ? (
+                    <div className="w-6 h-6 rounded-full bg-amber-100 border-2 border-amber-500 flex items-center justify-center">
+                      <div className="w-2 h-2 rounded-full bg-amber-500"></div>
+                    </div>
+                  ) : (
+                    <div className="w-6 h-6 rounded-full border-2 border-slate-300"></div>
+                  )}
+                </div>
+                <div className="flex-1">
+                  <p className={`text-sm font-medium ${stage.status === "pending" ? "text-slate-400" : "text-slate-800"}`}>
+                    {stage.stageName}
+                  </p>
+                  {stage.status === "active" && (
+                    <p className="text-xs text-amber-600">{stage.subPercent}% complete</p>
+                  )}
+                </div>
+                <p className="text-xs text-slate-400 shrink-0">{stage.weight}%</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="border-t border-slate-200 mt-4 pt-4">
+            <div className="flex items-center justify-between mb-1.5">
+              <p className="text-sm font-semibold text-slate-700">Overall Construction Progress</p>
+              <p className="text-sm font-bold text-slate-800">{getConstructionProgress(constructionStages)}%</p>
+            </div>
+            <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-[#5E9E3A] transition-all"
+                style={{ width: `${getConstructionProgress(constructionStages)}%` }}
+              ></div>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  </div>
+)}
+  
     {selectedStage && (() => {
   const fieldName = STAGE_FIELD_MAP[selectedStage];
   const detail = fieldName ? getStageDetail(fieldName, auditLogs) : null;
