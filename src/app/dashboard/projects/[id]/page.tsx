@@ -267,6 +267,7 @@ export default function ProjectDetailPage() {
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [username, setUsername] = useState<string>("Admin");
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
   const [selectedStage, setSelectedStage] = useState<string | null>(null);
 const [constructionStages, setConstructionStages] = useState<ConstructionStage[]>([]);
@@ -288,6 +289,14 @@ const [showConfigPanel, setShowConfigPanel] = useState(false);
     .then((res) => res.json())
     .then((data) => setAuditLogs(data))
     .catch(() => setAuditLogs([]));
+   
+fetch("/api/auth/me")
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.user?.username) setUsername(data.user.username);
+    })
+    .catch(() => {});
+   
 
   // 🔴 ADD THIS LINE HERE:
   fetchConstructionStages();
@@ -326,11 +335,11 @@ const saveAllStages = async () => {
 
     const newOverallProgress = getConstructionProgress(constructionStages);
 
-    await fetch(`/api/projects/${params.id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ siteProgressPercent: newOverallProgress }),
-    });
+   await fetch(`/api/projects/${params.id}`, {
+  method: "PATCH",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ siteProgressPercent: newOverallProgress, editedBy: username }),
+});
 
     await fetchConstructionStages();
 
