@@ -352,6 +352,20 @@ const saveAllStages = async () => {
   }
 };
 
+/** Cycle a stage: pending → active → done → pending */
+const cycleStage = (stage: ConstructionStage) => {
+  const next: { status: "pending" | "active" | "done"; subPercent: number } =
+    stage.status === "pending"
+      ? { status: "active", subPercent: 0 }
+      : stage.status === "active"
+      ? { status: "done", subPercent: 100 }
+      : { status: "pending", subPercent: 0 };
+
+  setConstructionStages((prev) =>
+    prev.map((s) => (s.id === stage.id ? { ...s, ...next } : s))
+  );
+};
+
 const saveStageConfig = async (selected: { stageName: string; weight: number }[]) => {
   await fetch(`/api/projects/${params.id}/construction-stages`, {
     method: "PUT",
@@ -361,6 +375,7 @@ const saveStageConfig = async (selected: { stageName: string; weight: number }[]
   setShowConfigPanel(false);
   fetchConstructionStages();
 };
+
 
   if (loading) {
     return (
