@@ -234,32 +234,32 @@ function ConfigureStagesPanel({
         </div>
 
         <div className="border-t border-slate-200 mt-4 pt-4 flex items-center justify-between">
-          <p className={`text-sm font-medium ${totalWeight === 100 ? "text-emerald-600" : "text-amber-600"}`}>
-            Total: {totalWeight}%
-          </p>
-          {totalWeight !== 100 && (
-            <p className="text-xs text-amber-600">Should total 100%</p>
-          )}
-        </div>
+  <p className={`text-sm font-medium ${totalWeight === 100 ? "text-emerald-600" : "text-amber-600"}`}>
+    Total: {totalWeight}%
+  </p>
+  {totalWeight !== 100 && (
+    <p className="text-xs text-amber-600">Should total 100%</p>
+  )}
+</div>
 
-       <button
-  onClick={onClose}
-  className="px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors"
->
-  Cancel
-</button>
-          <button
-            onClick={handleSave}
-            className="px-4 py-2 text-sm font-medium text-white bg-[#5E9E3A] rounded-lg hover:bg-[#5E9E3A]/90 transition-colors"
-          >
-            Save Stages
-          </button>
-        </div>
+<div className="flex items-center justify-end gap-3 mt-5">
+  <button
+    onClick={onClose}
+    className="px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors"
+  >
+    Cancel
+  </button>
+  <button
+    onClick={handleSave}
+    className="px-4 py-2 text-sm font-medium text-white bg-[#5E9E3A] rounded-lg hover:bg-[#5E9E3A]/90 transition-colors"
+  >
+    Save Stages
+  </button>
+</div>
       </div>
     </div>
   );
 }
-
 
 export default function ProjectDetailPage() {
   const params = useParams();
