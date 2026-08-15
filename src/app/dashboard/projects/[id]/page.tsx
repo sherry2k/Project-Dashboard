@@ -243,12 +243,12 @@ function ConfigureStagesPanel({
         </div>
 
         <div className="flex items-center justify-end gap-3 mt-5">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors"
-          >
-            Cancel
-          </button>
+         <button
+  onClick={() => { fetchConstructionStages(); setShowConstructionPanel(false); }}
+  className="px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors"
+>
+  Cancel
+</button>
           <button
             onClick={handleSave}
             className="px-4 py-2 text-sm font-medium text-white bg-[#5E9E3A] rounded-lg hover:bg-[#5E9E3A]/90 transition-colors"
@@ -311,35 +311,36 @@ const [showConfigPanel, setShowConfigPanel] = useState(false);
 };
 
 const saveAllStages = async () => {
+  let latestStages: ConstructionStage[] = [];
+  setConstructionStages((prev) => {
+    latestStages = prev;
+    return prev;
+  });
+
   try {
-    // 1. Save all stage updates
     await Promise.all(
-      constructionStages.map((stage) =>
+      latestStages.map((stage) =>
         fetch(`/api/construction-stages/${stage.id}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ 
-            status: stage.status, 
-            subPercent: stage.subPercent 
+          body: JSON.stringify({
+            status: stage.status,
+            subPercent: stage.subPercent,
           }),
         })
       )
     );
 
-    // 2. Calculate new total construction progress percentage
-    const newOverallProgress = getConstructionProgress(constructionStages);
+    const newOverallProgress = getConstructionProgress(latestStages);
 
-    // 3. Update parent project siteProgressPercent in the DB
     await fetch(`/api/projects/${params.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ siteProgressPercent: newOverallProgress }),
     });
 
-    // 4. Refresh local page data
     await fetchConstructionStages();
-    
-    // Refresh project data to show updated stats
+
     const updatedProjRes = await fetch(`/api/projects/${params.id}`);
     if (updatedProjRes.ok) {
       const updatedProj = await updatedProjRes.json();
