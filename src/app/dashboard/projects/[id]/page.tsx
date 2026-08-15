@@ -310,15 +310,9 @@ const [showConfigPanel, setShowConfigPanel] = useState(false);
 };
 
 const saveAllStages = async () => {
-  let latestStages: ConstructionStage[] = [];
-  setConstructionStages((prev) => {
-    latestStages = prev;
-    return prev;
-  });
-
   try {
     await Promise.all(
-      latestStages.map((stage) =>
+      constructionStages.map((stage) =>
         fetch(`/api/construction-stages/${stage.id}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
@@ -330,7 +324,7 @@ const saveAllStages = async () => {
       )
     );
 
-    const newOverallProgress = getConstructionProgress(latestStages);
+    const newOverallProgress = getConstructionProgress(constructionStages);
 
     await fetch(`/api/projects/${params.id}`, {
       method: "PATCH",
