@@ -30,6 +30,7 @@ import {
   PROJECT_LOCATIONS,
 } from "@/lib/constants";
 import { format } from "date-fns";
+import * as XLSX from "xlsx";
 import { getCurrentActivity } from "@/lib/projectHelpers";
 
 interface ProjectTableProps {
@@ -364,22 +365,84 @@ useEffect(() => {
     setSelectedRows(newSet);
   };
 
-  const exportCSV = () => {
-    const headers = ["S.No", "Owner Name", "Project No", "Plot No", "Location", "NOC", "3D Perspective", "Architecture", "Structure", "Status", "Contractor", "Remarks", "Last Updated"];
-    const rows = sortedProjects.map((p, i) => [
-      i + 1, p.ownerName, p.projectNo, p.plotNo, p.projectLocation,
-      p.noc, p.perspective3d, p.architecture, p.structure, p.status,
-      p.contractor, p.remarks, p.updatedAt,
-    ]);
-    const csv = [headers, ...rows].map((r) => r.map((c) => `"${c}"`).join(",")).join("\n");
-    const blob = new Blob([csv], { type: "text/csv" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `projects_${new Date().toISOString().split("T")[0]}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
+  const exportExcel = () => {
+  const headers = [
+    "S.No", "Owner Name", "Project No", "Plot No", "Location",
+    "NOC", "3D Perspective", "Architecture", "Structure", "Status",
+    "Current Activity", "Soil Investigation", "Contractor", "Remarks", "Last Updated",
+  ];
+
+  const rows = sortedProjects.map((p, i) => {
+    const activity = getCurrentActivity(p);
+    const soilLabel = p.soilReportRequired === "Not Required"
+      ? "Not Required"
+      : p.soilReportActualDate
+      ? "Completed"
+      : p.soilReportRequestedDate
+      ? "In Progress"
+      : "Not Started";
+    return [
+      i + 1,
+      p.ownerName,
+      p.projectNo,
+      p.plotNo,
+      p.projectLocation,
+      p.noc,
+      p.perspective3d,
+      p.architecture,
+      p.structure,
+      p.status,
+      activity.label,
+      soilLabel,
+      p.contractor || "",
+      p.remarks || "",
+      p.updatedAt ? format(new Date(p.updatedAt), "dd MMM yyyy HH:mm") : "",
+    ];
+  });
+
+  const worksheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+
+  // Column widths, tuned per column for readability
+  worksheet["!cols"] = [
+    { wch: 6 },   // S.No
+    { wch: 24 },  // Owner Name
+    { wch: 16 },  // Project No
+    { wch: 8 },   // Plot No
+    { wch: 16 },  // Location
+    { wch: 14 },  // NOC
+    { wch: 14 },  // 3D Perspective
+    { wch: 14 },  // Architecture
+    { wch: 14 },  // Structure
+    { wch: 18 },  // Status
+    { wch: 20 },  // Current Activity
+    { wch: 16 },  // Soil Investigation
+    { wch: 20 },  // Contractor
+    { wch: 30 },  // Remarks
+    { wch: 18 },  // Last Updated
+  ];
+
+  // Bold header row with a background fill
+  const headerRange = XLSX.utils.decode_range(worksheet["!ref"] || "A1");
+  for (let col = headerRange.s.c; col <= headerRange.e.c; col++) {
+    const cellRef = XLSX.utils.encode_cell({ r: 0, c: col });
+    if (!worksheet[cellRef]) continue;
+    worksheet[cellRef].s = {
+      font: { bold: true, color: { rgb: "FFFFFF" } },
+      fill: { fgColor: { rgb: "5E9E3A" } },
+      alignment: { horizontal: "center", vertical: "center" },
+    };
+  }
+
+  // Freeze the header row so it stays visible while scrolling
+  worksheet["!freeze"] = { xSplit: 0, ySplit: 1 };
+
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Projects");
+
+  XLSX.writeFile(workbook, `UBEC_Projects_${format(new Date(), "yyyy-MM-dd")}.xlsx`, {
+    cellStyles: true,
+  });
+};
 
   return (
     <>
@@ -438,13 +501,13 @@ useEffect(() => {
               <div className="w-px h-6 bg-slate-200 mx-1"></div>
             </>
           )}
-          <button
-            onClick={exportCSV}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors"
-          >
-            <Download size={14} />
-            Export CSV
-          </button>
+         <button
+  onClick={exportExcel}
+  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors"
+>
+  <Download size={14} />
+  Export Excel
+</button>
           <button
             onClick={() => window.print()}
             className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors"
