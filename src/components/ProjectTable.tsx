@@ -30,7 +30,7 @@ import {
   PROJECT_LOCATIONS,
 } from "@/lib/constants";
 import { format } from "date-fns";
-import * as XLSX from "xlsx";
+import ExcelJS from "exceljs";
 import { getCurrentActivity } from "@/lib/projectHelpers";
 
 interface ProjectTableProps {
@@ -365,14 +365,35 @@ useEffect(() => {
     setSelectedRows(newSet);
   };
 
-  const exportExcel = () => {
+  const exportExcel = async () => {
+  const workbook = new ExcelJS.Workbook();
+  const sheet = workbook.addWorksheet("Projects");
+
   const headers = [
     "S.No", "Owner Name", "Project No", "Plot No", "Location",
     "NOC", "3D Perspective", "Architecture", "Structure", "Status",
     "Current Activity", "Soil Investigation", "Contractor", "Remarks", "Last Updated",
   ];
 
-  const rows = sortedProjects.map((p, i) => {
+  sheet.columns = [
+    { header: "S.No", key: "sno", width: 6 },
+    { header: "Owner Name", key: "ownerName", width: 24 },
+    { header: "Project No", key: "projectNo", width: 16 },
+    { header: "Plot No", key: "plotNo", width: 8 },
+    { header: "Location", key: "location", width: 16 },
+    { header: "NOC", key: "noc", width: 14 },
+    { header: "3D Perspective", key: "perspective3d", width: 14 },
+    { header: "Architecture", key: "architecture", width: 14 },
+    { header: "Structure", key: "structure", width: 14 },
+    { header: "Status", key: "status", width: 18 },
+    { header: "Current Activity", key: "activity", width: 20 },
+    { header: "Soil Investigation", key: "soil", width: 16 },
+    { header: "Contractor", key: "contractor", width: 20 },
+    { header: "Remarks", key: "remarks", width: 30 },
+    { header: "Last Updated", key: "updatedAt", width: 18 },
+  ];
+
+  sortedProjects.forEach((p, i) => {
     const activity = getCurrentActivity(p);
     const soilLabel = p.soilReportRequired === "Not Required"
       ? "Not Required"
@@ -381,67 +402,58 @@ useEffect(() => {
       : p.soilReportRequestedDate
       ? "In Progress"
       : "Not Started";
-    return [
-      i + 1,
-      p.ownerName,
-      p.projectNo,
-      p.plotNo,
-      p.projectLocation,
-      p.noc,
-      p.perspective3d,
-      p.architecture,
-      p.structure,
-      p.status,
-      activity.label,
-      soilLabel,
-      p.contractor || "",
-      p.remarks || "",
-      p.updatedAt ? format(new Date(p.updatedAt), "dd MMM yyyy HH:mm") : "",
-    ];
+
+    sheet.addRow({
+      sno: i + 1,
+      ownerName: p.ownerName,
+      projectNo: p.projectNo,
+      plotNo: p.plotNo,
+      location: p.projectLocation,
+      noc: p.noc,
+      perspective3d: p.perspective3d,
+      architecture: p.architecture,
+      structure: p.structure,
+      status: p.status,
+      activity: activity.label,
+      soil: soilLabel,
+      contractor: p.contractor || "",
+      remarks: p.remarks || "",
+      updatedAt: p.updatedAt ? format(new Date(p.updatedAt), "dd MMM yyyy HH:mm") : "",
+    });
   });
 
-  const worksheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
-
-  // Column widths, tuned per column for readability
-  worksheet["!cols"] = [
-    { wch: 6 },   // S.No
-    { wch: 24 },  // Owner Name
-    { wch: 16 },  // Project No
-    { wch: 8 },   // Plot No
-    { wch: 16 },  // Location
-    { wch: 14 },  // NOC
-    { wch: 14 },  // 3D Perspective
-    { wch: 14 },  // Architecture
-    { wch: 14 },  // Structure
-    { wch: 18 },  // Status
-    { wch: 20 },  // Current Activity
-    { wch: 16 },  // Soil Investigation
-    { wch: 20 },  // Contractor
-    { wch: 30 },  // Remarks
-    { wch: 18 },  // Last Updated
-  ];
-
-  // Bold header row with a background fill
-  const headerRange = XLSX.utils.decode_range(worksheet["!ref"] || "A1");
-  for (let col = headerRange.s.c; col <= headerRange.e.c; col++) {
-    const cellRef = XLSX.utils.encode_cell({ r: 0, c: col });
-    if (!worksheet[cellRef]) continue;
-    worksheet[cellRef].s = {
-      font: { bold: true, color: { rgb: "FFFFFF" } },
-      fill: { fgColor: { rgb: "5E9E3A" } },
-      alignment: { horizontal: "center", vertical: "center" },
-    };
-  }
-
-  // Freeze the header row so it stays visible while scrolling
-  worksheet["!freeze"] = { xSplit: 0, ySplit: 1 };
-
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Projects");
-
-  XLSX.writeFile(workbook, `UBEC_Projects_${format(new Date(), "yyyy-MM-dd")}.xlsx`, {
-    cellStyles: true,
+  // Bold, colored, centered header row
+  const headerRow = sheet.getRow(1);
+  headerRow.eachCell((cell) => {
+    cell.font = { bold: true, color: { argb: "FFFFFFFF" } };
+    cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF5E9E3A" } };
+    cell.alignment = { horizontal: "center", vertical: "middle" };
   });
+  headerRow.height = 22;
+
+  // Freeze header row
+  sheet.views = [{ state: "frozen", ySplit: 1 }];
+
+  // Thin borders on every cell for a clean grid look
+  sheet.eachRow((row) => {
+    row.eachCell((cell) => {
+      cell.border = {
+        top: { style: "thin", color: { argb: "FFD1D5DB" } },
+        left: { style: "thin", color: { argb: "FFD1D5DB" } },
+        bottom: { style: "thin", color: { argb: "FFD1D5DB" } },
+        right: { style: "thin", color: { argb: "FFD1D5DB" } },
+      };
+    });
+  });
+
+  const buffer = await workbook.xlsx.writeBuffer();
+  const blob = new Blob([buffer], { type: "application/octet-stream" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `UBEC_Projects_${format(new Date(), "yyyy-MM-dd")}.xlsx`;
+  a.click();
+  URL.revokeObjectURL(url);
 };
 
   return (
