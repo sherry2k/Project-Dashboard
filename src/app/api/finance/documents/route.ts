@@ -43,6 +43,8 @@ export async function POST(request: NextRequest) {
         paymentMethod: body.paymentMethod || "",
         notes: body.notes || "",
         projectDetails: body.projectDetails || "",
+        contractValue: body.contractValue ? Math.round(body.contractValue * 100) : 0,
+        previouslyInvoiced: body.previouslyInvoiced ? Math.round(body.previouslyInvoiced * 100) : 0,
         createdBy: body.createdBy || "Admin",
       })
       .returning();
