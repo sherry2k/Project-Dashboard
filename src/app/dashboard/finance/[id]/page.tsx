@@ -152,7 +152,7 @@ export default function FinanceDocumentDetailPage() {
   id="print-area"
 >
         <div className="w-full flex justify-center">
-  <img src="/images/letterhead.jpg" alt="" style={{ width: "80%", height: "auto" }} />
+  <img src="/images/letterhead.jpg" alt="" style={{ width: "90%", height: "auto" }} />
 </div>
 
         <div className="px-10 py-6" id="print-content">
@@ -225,7 +225,7 @@ export default function FinanceDocumentDetailPage() {
                              <div className="mb-8 text-sm">
   <p className="font-semibold text-slate-800 mb-1">Bank Account Details:</p>
   <div className="space-y-0.5 text-slate-600">
-    <p><span className="font-medium text-slate-700">Account Name:</span> UNIVERSAL BUILDING ENGINEERING CONSULTANTS</p>
+    <p><span className="font-medium text-slate-700">Account Name:</span> Universal Building Engineering Consultants</p>
     <p><span className="font-medium text-slate-700">Bank Name:</span> ADIB</p>
     <p><span className="font-medium text-slate-700">Account Number:</span> 18758331</p>
     <p><span className="font-medium text-slate-700">IBAN:</span> AE640500000000018758331</p>
@@ -249,7 +249,7 @@ export default function FinanceDocumentDetailPage() {
 
        <div className="mt-24"></div>
 <div className="w-full flex justify-center">
-  <img src="/images/footer.jpg" alt="" style={{ width: "80%", height: "auto" }} />
+  <img src="/images/footer.jpg" alt="" style={{ width: "90%", height: "auto" }} />
 </div>
     </div>
        </div>
