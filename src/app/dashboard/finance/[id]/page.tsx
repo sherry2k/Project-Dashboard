@@ -247,9 +247,10 @@ export default function FinanceDocumentDetailPage() {
           </div>
         </div>
 
-       <div className="mt-16"></div>
-        <img src="/images/footer.jpg" alt="" className="w-full" />
-      </div>
+       <div className="mt-24"></div>
+<div className="w-full flex justify-center">
+  <img src="/images/footer.jpg" alt="" style={{ width: "80%", height: "auto" }} />
+</div>
     </div>
   );
 }
