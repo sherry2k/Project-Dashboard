@@ -10,6 +10,53 @@ interface UserInfo {
   role: string;
 }
 
+function numberToWords(num: number): string {
+  const ones = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
+  const teens = ["Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+  const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+
+  function threeDigits(n: number): string {
+    let str = "";
+    if (n >= 100) {
+      str += ones[Math.floor(n / 100)] + " Hundred ";
+      n %= 100;
+    }
+    if (n >= 20) {
+      str += tens[Math.floor(n / 10)] + " ";
+      n %= 10;
+      str += ones[n] ? ones[n] : "";
+    } else if (n >= 10) {
+      str += teens[n - 10];
+    } else if (n > 0) {
+      str += ones[n];
+    }
+    return str.trim();
+  }
+
+  function wholeNumberToWords(n: number): string {
+    if (n === 0) return "Zero";
+    let str = "";
+    const million = Math.floor(n / 1000000);
+    const thousand = Math.floor((n % 1000000) / 1000);
+    const rest = n % 1000;
+
+    if (million) str += threeDigits(million) + " Million ";
+    if (thousand) str += threeDigits(thousand) + " Thousand ";
+    if (rest) str += threeDigits(rest);
+
+    return str.trim();
+  }
+
+  const dirhams = Math.floor(num);
+  const fils = Math.round((num - dirhams) * 100);
+
+  let result = wholeNumberToWords(dirhams) + " Dirham" + (dirhams !== 1 ? "s" : "");
+  if (fils > 0) {
+    result += " and " + wholeNumberToWords(fils) + " Fils";
+  }
+  return result + " Only";
+}
+
 const DOC_TYPE_TITLES: Record<DocType, string> = {
   invoice: "INVOICE",
   receipt_voucher: "RECEIPT VOUCHER",
@@ -23,6 +70,12 @@ export default function FinanceDocumentDetailPage() {
   const [doc, setDoc] = useState<FinanceDocument | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+
+  useEffect(() => {
+    if (doc?.docNumber) {
+      document.title = doc.docNumber.replace(/\//g, "-");
+    }
+  }, [doc]);
 
   useEffect(() => {
     fetch("/api/auth/me")
@@ -92,12 +145,15 @@ export default function FinanceDocumentDetailPage() {
           </button>
         </div>
       </div>
-
+      
       {/* Printable document */}
-      <div className="max-w-4xl mx-auto my-6 bg-white shadow-sm print:shadow-none print:my-0" id="print-area">
-        <img src="/images/letterhead.jpg" alt="" className="w-full" />
+      <div
+        className="max-w-4xl mx-auto my-6 bg-white shadow-sm print:shadow-none print:my-0 flex flex-col min-h-[297mm]"
+        id="print-area"
+      >
+        <img src="/images/letterhead.jpg" alt="" className="w-full h-24 object-cover object-top" />
 
-        <div className="px-10 py-6">
+        <div className="px-10 py-6 flex-1">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold tracking-wide text-slate-800">{DOC_TYPE_TITLES[doc.docType]}</h2>
             <div className="text-right text-sm">
@@ -109,13 +165,13 @@ export default function FinanceDocumentDetailPage() {
 
           <div className="grid grid-cols-2 gap-6 mb-6 text-sm">
             <div>
-              <p className="text-xs uppercase tracking-wider text-slate-400 mb-1">Bill To</p>
+              <p className="text-xs uppercase tracking-wider text-slate-400 mb-1">Client:</p>
               <p className="font-semibold text-slate-800">{doc.clientName}</p>
               {doc.clientAddress && <p className="text-slate-600">{doc.clientAddress}</p>}
               {doc.clientTrn && <p className="text-slate-600">TRN: {doc.clientTrn}</p>}
             </div>
             <div className="text-right">
-              <p className="text-xs uppercase tracking-wider text-slate-400 mb-1">From</p>
+              <p className="text-xs uppercase tracking-wider text-slate-400 mb-1">Consultant:</p>
               <p className="font-semibold text-slate-800">Universal Building Engineering Consultants LLC</p>
               <p className="text-slate-600">TRN: 100551545500003</p>
               {doc.paymentMethod && (
@@ -128,24 +184,20 @@ export default function FinanceDocumentDetailPage() {
             <thead>
               <tr className="border-b-2 border-[#5E9E3A] text-left">
                 <th className="py-2 text-slate-600 font-semibold">Description</th>
-                <th className="py-2 text-slate-600 font-semibold text-right w-16">Qty</th>
-                <th className="py-2 text-slate-600 font-semibold text-right w-28">Unit Price</th>
-                <th className="py-2 text-slate-600 font-semibold text-right w-28">Amount</th>
+                <th className="py-2 text-slate-600 font-semibold text-right w-32">Amount</th>
               </tr>
             </thead>
             <tbody>
               {doc.items?.map((item) => (
                 <tr key={item.id} className="border-b border-slate-100">
                   <td className="py-2.5 text-slate-700">{item.description}</td>
-                  <td className="py-2.5 text-slate-700 text-right">{item.quantity}</td>
-                  <td className="py-2.5 text-slate-700 text-right">{formatMoney(item.unitPrice)}</td>
                   <td className="py-2.5 text-slate-700 text-right">{formatMoney(item.amount)}</td>
                 </tr>
               ))}
             </tbody>
           </table>
 
-          <div className="flex justify-end mb-8">
+          <div className="flex justify-end mb-3">
             <div className="w-64 text-sm space-y-1.5">
               <div className="flex justify-between text-slate-600">
                 <span>Subtotal</span>
@@ -160,6 +212,12 @@ export default function FinanceDocumentDetailPage() {
                 <span>AED {formatMoney(doc.totalAmount)}</span>
               </div>
             </div>
+          </div>
+
+          <div className="flex justify-end mb-8">
+            <p className="w-64 text-xs text-slate-500 italic text-right">
+              {numberToWords(doc.totalAmount / 100)}
+            </p>
           </div>
 
           {doc.notes && (
@@ -177,8 +235,8 @@ export default function FinanceDocumentDetailPage() {
           </div>
         </div>
 
-        <img src="/images/footer.jpg" alt="" className="w-full mt-6" />
+        <img src="/images/footer.jpg" alt="" className="w-full" />
       </div>
-    </div>
+      
   );
 }
