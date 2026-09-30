@@ -56,3 +56,43 @@ export const auditLogs = pgTable("audit_logs", {
   editedBy: varchar("edited_by", { length: 255 }).notNull().default("Admin"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
+
+// Sequential numbering per document type, per year — prevents duplicate/skipped invoice numbers
+export const documentCounters = pgTable("document_counters", {
+  id: serial("id").primaryKey(),
+  docType: varchar("doc_type", { length: 20 }).notNull(), // 'INV' | 'RV' | 'TAX'
+  year: integer("year").notNull(),
+  lastNumber: integer("last_number").notNull().default(0),
+});
+
+export const financeDocuments = pgTable("finance_documents", {
+  id: serial("id").primaryKey(),
+  docNumber: varchar("doc_number", { length: 50 }).notNull().unique(), // e.g. UBEC/INV/2026/0001
+  docType: varchar("doc_type", { length: 20 }).notNull(), // 'invoice' | 'receipt_voucher' | 'tax_invoice'
+  projectId: integer("project_id"), // optional link to a project
+  clientName: varchar("client_name", { length: 255 }).notNull(),
+  clientAddress: text("client_address").notNull().default(""),
+  clientTrn: varchar("client_trn", { length: 50 }).notNull().default(""),
+  issueDate: timestamp("issue_date").notNull().defaultNow(),
+  dueDate: timestamp("due_date"),
+  subtotal: integer("subtotal").notNull().default(0), // stored in fils (AED cents) to avoid float rounding
+  vatPercent: integer("vat_percent").notNull().default(5),
+  vatAmount: integer("vat_amount").notNull().default(0),
+  totalAmount: integer("total_amount").notNull().default(0),
+  status: varchar("status", { length: 20 }).notNull().default("draft"), // 'draft' | 'sent' | 'paid' | 'cancelled'
+  paymentMethod: varchar("payment_method", { length: 50 }).notNull().default(""), // for receipt vouchers
+  notes: text("notes").notNull().default(""),
+  createdBy: varchar("created_by", { length: 255 }).notNull().default("Admin"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const financeDocumentItems = pgTable("finance_document_items", {
+  id: serial("id").primaryKey(),
+  documentId: integer("document_id").notNull(),
+  description: text("description").notNull(),
+  quantity: integer("quantity").notNull().default(1),
+  unitPrice: integer("unit_price").notNull().default(0), // fils
+  amount: integer("amount").notNull().default(0), // fils
+  sortOrder: integer("sort_order").notNull().default(0),
+});
