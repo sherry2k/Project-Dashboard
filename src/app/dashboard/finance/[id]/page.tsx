@@ -280,7 +280,7 @@ export default function FinanceDocumentDetailPage() {
 
             <div className="flex justify-end">
               <div className="text-center">
-                <img src="/images/stamp.png" alt="" className="w-28 h-28 object-contain mb-1" />
+                <img src="/images/stamp.png" alt="" className="w-[140px] h-[140px] object-contain mb-1" />
                 <p className="text-xs text-slate-400">Authorized Signature</p>
               </div>
             </div>
