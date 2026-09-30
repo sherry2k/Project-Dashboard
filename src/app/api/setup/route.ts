@@ -63,6 +63,7 @@ export async function GET() {
      ALTER TABLE projects ADD COLUMN IF NOT EXISTS soil_report_lab VARCHAR(255);
     ALTER TABLE projects ADD COLUMN IF NOT EXISTS soil_report_required VARCHAR(20) NOT NULL DEFAULT 'Required';
     ALTER TABLE projects ADD COLUMN IF NOT EXISTS site_progress_percent INTEGER NOT NULL DEFAULT 0;
+    ALTER TABLE finance_documents ADD COLUMN IF NOT EXISTS project_details TEXT NOT NULL DEFAULT '';
 
       CREATE TABLE IF NOT EXISTS audit_logs (
         id SERIAL PRIMARY KEY,
