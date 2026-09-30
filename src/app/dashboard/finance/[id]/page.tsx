@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, Printer, Loader2 } from "lucide-react";
 import type { FinanceDocument, DocType } from "@/lib/types";
 import { format } from "date-fns";
+import { ArrowLeft, Printer, Loader2, Pencil } from "lucide-react";
 
 interface UserInfo {
   role: string;
@@ -129,22 +130,30 @@ export default function FinanceDocumentDetailPage() {
   return (
     <div className="min-h-screen bg-[#F1F5F9]">
       {/* Toolbar — hidden when printing */}
-      <div className="bg-white border-b border-slate-200 px-6 py-3 no-print">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <button
-            onClick={() => router.push("/dashboard/finance")}
-            className="flex items-center gap-1.5 text-slate-500 hover:text-slate-800 text-sm font-medium"
-          >
-            <ArrowLeft size={16} /> Back to Finance
-          </button>
-          <button
-            onClick={() => window.print()}
-            className="flex items-center gap-2 px-4 py-2 bg-[#5E9E3A] text-white rounded-lg text-sm font-medium hover:bg-[#5E9E3A]/90"
-          >
-            <Printer size={16} /> Print / Save as PDF
-          </button>
-        </div>
-      </div>
+     <div className="bg-white border-b border-slate-200 px-6 py-3 no-print">
+  <div className="max-w-4xl mx-auto flex items-center justify-between">
+    <button
+      onClick={() => router.push("/dashboard/finance")}
+      className="flex items-center gap-1.5 text-slate-500 hover:text-slate-800 text-sm font-medium"
+    >
+      <ArrowLeft size={16} /> Back to Finance
+    </button>
+    <div className="flex items-center gap-2">
+      <button
+        onClick={() => router.push(`/dashboard/finance/${params.id}/edit`)}
+        className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-200"
+      >
+        <Pencil size={16} /> Edit
+      </button>
+      <button
+        onClick={() => window.print()}
+        className="flex items-center gap-2 px-4 py-2 bg-[#5E9E3A] text-white rounded-lg text-sm font-medium hover:bg-[#5E9E3A]/90"
+      >
+        <Printer size={16} /> Print / Save as PDF
+      </button>
+    </div>
+  </div>
+</div>
       
       {/* Printable document */}
      <div
