@@ -151,7 +151,9 @@ export default function FinanceDocumentDetailPage() {
   className="max-w-4xl mx-auto my-6 bg-white shadow-sm print:shadow-none print:my-0"
   id="print-area"
 >
-        <img src="/images/letterhead.jpg" alt="" className="w-full h-auto" style={{ maxHeight: "100px" }} />
+        <div className="flex justify-center">
+  <img src="/images/letterhead.jpg" alt="" style={{ maxHeight: "90px", width: "auto" }} />
+</div>
 
         <div className="px-10 py-6">
           <div className="flex items-center justify-between mb-6">
