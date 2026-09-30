@@ -183,21 +183,21 @@ export default function FinanceDocumentDetailPage() {
           </div>
 
           <table className="w-full text-sm mb-6">
-            <thead>
-              <tr className="border-b-2 border-[#5E9E3A] text-left">
-                <th className="py-2 text-slate-600 font-semibold">Description</th>
-                <th className="py-2 text-slate-600 font-semibold text-right w-32">Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              {doc.items?.map((item) => (
-                <tr key={item.id} className="border-b border-slate-100">
-                  <td className="py-2.5 text-slate-700">{item.description}</td>
-                  <td className="py-2.5 text-slate-700 text-right">{formatMoney(item.amount)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+  <thead>
+    <tr className="bg-emerald-50 border-b-2 border-[#5E9E3A] text-left">
+      <th className="py-2 px-3 text-slate-700 font-semibold">Description</th>
+      <th className="py-2 px-3 text-slate-700 font-semibold text-right w-32">Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    {doc.items?.map((item) => (
+      <tr key={item.id} className="bg-emerald-50 border-b border-slate-100">
+        <td className="py-2.5 px-3 text-slate-700">{item.description}</td>
+        <td className="py-2.5 px-3 text-slate-700 text-right">{formatMoney(item.amount)}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
 
           <div className="flex justify-end mb-3">
             <div className="w-64 text-sm space-y-1.5">
@@ -247,7 +247,7 @@ export default function FinanceDocumentDetailPage() {
           </div>
         </div>
 
-       <div className="mt-24"></div>
+       <div className="mt-12"></div>
 <div className="w-full flex justify-center">
   <img src="/images/footer.jpg" alt="" style={{ width: "90%", height: "auto" }} />
 </div>
