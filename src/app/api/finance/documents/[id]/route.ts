@@ -38,6 +38,8 @@ export async function PATCH(
   if (body.issueDate !== undefined) updateData.issueDate = new Date(body.issueDate);
   if (body.dueDate !== undefined) updateData.dueDate = body.dueDate ? new Date(body.dueDate) : null;
   if (body.projectDetails !== undefined) updateData.projectDetails = body.projectDetails;
+  if (body.contractValue !== undefined) updateData.contractValue = Math.round(body.contractValue * 100);
+  if (body.previouslyInvoiced !== undefined) updateData.previouslyInvoiced = Math.round(body.previouslyInvoiced * 100);
   if (body.vatPercent !== undefined) updateData.vatPercent = body.vatPercent;
 
   // If line items are provided, replace them entirely and recompute totals
