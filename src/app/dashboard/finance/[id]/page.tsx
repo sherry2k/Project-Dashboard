@@ -130,145 +130,178 @@ export default function FinanceDocumentDetailPage() {
   return (
     <div className="min-h-screen bg-[#F1F5F9]">
       {/* Toolbar — hidden when printing */}
-     <div className="bg-white border-b border-slate-200 px-6 py-3 no-print">
-  <div className="max-w-4xl mx-auto flex items-center justify-between">
-    <button
-      onClick={() => router.push("/dashboard/finance")}
-      className="flex items-center gap-1.5 text-slate-500 hover:text-slate-800 text-sm font-medium"
-    >
-      <ArrowLeft size={16} /> Back to Finance
-    </button>
-    <div className="flex items-center gap-2">
-      <button
-        onClick={() => router.push(`/dashboard/finance/${params.id}/edit`)}
-        className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-200"
-      >
-        <Pencil size={16} /> Edit
-      </button>
-      <button
-        onClick={() => window.print()}
-        className="flex items-center gap-2 px-4 py-2 bg-[#5E9E3A] text-white rounded-lg text-sm font-medium hover:bg-[#5E9E3A]/90"
-      >
-        <Printer size={16} /> Print / Save as PDF
-      </button>
-    </div>
-  </div>
-</div>
-      
-      {/* Printable document */}
-     <div
-  className="max-w-4xl mx-auto my-6 bg-white shadow-sm print:shadow-none print:my-0"
-  id="print-area"
->
-        <div className="w-full flex justify-center">
-  <img src="/images/letterhead.jpg" alt="" style={{ width: "90%", height: "auto" }} />
-</div>
-
-        <div className="px-10 py-6" id="print-content">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold tracking-wide text-slate-800">{DOC_TYPE_TITLES[doc.docType]}</h2>
-            <div className="text-right text-sm">
-              <p className="font-semibold text-slate-700">{doc.docNumber}</p>
-              <p className="text-slate-500">Date: {format(new Date(doc.issueDate), "dd MMM yyyy")}</p>
-              {doc.dueDate && <p className="text-slate-500">Due: {format(new Date(doc.dueDate), "dd MMM yyyy")}</p>}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-6 mb-4 text-sm">
-            <div>
-              <p className="text-xs uppercase tracking-wider text-slate-400 mb-1">Client:</p>
-              <p className="font-semibold text-slate-800">{doc.clientName}</p>
-              {doc.clientAddress && <p className="text-slate-600">{doc.clientAddress}</p>}
-              {doc.clientTrn && <p className="text-slate-600">TRN: {doc.clientTrn}</p>}
-            </div>
-           <div className="text-right">
-  <p className="text-xs uppercase tracking-wider text-slate-400 mb-1">Consultant:</p>
-  <p className="font-semibold text-slate-800">Universal Building Engineering Consultants LLC</p>
-  <p className="text-slate-600">TRN: 100551545500003</p>
-  {doc.paymentMethod && (
-    <p className="text-slate-600 mt-1">Payment: {doc.paymentMethod}</p>
-  )}
-</div>
-          </div>
-          
-{doc.projectDetails && (
-  <div className="mb-3 text-sm">
-    <p className="text-xs uppercase tracking-wider text-slate-400 mb-1">Project Details</p>
-    <p className="text-slate-700">{doc.projectDetails}</p>
-  </div>
-)}
-          
-          <table className="w-full text-sm mb-4">
-  <thead>
-    <tr className="bg-[#5E9E3A] text-left">
-      <th className="py-2.5 px-3 text-white font-semibold w-12">No.</th>
-      <th className="py-2.5 px-3 text-white font-semibold">Description</th>
-      <th className="py-2.5 px-3 text-white font-semibold text-right w-32">Amount</th>
-    </tr>
-  </thead>
-  <tbody>
-    {doc.items?.map((item, i) => (
-      <tr key={item.id} className={i % 2 === 0 ? "bg-white" : "bg-slate-50"}>
-        <td className="py-2.5 px-3 text-slate-500">{i + 1}</td>
-        <td className="py-2.5 px-3 text-slate-700">{item.description}</td>
-        <td className="py-2.5 px-3 text-slate-700 text-right">{formatMoney(item.amount)}</td>
-      </tr>
-    ))}
-  </tbody>
-</table>
-
-          <div className="flex justify-end mb-3">
-            <div className="w-64 text-sm space-y-1.5">
-              <div className="flex justify-between text-slate-600">
-                <span>Subtotal</span>
-                <span>AED {formatMoney(doc.subtotal)}</span>
-              </div>
-              <div className="flex justify-between text-slate-600">
-                <span>VAT ({doc.vatPercent}%)</span>
-                <span>AED {formatMoney(doc.vatAmount)}</span>
-              </div>
-              <div className="flex justify-between text-base font-bold text-slate-800 border-t-2 border-slate-800 pt-1.5">
-                <span>Total</span>
-                <span>AED {formatMoney(doc.totalAmount)}</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex justify-end mb-8">
-            <p className="w-64 text-xs text-slate-500 italic text-right">
-              {numberToWords(doc.totalAmount / 100)}
-            </p>
-          </div>
-
-                             <div className="mb-8 text-sm">
-  <p className="font-semibold text-slate-800 mb-1">Bank Account Details:</p>
-  <div className="space-y-0.5 text-slate-600">
-    <p><span className="font-medium text-slate-700">Account Name:</span> Universal Building Engineering Consultants</p>
-    <p><span className="font-medium text-slate-700">Bank Name:</span> ADIB</p>
-    <p><span className="font-medium text-slate-700">Account Number:</span> 18758331</p>
-    <p><span className="font-medium text-slate-700">IBAN:</span> AE640500000000018758331</p>
-  </div>
-</div>
-
-          {doc.notes && (
-            <div className="mb-8 text-sm">
-              <p className="text-xs uppercase tracking-wider text-slate-400 mb-1">Notes</p>
-              <p className="text-slate-600">{doc.notes}</p>
-            </div>
-          )}
-
-          <div className="flex justify-end">
-            <div className="text-center">
-              <img src="/images/stamp.png" alt="" className="w-28 h-28 object-contain mb-1" />
-              <p className="text-xs text-slate-400">Authorized Signature</p>
-            </div>
+      <div className="bg-white border-b border-slate-200 px-6 py-3 no-print">
+        <div className="max-w-4xl mx-auto flex items-center justify-between">
+          <button
+            onClick={() => router.push("/dashboard/finance")}
+            className="flex items-center gap-1.5 text-slate-500 hover:text-slate-800 text-sm font-medium"
+          >
+            <ArrowLeft size={16} /> Back to Finance
+          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => router.push(`/dashboard/finance/${params.id}/edit`)}
+              className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-200"
+            >
+              <Pencil size={16} /> Edit
+            </button>
+            <button
+              onClick={() => window.print()}
+              className="flex items-center gap-2 px-4 py-2 bg-[#5E9E3A] text-white rounded-lg text-sm font-medium hover:bg-[#5E9E3A]/90"
+            >
+              <Printer size={16} /> Print / Save as PDF
+            </button>
           </div>
         </div>
+      </div>
 
-       <div className="w-full flex justify-center mt-4">
-  <img src="/images/footer.jpg" alt="" style={{ width: "90%", height: "auto" }} />
-</div>
+      {/* Printable document */}
+      <div
+        className="max-w-4xl mx-auto my-6 bg-white shadow-sm print:shadow-none print:my-0 relative overflow-hidden"
+        id="print-area"
+      >
+        {/* Watermark */}
+        <img
+          src="/images/logo.png"
+          alt=""
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-5 pointer-events-none select-none"
+          style={{ width: "400px", zIndex: 0 }}
+        />
+
+        <div style={{ position: "relative", zIndex: 1 }}>
+          <div className="w-full flex justify-center">
+            <img src="/images/letterhead.jpg" alt="" style={{ width: "90%", height: "auto" }} />
+          </div>
+
+          <div className="px-10 py-6" id="print-content">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-2xl font-bold tracking-wide text-slate-800">{DOC_TYPE_TITLES[doc.docType]}</h2>
+              <div className="text-right text-sm">
+                <p className="font-semibold text-slate-700">{doc.docNumber}</p>
+                <p className="text-slate-500">Date: {format(new Date(doc.issueDate), "dd MMM yyyy")}</p>
+                {doc.dueDate && <p className="text-slate-500">Due: {format(new Date(doc.dueDate), "dd MMM yyyy")}</p>}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-6 mb-4 text-sm">
+              <div>
+                <p className="text-xs uppercase tracking-wider text-slate-400 mb-1">Client:</p>
+                <p className="font-semibold text-slate-800">{doc.clientName}</p>
+                {doc.clientAddress && <p className="text-slate-600">{doc.clientAddress}</p>}
+                {doc.clientTrn && <p className="text-slate-600">TRN: {doc.clientTrn}</p>}
+              </div>
+              <div className="text-right">
+                <p className="text-xs uppercase tracking-wider text-slate-400 mb-1">Consultant:</p>
+                <p className="font-semibold text-slate-800">Universal Building Engineering Consultants LLC</p>
+                <p className="text-slate-600">TRN: 100551545500003</p>
+                {doc.paymentMethod && (
+                  <p className="text-slate-600 mt-1">Payment: {doc.paymentMethod}</p>
+                )}
+              </div>
+            </div>
+
+            {doc.projectDetails && (
+              <div className="mb-3 text-sm">
+                <p className="text-xs uppercase tracking-wider text-slate-400 mb-1">Project Details</p>
+                <p className="text-slate-700">{doc.projectDetails}</p>
+              </div>
+            )}
+
+            <table className="w-full text-sm mb-4">
+              <thead>
+                <tr className="bg-[#5E9E3A] text-left">
+                  <th className="py-2.5 px-3 text-white font-semibold w-12">No.</th>
+                  <th className="py-2.5 px-3 text-white font-semibold">Description</th>
+                  <th className="py-2.5 px-3 text-white font-semibold text-right w-32">Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                {doc.items?.map((item, i) => (
+                  <tr key={item.id} className={i % 2 === 0 ? "bg-white" : "bg-slate-50"}>
+                    <td className="py-2.5 px-3 text-slate-500">{i + 1}</td>
+                    <td className="py-2.5 px-3 text-slate-700">{item.description}</td>
+                    <td className="py-2.5 px-3 text-slate-700 text-right">{formatMoney(item.amount)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <div className="flex justify-end mb-3">
+              <div className="w-64 text-sm space-y-1.5">
+                <div className="flex justify-between text-slate-600">
+                  <span>Subtotal</span>
+                  <span>AED {formatMoney(doc.subtotal)}</span>
+                </div>
+                <div className="flex justify-between text-slate-600">
+                  <span>VAT ({doc.vatPercent}%)</span>
+                  <span>AED {formatMoney(doc.vatAmount)}</span>
+                </div>
+                <div className="flex justify-between text-base font-bold text-slate-800 border-t-2 border-slate-800 pt-1.5">
+                  <span>Total</span>
+                  <span>AED {formatMoney(doc.totalAmount)}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end mb-3">
+              <p className="w-64 text-xs text-slate-500 italic text-right">
+                {numberToWords(doc.totalAmount / 100)}
+              </p>
+            </div>
+
+            {doc.contractValue > 0 && (
+              <div className="mb-6 text-sm bg-slate-50 border border-slate-200 rounded-lg p-3 space-y-1">
+                <div className="flex justify-between">
+                  <span className="text-slate-600">Contract Value</span>
+                  <span className="font-semibold text-slate-800">AED {formatMoney(doc.contractValue)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-600">This Invoice (Advance Payment)</span>
+                  <span className="font-semibold text-slate-800">AED {formatMoney(doc.totalAmount)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-600">Previously Invoiced</span>
+                  <span className="text-slate-700">AED {formatMoney(doc.previouslyInvoiced)}</span>
+                </div>
+                <div className="flex justify-between border-t border-slate-300 pt-1 mt-1">
+                  <span className="font-medium text-slate-700">Balance Remaining</span>
+                  <span className="font-bold text-slate-800">
+                    AED {formatMoney(doc.contractValue - doc.previouslyInvoiced - doc.totalAmount)}
+                  </span>
+                </div>
+              </div>
+            )}
+
+            <div className="mb-8 text-sm">
+              <p className="font-semibold text-slate-800 mb-1">Bank Account Details:</p>
+              <div className="space-y-0.5 text-slate-600">
+                <p><span className="font-medium text-slate-700">Account Name:</span> Universal Building Engineering Consultants</p>
+                <p><span className="font-medium text-slate-700">Bank Name:</span> ADIB</p>
+                <p><span className="font-medium text-slate-700">Account Number:</span> 18758331</p>
+                <p><span className="font-medium text-slate-700">IBAN:</span> AE640500000000018758331</p>
+              </div>
+            </div>
+
+            {doc.notes && (
+              <div className="mb-8 text-sm">
+                <p className="text-xs uppercase tracking-wider text-slate-400 mb-1">Notes</p>
+                <p className="text-slate-600">{doc.notes}</p>
+              </div>
+            )}
+
+            <div className="flex justify-end">
+              <div className="text-center">
+                <img src="/images/stamp.png" alt="" className="w-28 h-28 object-contain mb-1" />
+                <p className="text-xs text-slate-400">Authorized Signature</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="w-full flex justify-center mt-4">
+            <img src="/images/footer.jpg" alt="" style={{ width: "90%", height: "auto" }} />
+          </div>
+        </div>
+      </div>
     </div>
-       </div>
   );
 }
