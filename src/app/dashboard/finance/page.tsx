@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, FileText, Receipt, FileCheck, Loader2 } from "lucide-react";
+import { Plus, FileText, Receipt, FileCheck, Loader2, Trash2 } from "lucide-react";
 import type { FinanceDocument, DocType } from "@/lib/types";
 import { format } from "date-fns";
 
@@ -77,7 +77,15 @@ export default function FinancePage() {
       </div>
     );
   }
+  
+const handleDelete = async (e: React.MouseEvent, id: number) => {
+  e.stopPropagation();
+  if (!confirm("Delete this document? This cannot be undone.")) return;
+  await fetch(`/api/finance/documents/${id}`, { method: "DELETE" });
+  setDocuments((prev) => prev.filter((d) => d.id !== id));
+};
 
+  
   const formatMoney = (fils: number) => `AED ${(fils / 100).toLocaleString("en-AE", { minimumFractionDigits: 2 })}`;
 
   return (
@@ -133,13 +141,14 @@ export default function FinancePage() {
             <table className="w-full">
               <thead>
                 <tr className="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-600 uppercase tracking-wider">
-                  <th className="text-left px-4 py-3">Doc Number</th>
-                  <th className="text-left px-4 py-3">Type</th>
-                  <th className="text-left px-4 py-3">Client</th>
-                  <th className="text-left px-4 py-3">Issue Date</th>
-                  <th className="text-right px-4 py-3">Total</th>
-                  <th className="text-left px-4 py-3">Status</th>
-                </tr>
+  <th className="text-left px-4 py-3">Doc Number</th>
+  <th className="text-left px-4 py-3">Type</th>
+  <th className="text-left px-4 py-3">Client</th>
+  <th className="text-left px-4 py-3">Issue Date</th>
+  <th className="text-right px-4 py-3">Total</th>
+  <th className="text-left px-4 py-3">Status</th>
+  <th className="text-right px-4 py-3 w-16"></th>
+</tr>
               </thead>
               <tbody>
                 {documents.map((doc) => {
@@ -161,10 +170,19 @@ export default function FinancePage() {
                       <td className="px-4 py-3 text-sm text-slate-700">{doc.clientName}</td>
                       <td className="px-4 py-3 text-sm text-slate-500">{format(new Date(doc.issueDate), "dd MMM yyyy")}</td>
                       <td className="px-4 py-3 text-sm font-medium text-slate-800 text-right">{formatMoney(doc.totalAmount)}</td>
-                      <td className="px-4 py-3">
+                                            <td className="px-4 py-3">
                         <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${statusColor.bg} ${statusColor.text}`}>
                           {doc.status}
                         </span>
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <button
+                          onClick={(e) => handleDelete(e, doc.id)}
+                          className="p-1.5 rounded-lg hover:bg-red-50 text-red-400 hover:text-red-600 transition-colors"
+                          title="Delete"
+                        >
+                          <Trash2 size={14} />
+                        </button>
                       </td>
                     </tr>
                   );
