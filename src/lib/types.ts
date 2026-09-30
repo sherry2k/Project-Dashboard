@@ -118,4 +118,6 @@ export interface FinanceDocument {
   updatedAt: string;
   items?: FinanceDocumentItem[];
   projectDetails: string;
+  contractValue: number;
+  previouslyInvoiced: number;
 }
