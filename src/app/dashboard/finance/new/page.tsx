@@ -106,12 +106,15 @@ export default function NewFinanceDocumentPage() {
         }),
       });
 
-      if (!docRes.ok) throw new Error("Failed to save");
+      if (!docRes.ok) {
+  const err = await docRes.json().catch(() => ({}));
+  throw new Error(err.error || "Failed to save");
+}
       const doc = await docRes.json();
       router.push(`/dashboard/finance/${doc.id}`);
-    } catch {
-      alert("Failed to save document. Please try again.");
-    } finally {
+   } catch (err) {
+  alert(err instanceof Error ? err.message : "Failed to save document. Please try again.");
+} finally {
       setSaving(false);
     }
   };
