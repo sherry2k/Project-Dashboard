@@ -94,8 +94,7 @@ export interface FinanceDocumentItem {
   unitPrice: number; // fils
   amount: number; // fils
   sortOrder: number;
-  projectDetails: string;
-}
+  }
 
 export interface FinanceDocument {
   id: number;
@@ -118,4 +117,5 @@ export interface FinanceDocument {
   createdAt: string;
   updatedAt: string;
   items?: FinanceDocumentItem[];
+  projectDetails: string;
 }
