@@ -130,6 +130,9 @@ body {
   body {
     background: white;
   }
+  .min-h-screen {
+  background: white !important;
+}
   #print-area {
     box-shadow: none;
     margin: 0;
