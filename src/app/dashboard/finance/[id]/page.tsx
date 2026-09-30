@@ -165,7 +165,7 @@ export default function FinanceDocumentDetailPage() {
 </div>
 
         <div className="px-10 py-6" id="print-content">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold tracking-wide text-slate-800">{DOC_TYPE_TITLES[doc.docType]}</h2>
             <div className="text-right text-sm">
               <p className="font-semibold text-slate-700">{doc.docNumber}</p>
@@ -174,7 +174,7 @@ export default function FinanceDocumentDetailPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-6 mb-6 text-sm">
+          <div className="grid grid-cols-2 gap-6 mb-4 text-sm">
             <div>
               <p className="text-xs uppercase tracking-wider text-slate-400 mb-1">Client:</p>
               <p className="font-semibold text-slate-800">{doc.clientName}</p>
@@ -192,13 +192,13 @@ export default function FinanceDocumentDetailPage() {
           </div>
           
 {doc.projectDetails && (
-  <div className="mb-4 text-sm">
+  <div className="mb-3 text-sm">
     <p className="text-xs uppercase tracking-wider text-slate-400 mb-1">Project Details</p>
     <p className="text-slate-700">{doc.projectDetails}</p>
   </div>
 )}
           
-          <table className="w-full text-sm mb-6">
+          <table className="w-full text-sm mb-4">
   <thead>
     <tr className="bg-[#5E9E3A] text-left">
       <th className="py-2.5 px-3 text-white font-semibold w-12">No.</th>
