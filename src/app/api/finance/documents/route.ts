@@ -15,51 +15,57 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const body = await request.json();
+  try {
+    const body = await request.json();
 
-  const items: { description: string; quantity: number; unitPrice: number }[] = body.items || [];
-  const subtotal = items.reduce((sum, it) => sum + it.quantity * it.unitPrice, 0);
-  const vatPercent = body.vatPercent ?? 5;
-  const vatAmount = Math.round((subtotal * vatPercent) / 100);
-  const totalAmount = subtotal + vatAmount;
+    const items: { description: string; quantity: number; unitPrice: number }[] = body.items || [];
+    const subtotal = items.reduce((sum, it) => sum + it.quantity * it.unitPrice, 0);
+    const vatPercent = body.vatPercent ?? 5;
+    const vatAmount = Math.round((subtotal * vatPercent) / 100);
+    const totalAmount = subtotal + vatAmount;
 
-  const result = await db
-    .insert(financeDocuments)
-    .values({
-      docNumber: body.docNumber,
-      docType: body.docType,
-      projectId: body.projectId || null,
-      clientName: body.clientName || "",
-      clientAddress: body.clientAddress || "",
-      clientTrn: body.clientTrn || "",
-      issueDate: body.issueDate ? new Date(body.issueDate) : new Date(),
-      dueDate: body.dueDate ? new Date(body.dueDate) : null,
-      subtotal,
-      vatPercent,
-      vatAmount,
-      totalAmount,
-      status: body.status || "draft",
-      paymentMethod: body.paymentMethod || "",
-      notes: body.notes || "",
-      projectDetails: body.projectDetails || "",
-      createdBy: body.createdBy || "Admin",
-    })
-    .returning();
+    const result = await db
+      .insert(financeDocuments)
+      .values({
+        docNumber: body.docNumber,
+        docType: body.docType,
+        projectId: body.projectId || null,
+        clientName: body.clientName || "",
+        clientAddress: body.clientAddress || "",
+        clientTrn: body.clientTrn || "",
+        issueDate: body.issueDate ? new Date(body.issueDate) : new Date(),
+        dueDate: body.dueDate ? new Date(body.dueDate) : null,
+        subtotal,
+        vatPercent,
+        vatAmount,
+        totalAmount,
+        status: body.status || "draft",
+        paymentMethod: body.paymentMethod || "",
+        notes: body.notes || "",
+        projectDetails: body.projectDetails || "",
+        createdBy: body.createdBy || "Admin",
+      })
+      .returning();
 
-  const doc = result[0];
+    const doc = result[0];
 
-  if (items.length > 0) {
-    await db.insert(financeDocumentItems).values(
-      items.map((it, i) => ({
-        documentId: doc.id,
-        description: it.description,
-        quantity: it.quantity,
-        unitPrice: it.unitPrice,
-        amount: it.quantity * it.unitPrice,
-        sortOrder: i,
-      }))
-    );
+    if (items.length > 0) {
+      await db.insert(financeDocumentItems).values(
+        items.map((it, i) => ({
+          documentId: doc.id,
+          description: it.description,
+          quantity: it.quantity,
+          unitPrice: it.unitPrice,
+          amount: it.quantity * it.unitPrice,
+          sortOrder: i,
+        }))
+      );
+    }
+
+    return NextResponse.json(doc, { status: 201 });
+  } catch (error) {
+    console.error("POST /api/finance/documents failed:", error);
+    const message = error instanceof Error ? error.message : "Unknown server error";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
-
-  return NextResponse.json(doc, { status: 201 });
 }
