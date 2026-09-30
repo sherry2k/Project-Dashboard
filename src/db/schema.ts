@@ -86,6 +86,8 @@ export const financeDocuments = pgTable("finance_documents", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
   projectDetails: text("project_details").notNull().default(""),
+  contractValue: integer("contract_value").notNull().default(0), // fils
+  previouslyInvoiced: integer("previously_invoiced").notNull().default(0), // fils
 });
 
 export const financeDocumentItems = pgTable("finance_document_items", {
