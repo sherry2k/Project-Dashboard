@@ -32,6 +32,40 @@ export async function PATCH(
   if (body.status !== undefined) updateData.status = body.status;
   if (body.notes !== undefined) updateData.notes = body.notes;
   if (body.paymentMethod !== undefined) updateData.paymentMethod = body.paymentMethod;
+  if (body.clientName !== undefined) updateData.clientName = body.clientName;
+  if (body.clientAddress !== undefined) updateData.clientAddress = body.clientAddress;
+  if (body.clientTrn !== undefined) updateData.clientTrn = body.clientTrn;
+  if (body.issueDate !== undefined) updateData.issueDate = new Date(body.issueDate);
+  if (body.dueDate !== undefined) updateData.dueDate = body.dueDate ? new Date(body.dueDate) : null;
+  if (body.projectDetails !== undefined) updateData.projectDetails = body.projectDetails;
+  if (body.vatPercent !== undefined) updateData.vatPercent = body.vatPercent;
+
+  // If line items are provided, replace them entirely and recompute totals
+  if (body.items !== undefined) {
+    const items: { description: string; quantity: number; unitPrice: number }[] = body.items;
+    const subtotal = items.reduce((sum, it) => sum + it.quantity * it.unitPrice, 0);
+    const vatPercent = body.vatPercent ?? updateData.vatPercent ?? 5;
+    const vatAmount = Math.round((subtotal * Number(vatPercent)) / 100);
+    const totalAmount = subtotal + vatAmount;
+
+    updateData.subtotal = subtotal;
+    updateData.vatAmount = vatAmount;
+    updateData.totalAmount = totalAmount;
+
+    await db.delete(financeDocumentItems).where(eq(financeDocumentItems.documentId, docId));
+    if (items.length > 0) {
+      await db.insert(financeDocumentItems).values(
+        items.map((it, i) => ({
+          documentId: docId,
+          description: it.description,
+          quantity: it.quantity,
+          unitPrice: it.unitPrice,
+          amount: it.quantity * it.unitPrice,
+          sortOrder: i,
+        }))
+      );
+    }
+  }
 
   const result = await db
     .update(financeDocuments)
