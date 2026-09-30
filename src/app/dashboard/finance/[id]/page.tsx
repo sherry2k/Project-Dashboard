@@ -152,7 +152,7 @@ export default function FinanceDocumentDetailPage() {
   id="print-area"
 >
         <div className="w-full flex justify-center">
-  <img src="/images/letterhead.jpg" alt="" style={{ width: "65%", height: "auto" }} />
+  <img src="/images/letterhead.jpg" alt="" style={{ width: "80%", height: "auto" }} />
 </div>
 
         <div className="px-10 py-6" id="print-content">
