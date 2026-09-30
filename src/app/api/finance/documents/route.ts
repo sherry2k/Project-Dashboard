@@ -41,6 +41,7 @@ export async function POST(request: NextRequest) {
       status: body.status || "draft",
       paymentMethod: body.paymentMethod || "",
       notes: body.notes || "",
+      projectDetails: body.projectDetails || "",
       createdBy: body.createdBy || "Admin",
     })
     .returning();
