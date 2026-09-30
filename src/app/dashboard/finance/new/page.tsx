@@ -37,6 +37,8 @@ export default function NewFinanceDocumentPage() {
   const [items, setItems] = useState<LineItem[]>([{ description: "", quantity: 1, unitPrice: 0 }]);
   const [saving, setSaving] = useState(false);
   const [projectDetails, setProjectDetails] = useState("");
+  const [contractValue, setContractValue] = useState(0);
+  const [previouslyInvoiced, setPreviouslyInvoiced] = useState(0);
 
   useEffect(() => {
     fetch("/api/auth/me")
@@ -95,6 +97,8 @@ export default function NewFinanceDocumentPage() {
           paymentMethod,
           notes,
           status: "draft",
+          contractValue,
+          previouslyInvoiced,
           createdBy: user?.username || "Admin",
           items: items
             .filter((it) => it.description.trim())
@@ -195,6 +199,30 @@ export default function NewFinanceDocumentPage() {
                 className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"
               />
             </div>
+            <div>
+  <label className="block text-sm font-medium text-slate-700 mb-1.5">Contract Value (AED)</label>
+  <input
+    type="number"
+    min={0}
+    step={0.01}
+    value={contractValue}
+    onChange={(e) => setContractValue(Number(e.target.value))}
+    className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"
+    placeholder="Optional — total agreed contract value"
+  />
+</div>
+<div>
+  <label className="block text-sm font-medium text-slate-700 mb-1.5">Previously Invoiced (AED)</label>
+  <input
+    type="number"
+    min={0}
+    step={0.01}
+    value={previouslyInvoiced}
+    onChange={(e) => setPreviouslyInvoiced(Number(e.target.value))}
+    className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"
+    placeholder="Optional — amount invoiced so far"
+  />
+</div>
 <div className="md:col-span-2">
   <label className="block text-sm font-medium text-slate-700 mb-1.5">Project Details</label>
   <textarea
