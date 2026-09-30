@@ -181,7 +181,14 @@ export default function FinanceDocumentDetailPage() {
   )}
 </div>
           </div>
-
+          
+{doc.projectDetails && (
+  <div className="mb-4 text-sm">
+    <p className="text-xs uppercase tracking-wider text-slate-400 mb-1">Project Details</p>
+    <p className="text-slate-700">{doc.projectDetails}</p>
+  </div>
+)}
+          
           <table className="w-full text-sm mb-6">
   <thead>
     <tr className="bg-[#5E9E3A] text-left">
