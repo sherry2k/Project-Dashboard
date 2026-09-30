@@ -151,11 +151,11 @@ export default function FinanceDocumentDetailPage() {
   className="max-w-4xl mx-auto my-6 bg-white shadow-sm print:shadow-none print:my-0"
   id="print-area"
 >
-        <div className="w-full flex justify-center overflow-hidden" style={{ height: "70px" }}>
-  <img src="/images/letterhead.jpg" alt="" className="h-full w-auto object-contain" />
+        <div className="w-full flex justify-center">
+  <img src="/images/letterhead.jpg" alt="" style={{ width: "65%", height: "auto" }} />
 </div>
 
-        <div className="px-10 py-6">
+        <div className="px-10 py-6" id="print-content">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold tracking-wide text-slate-800">{DOC_TYPE_TITLES[doc.docType]}</h2>
             <div className="text-right text-sm">
@@ -222,10 +222,15 @@ export default function FinanceDocumentDetailPage() {
             </p>
           </div>
 
-                             <div className="mb-8 text-sm space-y-0.5">
-            <p className="text-slate-600"><span className="font-semibold text-slate-800">Bank Name:</span> Abu Dhabi Islamic Bank</p>
-            <p className="text-slate-600"><span className="font-semibold text-slate-800">Bank Account:</span> AE640500000000018758331</p>
-          </div>
+                             <div className="mb-8 text-sm">
+  <p className="font-semibold text-slate-800 mb-1">Bank Account Details:</p>
+  <div className="space-y-0.5 text-slate-600">
+    <p><span className="font-medium text-slate-700">Account Name:</span> UNIVERSAL BUILDING ENGINEERING CONSULTANTS</p>
+    <p><span className="font-medium text-slate-700">Bank Name:</span> ADIB</p>
+    <p><span className="font-medium text-slate-700">Account Number:</span> 18758331</p>
+    <p><span className="font-medium text-slate-700">IBAN:</span> AE640500000000018758331</p>
+  </div>
+</div>
 
           {doc.notes && (
             <div className="mb-8 text-sm">
