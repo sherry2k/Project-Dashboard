@@ -11,6 +11,7 @@ import {
   LogOut,
   ChevronDown,
   Shield,
+  Wallet,
 } from "lucide-react";
 import NotificationBell from "./NotificationBell";
 import type { NotificationItem } from "@/lib/types";
@@ -139,16 +140,26 @@ export default function Header({
                       </span>
                     </div>
                   )}
-                  {user?.role === "admin" && (
-                    <Link
-                      href="/admin"
-                      onClick={() => setShowUserMenu(false)}
-                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-purple-600 hover:bg-purple-50 transition-colors"
-                    >
-                      <Shield size={16} />
-                      User Management
-                    </Link>
-                  )}
+                 {user?.role === "admin" && (
+  <Link
+    href="/dashboard/finance"
+    onClick={() => setShowUserMenu(false)}
+    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-emerald-600 hover:bg-emerald-50 transition-colors"
+  >
+    <Wallet size={16} />
+    Finance
+  </Link>
+)}
+{user?.role === "admin" && (
+  <Link
+    href="/admin"
+    onClick={() => setShowUserMenu(false)}
+    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-purple-600 hover:bg-purple-50 transition-colors"
+  >
+    <Shield size={16} />
+    User Management
+  </Link>
+)}
                   {onLogout && (
                     <button
                       onClick={() => {
