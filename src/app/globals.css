@@ -133,6 +133,7 @@ body {
   #print-area {
     box-shadow: none;
     margin: 0;
+    font-size: 92%;
   }
   * {
     -webkit-print-color-adjust: exact !important;
