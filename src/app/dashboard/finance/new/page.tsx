@@ -36,6 +36,7 @@ export default function NewFinanceDocumentPage() {
   const [notes, setNotes] = useState("");
   const [items, setItems] = useState<LineItem[]>([{ description: "", quantity: 1, unitPrice: 0 }]);
   const [saving, setSaving] = useState(false);
+  const [projectDetails, setProjectDetails] = useState("");
 
   useEffect(() => {
     fetch("/api/auth/me")
@@ -191,6 +192,17 @@ export default function NewFinanceDocumentPage() {
                 className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"
               />
             </div>
+<div className="md:col-span-2">
+  <label className="block text-sm font-medium text-slate-700 mb-1.5">Project Details</label>
+  <textarea
+    value={projectDetails}
+    onChange={(e) => setProjectDetails(e.target.value)}
+    rows={2}
+    className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"
+    placeholder="e.g. Villa construction, Plot 126, Al Shawamekh"
+  />
+</div>
+            
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1.5">Issue Date</label>
               <input
