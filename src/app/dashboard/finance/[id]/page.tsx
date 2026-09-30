@@ -237,6 +237,7 @@ export default function FinanceDocumentDetailPage() {
 
         <img src="/images/footer.jpg" alt="" className="w-full" />
       </div>
+      </div>
       
   );
 }
