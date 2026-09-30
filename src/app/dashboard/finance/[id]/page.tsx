@@ -151,8 +151,8 @@ export default function FinanceDocumentDetailPage() {
   className="max-w-4xl mx-auto my-6 bg-white shadow-sm print:shadow-none print:my-0"
   id="print-area"
 >
-        <div className="flex justify-center">
-  <img src="/images/letterhead.jpg" alt="" style={{ maxHeight: "90px", width: "auto" }} />
+        <div className="w-full flex justify-center overflow-hidden" style={{ height: "70px" }}>
+  <img src="/images/letterhead.jpg" alt="" className="h-full w-auto object-contain" />
 </div>
 
         <div className="px-10 py-6">
@@ -222,19 +222,9 @@ export default function FinanceDocumentDetailPage() {
             </p>
           </div>
 
-                    <div className="mb-8">
-            <table className="w-full text-sm border-2 border-slate-800">
-              <tbody>
-                <tr className="border-b-2 border-slate-800">
-                  <td className="px-3 py-2 font-bold text-slate-800 border-r-2 border-slate-800 w-40">Bank Name:</td>
-                  <td className="px-3 py-2 text-slate-700 text-center">Abu Dhabi Islamic Bank</td>
-                </tr>
-                <tr>
-                  <td className="px-3 py-2 font-bold text-slate-800 border-r-2 border-slate-800">Bank Account:</td>
-                  <td className="px-3 py-2 text-slate-700 text-center">AE640500000000018758331</td>
-                </tr>
-              </tbody>
-            </table>
+                             <div className="mb-8 text-sm space-y-0.5">
+            <p className="text-slate-600"><span className="font-semibold text-slate-800">Bank Name:</span> Abu Dhabi Islamic Bank</p>
+            <p className="text-slate-600"><span className="font-semibold text-slate-800">Bank Account:</span> AE640500000000018758331</p>
           </div>
 
           {doc.notes && (
@@ -252,9 +242,9 @@ export default function FinanceDocumentDetailPage() {
           </div>
         </div>
 
+       <div className="mt-16"></div>
         <img src="/images/footer.jpg" alt="" className="w-full" />
       </div>
-      </div>
-      
+    </div>
   );
 }
