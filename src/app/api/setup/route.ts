@@ -97,3 +97,43 @@ export async function GET() {
     return NextResponse.json({ success: false, error: message }, { status: 500 });
   }
 }
+
+CREATE TABLE IF NOT EXISTS document_counters (
+  id SERIAL PRIMARY KEY,
+  doc_type VARCHAR(20) NOT NULL,
+  year INTEGER NOT NULL,
+  last_number INTEGER NOT NULL DEFAULT 0,
+  UNIQUE(doc_type, year)
+);
+
+CREATE TABLE IF NOT EXISTS finance_documents (
+  id SERIAL PRIMARY KEY,
+  doc_number VARCHAR(50) NOT NULL UNIQUE,
+  doc_type VARCHAR(20) NOT NULL,
+  project_id INTEGER,
+  client_name VARCHAR(255) NOT NULL,
+  client_address TEXT NOT NULL DEFAULT '',
+  client_trn VARCHAR(50) NOT NULL DEFAULT '',
+  issue_date TIMESTAMP NOT NULL DEFAULT NOW(),
+  due_date TIMESTAMP,
+  subtotal INTEGER NOT NULL DEFAULT 0,
+  vat_percent INTEGER NOT NULL DEFAULT 5,
+  vat_amount INTEGER NOT NULL DEFAULT 0,
+  total_amount INTEGER NOT NULL DEFAULT 0,
+  status VARCHAR(20) NOT NULL DEFAULT 'draft',
+  payment_method VARCHAR(50) NOT NULL DEFAULT '',
+  notes TEXT NOT NULL DEFAULT '',
+  created_by VARCHAR(255) NOT NULL DEFAULT 'Admin',
+  created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS finance_document_items (
+  id SERIAL PRIMARY KEY,
+  document_id INTEGER NOT NULL,
+  description TEXT NOT NULL,
+  quantity INTEGER NOT NULL DEFAULT 1,
+  unit_price INTEGER NOT NULL DEFAULT 0,
+  amount INTEGER NOT NULL DEFAULT 0,
+  sort_order INTEGER NOT NULL DEFAULT 0
+);
