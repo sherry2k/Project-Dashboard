@@ -151,7 +151,7 @@ export default function FinanceDocumentDetailPage() {
   className="max-w-4xl mx-auto my-6 bg-white shadow-sm print:shadow-none print:my-0"
   id="print-area"
 >
-        <img src="/images/letterhead.jpg" alt="" className="w-full h-auto" style={{ maxHeight: "90px" }} />
+        <img src="/images/letterhead.jpg" alt="" className="w-full h-auto" style={{ maxHeight: "100px" }} />
 
         <div className="px-10 py-6">
           <div className="flex items-center justify-between mb-6">
@@ -218,6 +218,21 @@ export default function FinanceDocumentDetailPage() {
             <p className="w-64 text-xs text-slate-500 italic text-right">
               {numberToWords(doc.totalAmount / 100)}
             </p>
+          </div>
+
+                    <div className="mb-8">
+            <table className="w-full text-sm border-2 border-slate-800">
+              <tbody>
+                <tr className="border-b-2 border-slate-800">
+                  <td className="px-3 py-2 font-bold text-slate-800 border-r-2 border-slate-800 w-40">Bank Name:</td>
+                  <td className="px-3 py-2 text-slate-700 text-center">Abu Dhabi Islamic Bank</td>
+                </tr>
+                <tr>
+                  <td className="px-3 py-2 font-bold text-slate-800 border-r-2 border-slate-800">Bank Account:</td>
+                  <td className="px-3 py-2 text-slate-700 text-center">AE640500000000018758331</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
           {doc.notes && (
