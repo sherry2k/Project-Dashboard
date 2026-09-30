@@ -127,6 +127,13 @@ body {
   .table-container {
     overflow: visible;
   }
+  body {
+    background: white;
+  }
+  #print-area {
+    box-shadow: none;
+    margin: 0;
+  }
 }
 @media (min-width: 768px) {
   .hide-native-scrollbar-desktop-only {
