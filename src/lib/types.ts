@@ -83,3 +83,38 @@ export interface ConstructionStage {
   subPercent: number;
   sortOrder: number;
 }
+
+export type DocType = "invoice" | "receipt_voucher" | "tax_invoice";
+
+export interface FinanceDocumentItem {
+  id: number;
+  documentId: number;
+  description: string;
+  quantity: number;
+  unitPrice: number; // fils
+  amount: number; // fils
+  sortOrder: number;
+}
+
+export interface FinanceDocument {
+  id: number;
+  docNumber: string;
+  docType: DocType;
+  projectId: number | null;
+  clientName: string;
+  clientAddress: string;
+  clientTrn: string;
+  issueDate: string;
+  dueDate: string | null;
+  subtotal: number;
+  vatPercent: number;
+  vatAmount: number;
+  totalAmount: number;
+  status: "draft" | "sent" | "paid" | "cancelled";
+  paymentMethod: string;
+  notes: string;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+  items?: FinanceDocumentItem[];
+}
