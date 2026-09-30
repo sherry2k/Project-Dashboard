@@ -135,6 +135,9 @@ body {
     margin: 0;
   }
 }
+@page {
+  margin: 10mm;
+}
 @media (min-width: 768px) {
   .hide-native-scrollbar-desktop-only {
     scrollbar-width: none;
