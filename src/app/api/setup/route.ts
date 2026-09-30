@@ -117,6 +117,8 @@ export async function GET() {
       );
 
    ALTER TABLE finance_documents ADD COLUMN IF NOT EXISTS project_details TEXT NOT NULL DEFAULT '';
+   ALTER TABLE finance_documents ADD COLUMN IF NOT EXISTS contract_value INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE finance_documents ADD COLUMN IF NOT EXISTS previously_invoiced INTEGER NOT NULL DEFAULT 0;
  
       CREATE TABLE IF NOT EXISTS finance_document_items (
         id SERIAL PRIMARY KEY,
