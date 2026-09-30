@@ -147,13 +147,13 @@ export default function FinanceDocumentDetailPage() {
       </div>
       
       {/* Printable document */}
-      <div
-        className="max-w-4xl mx-auto my-6 bg-white shadow-sm print:shadow-none print:my-0 flex flex-col min-h-[297mm]"
-        id="print-area"
-      >
-        <img src="/images/letterhead.jpg" alt="" className="w-full h-24 object-cover object-top" />
+     <div
+  className="max-w-4xl mx-auto my-6 bg-white shadow-sm print:shadow-none print:my-0"
+  id="print-area"
+>
+        <img src="/images/letterhead.jpg" alt="" className="w-full h-auto" style={{ maxHeight: "90px" }} />
 
-        <div className="px-10 py-6 flex-1">
+        <div className="px-10 py-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold tracking-wide text-slate-800">{DOC_TYPE_TITLES[doc.docType]}</h2>
             <div className="text-right text-sm">
@@ -170,14 +170,14 @@ export default function FinanceDocumentDetailPage() {
               {doc.clientAddress && <p className="text-slate-600">{doc.clientAddress}</p>}
               {doc.clientTrn && <p className="text-slate-600">TRN: {doc.clientTrn}</p>}
             </div>
-            <div className="text-right">
-              <p className="text-xs uppercase tracking-wider text-slate-400 mb-1">Consultant:</p>
-              <p className="font-semibold text-slate-800">Universal Building Engineering Consultants LLC</p>
-              <p className="text-slate-600">TRN: 100551545500003</p>
-              {doc.paymentMethod && (
-                <p className="text-slate-600 mt-1">Payment: {doc.paymentMethod}</p>
-              )}
-            </div>
+           <div className="text-right">
+  <p className="text-xs uppercase tracking-wider text-slate-400 mb-1">Consultant:</p>
+  <p className="font-semibold text-slate-800">Universal Building Engineering Consultants LLC</p>
+  <p className="text-slate-600">TRN: 100551545500003</p>
+  {doc.paymentMethod && (
+    <p className="text-slate-600 mt-1">Payment: {doc.paymentMethod}</p>
+  )}
+</div>
           </div>
 
           <table className="w-full text-sm mb-6">
