@@ -200,12 +200,24 @@ export default function FinanceDocumentDetailPage() {
               </div>
             </div>
 
-            {doc.projectDetails && (
-              <div className="mb-3 text-sm">
-                <p className="text-xs uppercase tracking-wider text-slate-400 mb-1">Project Details</p>
-                <p className="text-slate-700">{doc.projectDetails}</p>
-              </div>
-            )}
+            {(doc.projectDetails || doc.contractValue > 0) && (
+  <div className="grid grid-cols-2 gap-6 mb-3 text-sm">
+    <div>
+      {doc.projectDetails && (
+        <>
+          <p className="text-xs uppercase tracking-wider text-slate-400 mb-1">Project Details</p>
+          <p className="text-slate-700">{doc.projectDetails}</p>
+        </>
+      )}
+    </div>
+    {doc.contractValue > 0 && (
+      <div className="text-right">
+        <p className="text-xs uppercase tracking-wider text-slate-400 mb-1">Contract Value</p>
+        <p className="font-semibold text-slate-800">AED {formatMoney(doc.contractValue)}</p>
+      </div>
+    )}
+  </div>
+)}
 
             <table className="w-full text-sm mb-4">
               <thead>
@@ -249,30 +261,7 @@ export default function FinanceDocumentDetailPage() {
               </p>
             </div>
 
-            {doc.contractValue > 0 && (
-  <div className="mb-4 text-xs bg-slate-50 border border-slate-200 rounded p-2.5 space-y-0.5">
-    <div className="flex justify-between">
-      <span className="text-slate-600">Contract Value</span>
-      <span className="font-semibold text-slate-800">AED {formatMoney(doc.contractValue)}</span>
-    </div>
-    <div className="flex justify-between">
-      <span className="text-slate-600">This Invoice (Advance Payment)</span>
-      <span className="font-semibold text-slate-800">AED {formatMoney(doc.totalAmount)}</span>
-    </div>
-    <div className="flex justify-between">
-      <span className="text-slate-600">Previously Invoiced</span>
-      <span className="text-slate-700">AED {formatMoney(doc.previouslyInvoiced)}</span>
-    </div>
-    <div className="flex justify-between border-t border-slate-300 pt-0.5 mt-0.5">
-      <span className="font-medium text-slate-700">Balance Remaining</span>
-      <span className="font-bold text-slate-800">
-        AED {formatMoney(doc.contractValue - doc.previouslyInvoiced - doc.totalAmount)}
-      </span>
-    </div>
-  </div>
-)}
-
-            <div className="mb-8 text-sm">
+                <div className="mb-8 text-sm">
               <p className="font-semibold text-slate-800 mb-1">Bank Account Details:</p>
               <div className="space-y-0.5 text-slate-600">
                 <p><span className="font-medium text-slate-700">Account Name:</span> Universal Building Engineering Consultants</p>
