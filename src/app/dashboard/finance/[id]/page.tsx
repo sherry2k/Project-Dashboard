@@ -161,7 +161,7 @@ export default function FinanceDocumentDetailPage() {
   id="print-area"
 >
         <div className="w-full flex justify-center">
-  <img src="/images/letterhead.jpg" alt="" style={{ width: "85%", height: "auto" }} />
+  <img src="/images/letterhead.jpg" alt="" style={{ width: "90%", height: "auto" }} />
 </div>
 
         <div className="px-10 py-6" id="print-content">
@@ -266,7 +266,7 @@ export default function FinanceDocumentDetailPage() {
         </div>
 
        <div className="w-full flex justify-center mt-4">
-  <img src="/images/footer.jpg" alt="" style={{ width: "85%", height: "auto" }} />
+  <img src="/images/footer.jpg" alt="" style={{ width: "90%", height: "auto" }} />
 </div>
     </div>
        </div>
