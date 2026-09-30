@@ -250,27 +250,27 @@ export default function FinanceDocumentDetailPage() {
             </div>
 
             {doc.contractValue > 0 && (
-              <div className="mb-6 text-sm bg-slate-50 border border-slate-200 rounded-lg p-3 space-y-1">
-                <div className="flex justify-between">
-                  <span className="text-slate-600">Contract Value</span>
-                  <span className="font-semibold text-slate-800">AED {formatMoney(doc.contractValue)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-600">This Invoice (Advance Payment)</span>
-                  <span className="font-semibold text-slate-800">AED {formatMoney(doc.totalAmount)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-600">Previously Invoiced</span>
-                  <span className="text-slate-700">AED {formatMoney(doc.previouslyInvoiced)}</span>
-                </div>
-                <div className="flex justify-between border-t border-slate-300 pt-1 mt-1">
-                  <span className="font-medium text-slate-700">Balance Remaining</span>
-                  <span className="font-bold text-slate-800">
-                    AED {formatMoney(doc.contractValue - doc.previouslyInvoiced - doc.totalAmount)}
-                  </span>
-                </div>
-              </div>
-            )}
+  <div className="mb-4 text-xs bg-slate-50 border border-slate-200 rounded p-2.5 space-y-0.5">
+    <div className="flex justify-between">
+      <span className="text-slate-600">Contract Value</span>
+      <span className="font-semibold text-slate-800">AED {formatMoney(doc.contractValue)}</span>
+    </div>
+    <div className="flex justify-between">
+      <span className="text-slate-600">This Invoice (Advance Payment)</span>
+      <span className="font-semibold text-slate-800">AED {formatMoney(doc.totalAmount)}</span>
+    </div>
+    <div className="flex justify-between">
+      <span className="text-slate-600">Previously Invoiced</span>
+      <span className="text-slate-700">AED {formatMoney(doc.previouslyInvoiced)}</span>
+    </div>
+    <div className="flex justify-between border-t border-slate-300 pt-0.5 mt-0.5">
+      <span className="font-medium text-slate-700">Balance Remaining</span>
+      <span className="font-bold text-slate-800">
+        AED {formatMoney(doc.contractValue - doc.previouslyInvoiced - doc.totalAmount)}
+      </span>
+    </div>
+  </div>
+)}
 
             <div className="mb-8 text-sm">
               <p className="font-semibold text-slate-800 mb-1">Bank Account Details:</p>
