@@ -85,6 +85,7 @@ export const financeDocuments = pgTable("finance_documents", {
   createdBy: varchar("created_by", { length: 255 }).notNull().default("Admin"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  projectDetails: text("project_details").notNull().default(""),
 });
 
 export const financeDocumentItems = pgTable("finance_document_items", {
