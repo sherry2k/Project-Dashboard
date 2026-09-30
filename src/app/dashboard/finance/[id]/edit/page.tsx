@@ -42,6 +42,8 @@ export default function EditFinanceDocumentPage() {
   const [notes, setNotes] = useState("");
   const [items, setItems] = useState<LineItem[]>([{ description: "", quantity: 1, unitPrice: 0 }]);
   const [saving, setSaving] = useState(false);
+  const [contractValue, setContractValue] = useState(0);
+  const [previouslyInvoiced, setPreviouslyInvoiced] = useState(0);
 
   useEffect(() => {
     fetch("/api/auth/me")
@@ -72,6 +74,8 @@ export default function EditFinanceDocumentPage() {
         setDueDate(data.dueDate ? data.dueDate.slice(0, 10) : "");
         setVatPercent(data.vatPercent);
         setPaymentMethod(data.paymentMethod);
+        setContractValue(data.contractValue / 100);
+        setPreviouslyInvoiced(data.previouslyInvoiced / 100);
         setNotes(data.notes);
         if (data.items && data.items.length > 0) {
           setItems(data.items.map((it) => ({
@@ -121,6 +125,8 @@ export default function EditFinanceDocumentPage() {
           vatPercent,
           paymentMethod,
           notes,
+          contractValue,
+          previouslyInvoiced,
           items: items
             .filter((it) => it.description.trim())
             .map((it) => ({
@@ -241,6 +247,28 @@ export default function EditFinanceDocumentPage() {
                 className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"
               />
             </div>
+            <div>
+  <label className="block text-sm font-medium text-slate-700 mb-1.5">Contract Value (AED)</label>
+  <input
+    type="number"
+    min={0}
+    step={0.01}
+    value={contractValue}
+    onChange={(e) => setContractValue(Number(e.target.value))}
+    className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"
+  />
+</div>
+<div>
+  <label className="block text-sm font-medium text-slate-700 mb-1.5">Previously Invoiced (AED)</label>
+  <input
+    type="number"
+    min={0}
+    step={0.01}
+    value={previouslyInvoiced}
+    onChange={(e) => setPreviouslyInvoiced(Number(e.target.value))}
+    className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"
+  />
+</div>
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1.5">Issue Date</label>
               <input
