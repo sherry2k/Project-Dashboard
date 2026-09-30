@@ -184,14 +184,16 @@ export default function FinanceDocumentDetailPage() {
 
           <table className="w-full text-sm mb-6">
   <thead>
-    <tr className="bg-emerald-50 border-b-2 border-[#5E9E3A] text-left">
-      <th className="py-2 px-3 text-slate-700 font-semibold">Description</th>
-      <th className="py-2 px-3 text-slate-700 font-semibold text-right w-32">Amount</th>
+    <tr className="bg-[#5E9E3A] text-left">
+      <th className="py-2.5 px-3 text-white font-semibold w-12">No.</th>
+      <th className="py-2.5 px-3 text-white font-semibold">Description</th>
+      <th className="py-2.5 px-3 text-white font-semibold text-right w-32">Amount</th>
     </tr>
   </thead>
   <tbody>
-    {doc.items?.map((item) => (
-      <tr key={item.id} className="bg-emerald-50 border-b border-slate-100">
+    {doc.items?.map((item, i) => (
+      <tr key={item.id} className={i % 2 === 0 ? "bg-white" : "bg-slate-50"}>
+        <td className="py-2.5 px-3 text-slate-500">{i + 1}</td>
         <td className="py-2.5 px-3 text-slate-700">{item.description}</td>
         <td className="py-2.5 px-3 text-slate-700 text-right">{formatMoney(item.amount)}</td>
       </tr>
@@ -247,8 +249,7 @@ export default function FinanceDocumentDetailPage() {
           </div>
         </div>
 
-       <div className="mt-12"></div>
-<div className="w-full flex justify-center">
+       <div className="w-full flex justify-center mt-4">
   <img src="/images/footer.jpg" alt="" style={{ width: "90%", height: "auto" }} />
 </div>
     </div>
