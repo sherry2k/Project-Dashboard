@@ -252,5 +252,6 @@ export default function FinanceDocumentDetailPage() {
   <img src="/images/footer.jpg" alt="" style={{ width: "80%", height: "auto" }} />
 </div>
     </div>
+       </div>
   );
 }
