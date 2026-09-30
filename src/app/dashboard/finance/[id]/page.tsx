@@ -219,24 +219,24 @@ export default function FinanceDocumentDetailPage() {
   </div>
 )}
 
-            <table className="w-full text-sm mb-4">
-              <thead>
-                <tr className="bg-[#5E9E3A] text-left">
-                  <th className="py-2.5 px-3 text-white font-semibold w-12">No.</th>
-                  <th className="py-2.5 px-3 text-white font-semibold">Description</th>
-                  <th className="py-2.5 px-3 text-white font-semibold text-right w-32">Amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                {doc.items?.map((item, i) => (
-                  <tr key={item.id} className={i % 2 === 0 ? "bg-white" : "bg-slate-50"}>
-                    <td className="py-2.5 px-3 text-slate-500">{i + 1}</td>
-                    <td className="py-2.5 px-3 text-slate-700">{item.description}</td>
-                    <td className="py-2.5 px-3 text-slate-700 text-right">{formatMoney(item.amount)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <table className="w-full text-sm mb-4 border border-slate-300">
+  <thead>
+    <tr className="bg-[#5E9E3A] text-left">
+      <th className="py-2.5 px-3 text-white font-semibold w-12 border border-slate-300">No.</th>
+      <th className="py-2.5 px-3 text-white font-semibold border border-slate-300">Description</th>
+      <th className="py-2.5 px-3 text-white font-semibold text-right w-32 border border-slate-300">Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    {doc.items?.map((item, i) => (
+      <tr key={item.id} className={i % 2 === 0 ? "bg-white" : "bg-slate-50"}>
+        <td className="py-2.5 px-3 text-slate-500 border border-slate-300">{i + 1}</td>
+        <td className="py-2.5 px-3 text-slate-700 border border-slate-300">{item.description}</td>
+        <td className="py-2.5 px-3 text-slate-700 text-right border border-slate-300">{formatMoney(item.amount)}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
 
             <div className="flex justify-end mb-3">
               <div className="w-64 text-sm space-y-1.5">
