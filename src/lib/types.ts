@@ -22,6 +22,8 @@ export interface Project {
   soilReportLab?: string | null;
   soilReportRequired?: string;
   siteProgressPercent?: number;
+  ownerEmail?: string;
+  ownerPhone?: string;
 }
 export interface ProjectStats {
   total: number;
