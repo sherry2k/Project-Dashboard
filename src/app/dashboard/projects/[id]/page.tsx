@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Loader2, Building2 } from "lucide-react";
+import { ArrowLeft, Loader2, Building2, Phone, Mail } from "lucide-react";
 import type { Project, AuditLog, ConstructionStage } from "@/lib/types";
 import {
   getCurrentActivity,
@@ -474,16 +474,47 @@ return (
                   <p className="text-sm text-slate-400 italic">Not assigned yet</p>
                 )}
               </div>
-              <div>
-  <p className="text-xs text-slate-500 mb-1.5">Owner Contact</p>
-  {project.ownerEmail || project.ownerPhone ? (
-    <div className="text-sm text-slate-800 space-y-0.5">
-      {project.ownerPhone && <p>{project.ownerPhone}</p>}
-      {project.ownerEmail && <p className="text-slate-600">{project.ownerEmail}</p>}
+             <div className="col-span-2 sm:col-span-4">
+  <p className="text-xs text-slate-500 mb-2">Owner Contact</p>
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+    <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+      <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
+        <Phone size={18} className="text-emerald-600" />
+      </div>
+      <div className="min-w-0">
+        <p className="text-[11px] uppercase tracking-wider text-slate-400">Phone</p>
+        {project.ownerPhone ? (
+          <a
+            href={`tel:${project.ownerPhone.replace(/\s/g, "")}`}
+            className="text-base font-semibold text-slate-800 hover:text-emerald-600 truncate block"
+          >
+            {project.ownerPhone}
+          </a>
+        ) : (
+          <p className="text-sm text-slate-400 italic">Not added yet</p>
+        )}
+      </div>
     </div>
-  ) : (
-    <p className="text-sm text-slate-400 italic">Not added yet</p>
-  )}
+
+    <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+      <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
+        <Mail size={18} className="text-blue-600" />
+      </div>
+      <div className="min-w-0">
+        <p className="text-[11px] uppercase tracking-wider text-slate-400">Email</p>
+        {project.ownerEmail ? (
+          <a
+            href={`mailto:${project.ownerEmail}`}
+            className="text-base font-semibold text-slate-800 hover:text-blue-600 truncate block"
+          >
+            {project.ownerEmail}
+          </a>
+        ) : (
+          <p className="text-sm text-slate-400 italic">Not added yet</p>
+        )}
+      </div>
+    </div>
+  </div>
 </div>
               <div>
                 <p className="text-xs text-slate-500 mb-1.5">Last Updated</p>
