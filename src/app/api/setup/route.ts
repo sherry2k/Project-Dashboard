@@ -66,8 +66,7 @@ export async function GET() {
     ALTER TABLE projects ADD COLUMN IF NOT EXISTS owner_email VARCHAR(255) NOT NULL DEFAULT '';
     ALTER TABLE projects ADD COLUMN IF NOT EXISTS owner_phone VARCHAR(50) NOT NULL DEFAULT '';
    
-      CREATE TABLE IF NOT EXISTS audit_logs (
-   
+       
       CREATE TABLE IF NOT EXISTS audit_logs (
         id SERIAL PRIMARY KEY,
         project_id INTEGER NOT NULL,
