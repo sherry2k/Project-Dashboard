@@ -117,6 +117,8 @@ export default function AddProjectModal({ project, onSave, onClose }: AddProject
   soilReportLab: "",
   soilReportRequired: "Required",
   siteProgressPercent: "0",
+  ownerEmail: "",
+  ownerPhone: "",
 });
 
   useEffect(() => {
@@ -139,6 +141,8 @@ export default function AddProjectModal({ project, onSave, onClose }: AddProject
      soilReportLab: project.soilReportLab || "",
    soilReportRequired: project.soilReportRequired || "Required",
    siteProgressPercent: String(project.siteProgressPercent ?? 0),
+      ownerEmail: project.ownerEmail || "",
+     ownerPhone: project.ownerPhone || "",
     });
   }
 }, [project]);
@@ -213,6 +217,18 @@ export default function AddProjectModal({ project, onSave, onClose }: AddProject
               onChange={(v) => updateField("plotNo", v)}
               placeholder="e.g., PLT-101"
             />
+            <TextField
+  label="Owner Email"
+  value={form.ownerEmail}
+  onChange={(v) => updateField("ownerEmail", v)}
+  placeholder="owner@example.com"
+/>
+<TextField
+  label="Owner Phone"
+  value={form.ownerPhone}
+  onChange={(v) => updateField("ownerPhone", v)}
+  placeholder="+971 50 000 0000"
+/>
             <SelectField
               label="Project Location"
               value={form.projectLocation}
