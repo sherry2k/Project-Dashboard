@@ -142,6 +142,8 @@ export async function POST(request: NextRequest) {
       status: body.status || "In Progress",
       contractor: body.contractor || "",
       remarks: body.remarks || "",
+      ownerEmail: body.ownerEmail || "",
+      ownerPhone: body.ownerPhone || "",
       lastEditedBy: editedBy,
       soilReportRequestedDate: body.soilReportRequestedDate ? new Date(body.soilReportRequestedDate) : null,
       soilReportExpectedDate: body.soilReportExpectedDate ? new Date(body.soilReportExpectedDate) : null,
