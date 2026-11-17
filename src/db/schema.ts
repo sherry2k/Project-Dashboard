@@ -33,6 +33,8 @@ export const projects = pgTable("projects", {
   soilReportLab: varchar("soil_report_lab", { length: 255 }),
   soilReportRequired: varchar("soil_report_required", { length: 20 }).notNull().default("Required"),
   siteProgressPercent: integer("site_progress_percent").notNull().default(0),
+  ownerEmail: varchar("owner_email", { length: 255 }).notNull().default(""),
+  ownerPhone: varchar("owner_phone", { length: 50 }).notNull().default(""),
 });
 
 export const constructionStages = pgTable("construction_stages", {
