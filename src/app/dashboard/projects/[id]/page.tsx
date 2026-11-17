@@ -475,6 +475,17 @@ return (
                 )}
               </div>
               <div>
+  <p className="text-xs text-slate-500 mb-1.5">Owner Contact</p>
+  {project.ownerEmail || project.ownerPhone ? (
+    <div className="text-sm text-slate-800 space-y-0.5">
+      {project.ownerPhone && <p>{project.ownerPhone}</p>}
+      {project.ownerEmail && <p className="text-slate-600">{project.ownerEmail}</p>}
+    </div>
+  ) : (
+    <p className="text-sm text-slate-400 italic">Not added yet</p>
+  )}
+</div>
+              <div>
                 <p className="text-xs text-slate-500 mb-1.5">Last Updated</p>
                 <p className="text-sm text-slate-700">
                   {project.updatedAt ? format(new Date(project.updatedAt), "dd MMM yyyy — HH:mm") : "—"}
